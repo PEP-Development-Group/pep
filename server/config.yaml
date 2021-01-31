@@ -56,9 +56,9 @@ captcha:
 mysql:
   path: '127.0.0.1:3306'
   config: 'charset=utf8mb4&parseTime=True&loc=Local'
-  db-name: 'qmPlus'
+  db-name: 'pep'
   username: 'root'
-  password: 'Aa@6447985'
+  password: 'shiluo'
   max-idle-conns: 10
   max-open-conns: 100
   log-mode: false
