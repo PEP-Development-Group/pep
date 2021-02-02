@@ -44,6 +44,7 @@ require (
 	github.com/spf13/viper v1.7.0
 	github.com/swaggo/gin-swagger v1.2.0
 	github.com/swaggo/swag v1.6.7
+	github.com/tealeg/xlsx/v3 v3.2.3
 	github.com/tebeka/strftime v0.1.3 // indirect
 	github.com/unrolled/secure v1.0.7
 	go.uber.org/zap v1.10.0

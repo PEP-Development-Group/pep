@@ -89,3 +89,8 @@ func UploadFile(header *multipart.FileHeader, noSave string) (err error, file mo
 	}
 	return
 }
+
+func ParseFile(header *multipart.FileHeader) (err error, file model.ExaFileUploadAndDownload) {
+
+	return
+}

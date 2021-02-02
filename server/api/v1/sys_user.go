@@ -105,19 +105,19 @@ func tokenNext(c *gin.Context, user model.SysUser) {
 }
 
 // @Tags SysUser
-// @Summary 用户注册账号
+// @Summary 新增学生
 // @Produce  application/json
 // @Param data body model.SysUser true "用户名, 昵称, 密码, 角色ID"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"注册成功"}"
 // @Router /user/register [post]
 func Register(c *gin.Context) {
-	var R request.Register
+	var R request.RegisterStudent
 	_ = c.ShouldBindJSON(&R)
 	if err := utils.Verify(R, utils.RegisterVerify); err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	user := &model.SysUser{Username: R.Username, NickName: R.NickName, Password: R.Password, HeaderImg: R.HeaderImg, AuthorityId: R.AuthorityId}
+	user := &model.SysUser{Username: R.Username, real: R.NickName, Password: R.Password, HeaderImg: R.HeaderImg, AuthorityId: R.AuthorityId}
 	err, userReturn := service.Register(*user)
 	if err != nil {
 		global.GVA_LOG.Error("注册失败", zap.Any("err", err))

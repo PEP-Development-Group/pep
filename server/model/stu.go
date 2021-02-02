@@ -12,10 +12,13 @@ type Stu struct {
       StuName  string `json:"stuName" form:"stuName" gorm:"column:stu_name;comment:姓名;type:varchar(5);size:5;"`
       College  string `json:"college" form:"college" gorm:"column:college;comment:学院;type:varchar(5);size:5;"`
       Major  string `json:"major" form:"major" gorm:"column:major;comment:专业;type:varchar(10);size:10;"`
-      PID  string `json:"PID" form:"PID" gorm:"column:PID;comment:身份证号;type:char;"`
-      Hash  string `json:"hash" form:"hash" gorm:"column:hash;comment:加密后密码;type:char;"`
-      Salt  string `json:"salt" form:"salt" gorm:"column:salt;comment:随机盐;type:char;"`
-      CancelNums  *bool `json:"cancelNums" form:"cancelNums" gorm:"column:cancel_nums;comment:取消预约实验的次数;type:tinyint;"`
+      PID  string `json:"PID" form:"PID" gorm:"column:PID;comment:身份证;type:char;"`
+      Hash  string `json:"hash" form:"hash" gorm:"column:hash;comment:hash密码;type:char;"`
+      Salt  string `json:"salt" form:"salt" gorm:"column:salt;comment:盐;type:char;"`
+      CancelNums  int `json:"cancelNums" form:"cancelNums" gorm:"column:cancel_nums;comment:取消次数;type:int;size:10;"`
+
+      Authority   SysAuthority `json:"authority" gorm:"foreignKey:AuthorityId;references:AuthorityId;comment:用户角色"`
+      AuthorityId string       `json:"authorityId" gorm:"default:888;comment:用户角色ID"`
 }
 
 

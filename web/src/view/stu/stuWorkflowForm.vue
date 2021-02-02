@@ -16,20 +16,19 @@
                 <el-input v-model="formData.major" clearable placeholder="请输入" ></el-input>
           </el-form-item>
            
-             <el-form-item label="身份证号:">
+             <el-form-item label="身份证:">
                 <el-input v-model="formData.PID" clearable placeholder="请输入" ></el-input>
           </el-form-item>
            
-             <el-form-item label="加密后密码:">
+             <el-form-item label="hash密码:">
                 <el-input v-model="formData.hash" clearable placeholder="请输入" ></el-input>
           </el-form-item>
            
-             <el-form-item label="随机盐:">
+             <el-form-item label="盐:">
                 <el-input v-model="formData.salt" clearable placeholder="请输入" ></el-input>
           </el-form-item>
            
-             <el-form-item label="取消预约实验的次数:">
-                <el-switch active-color="#13ce66" inactive-color="#ff4949" active-text="是" inactive-text="否" v-model="formData.cancelNums" clearable ></el-switch>
+             <el-form-item label="取消次数:"><el-input v-model.number="formData.cancelNums" clearable placeholder="请输入"></el-input>
           </el-form-item>
            <el-form-item>
            <el-button v-if="this.wf.clazz == 'start'" @click="start" type="primary">启动</el-button>
@@ -79,7 +78,7 @@ export default {
             PID:"",
             hash:"",
             salt:"",
-            cancelNums:false,
+            cancelNums:0,
             
       }
     };
