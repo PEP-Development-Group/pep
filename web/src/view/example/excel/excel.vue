@@ -1,19 +1,20 @@
 <template>
-  <div>
+  <div class="center">
     <el-upload
       :action="`${path}/fileUploadAndDownload/upload`"
       :before-remove="beforeRemove"
       :file-list="fileList"
       :headers="{'x-token':token}"
-      :limit="10"
+      :limit="1"
       :on-exceed="handleExceed"
-      :on-preview="handlePreview"
       :on-remove="handleRemove"
-      class="upload-demo"
-      multiple
+      class="upload-demo upload-con"
+      accept=".xls,.xlsx"
+      drag
     >
-      <el-button size="small" type="primary">点击上传</el-button>
-      <div class="el-upload__tip" slot="tip">未对文件格式及大小做校验</div>
+      <i class="el-icon-upload"></i>
+      <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+      <div class="el-upload__tip" slot="tip">只能上传.xls和.xlsx格式文件</div>
     </el-upload>
   </div>
 </template>
@@ -27,16 +28,11 @@ export default {
       path: path,
 
       fileList: [
-        {
-          name: 'food.jpeg',
-          url:
-            'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-        },
-        {
-          name: 'food2.jpeg',
-          url:
-            'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-        }
+        // {
+        //   name: 'food.jpeg',
+        //   url:
+        //     'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
+        // }
       ]
     }
   },
@@ -44,26 +40,33 @@ export default {
     ...mapGetters('user', ['userInfo', 'token'])
   },
   methods: {
-    handleRemove(file, fileList) {
+    handleRemove(file) {
       this.$message.warning(
-        `共有 ${fileList.length} 个文件，移除了${file.name}`
+        `移除了${file.name}`
       )
     },
-    handlePreview(file) {
-      this.$message.warning(`${file.name}选择完成`)
-    },
-    handleExceed(files, fileList) {
+    handleExceed() {
       this.$message.warning(
-        `当前限制选择 3 个文件，本次选择了 ${
-          files.length
-        } 个文件，共选择了 ${files.length + fileList.length} 个文件`
+        `每次只能上传一个文件`
       )
     },
-    beforeRemove(file, fileList) {
+    beforeRemove(file) {
       return this.$confirm(
-        `共有 ${fileList.length} 个文件，确定移除 ${file.name}？`
+        `确定移除 ${file.name}？`
       )
     }
   }
 }
 </script>
+<style type="text/css">
+  .center{
+    text-align: center;
+  }
+  .upload-con{
+    width: 360px;
+    display: inline-block;
+  }
+  .upload-demo .el-upload-list__item-status-label, .upload .el-upload-list__item-status-label{
+    left: auto;
+  }
+</style>
