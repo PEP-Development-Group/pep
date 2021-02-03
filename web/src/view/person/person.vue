@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-row>
-      <el-col :span="6">
+      <!-- <el-col :span="6">
         <div class="fl-left avatar-box">
           <div class="user-card">
               <div class="user-headpic-update" :style="{ 'background-image': 'url(' + userInfo.headerImg + ')','background-repeat':'no-repeat','background-size':'cover' }" >
@@ -31,13 +31,13 @@
             </div>
           </div>
         </div>
-      </el-col>
-      <el-col :span="18">
+      </el-col> -->
+      <el-col :span="24">
         <div class="user-addcount">
           <el-tabs v-model="activeName" @tab-click="handleClick">
-            <el-tab-pane label="账号绑定" name="second">
+            <el-tab-pane label="账号信息" name="second">
               <ul>
-                <li>
+                <!-- <li>
                   <p class="title">密保手机</p>
                   <p class="desc">
                     已绑定手机:1245678910
@@ -56,6 +56,18 @@
                   <p class="desc">
                     未设置密保问题
                     <a href="#">去设置</a>
+                  </p>
+                </li> -->
+                <li>
+                  <p class="title">姓名</p>
+                  <p class="desc">
+                    {{userInfo.nickName}}
+                  </p>
+                </li>
+                <li>
+                  <p class="title">学号</p>
+                  <p class="desc">
+                    {{userInfo.ID}}
                   </p>
                 </li>
                 <li>
