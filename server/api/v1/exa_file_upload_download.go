@@ -36,18 +36,6 @@ func UploadFile(c *gin.Context) {
 	response.OkWithDetailed(response.ExaFileResponse{File: file}, "上传成功", c)
 }
 
-func ImportFromUploadedFile(c *gin.Context) {
-	var file model.ExaFileUploadAndDownload
-	noSave := c.DefaultQuery("noSave", "0")
-	_, header, err := c.Request.FormFile("file")
-	if err != nil {
-		global.GVA_LOG.Error("接收文件失败!", zap.Any("err", err))
-		response.FailWithMessage("接收文件失败", c)
-		return
-	}
-
-}
-
 // @Tags ExaFileUploadAndDownload
 // @Summary 删除文件
 // @Security ApiKeyAuth

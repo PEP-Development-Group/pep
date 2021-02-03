@@ -47,7 +47,7 @@ func tokenNext(c *gin.Context, user model.SysUser) {
 	claims := request.CustomClaims{
 		UUID:        user.UUID,
 		ID:          user.ID,
-		NickName:    user.NickName,
+		NickName:    user.Name,
 		Username:    user.Username,
 		AuthorityId: user.AuthorityId,
 		BufferTime:  global.GVA_CONFIG.JWT.BufferTime, // 缓冲时间1天 缓冲时间内会获得新的token刷新令牌 此时一个用户会存在两个有效令牌 但是前端只留一个 另一个会丢失
@@ -105,19 +105,19 @@ func tokenNext(c *gin.Context, user model.SysUser) {
 }
 
 // @Tags SysUser
-// @Summary 新增学生
+// @Summary 用户注册账号
 // @Produce  application/json
 // @Param data body model.SysUser true "用户名, 昵称, 密码, 角色ID"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"注册成功"}"
 // @Router /user/register [post]
 func Register(c *gin.Context) {
-	var R request.RegisterStudent
+	var R request.Register
 	_ = c.ShouldBindJSON(&R)
 	if err := utils.Verify(R, utils.RegisterVerify); err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	user := &model.SysUser{Username: R.Username, real: R.NickName, Password: R.Password, HeaderImg: R.HeaderImg, AuthorityId: R.AuthorityId}
+	user := &model.SysUser{Username: R.Username, Name: R.Name, Password: R.Password, HeaderImg: R.HeaderImg, AuthorityId: R.AuthorityId}
 	err, userReturn := service.Register(*user)
 	if err != nil {
 		global.GVA_LOG.Error("注册失败", zap.Any("err", err))

@@ -2,26 +2,17 @@ package request
 
 import uuid "github.com/satori/go.uuid"
 
-// Teacher register structure
-type RegisterTeacher struct {
-	Account  string `json:"account"`
-	Password string `json:"password"`
-	RealName string `json:"name"`
-	// HeaderImg   string `json:"headerImg" gorm:"default:'http://www.henrongyi.top/avatar/lufu.jpg'"`
-
+// User register structure
+type Register struct {
+	Username    string `json:"userName"`
+	Password    string `json:"password"`
+	Name        string `json:"name" gorm:"default:'QMPlusUser'"`
+	HeaderImg   string `json:"headerImg" gorm:"default:'http://www.henrongyi.top/avatar/lufu.jpg'"`
 	AuthorityId string `json:"authorityId" gorm:"default:888"`
-}
 
-// Student register structure
-type RegisterStudent struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-
-	College  string `json:"college"`
-	Major    string `json:"major"`
-	PID      string `json:"pid"`
-
-	AuthorityId string `json:"authorityId" gorm:"default:888"`
+	College string `json:"college"`
+	Major   string `json:"major"`
+	PID     string `json:"pid"`
 }
 
 // User login structure

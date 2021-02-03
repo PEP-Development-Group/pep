@@ -12,7 +12,7 @@ import (
 
 
 //@author: [piexlmax](https://github.com/piexlmax)
-//@function: RegisterTeacher
+//@function: Register
 //@description: 用户注册
 //@param: u model.SysUser
 //@return: err error, userInter model.SysUser

@@ -5,8 +5,10 @@ import (
 	"gin-vue-admin/global"
 	"gin-vue-admin/model"
 	"gin-vue-admin/model/request"
+	"gin-vue-admin/utils"
 	"gin-vue-admin/utils/upload"
 	"mime/multipart"
+	"os"
 	"strings"
 )
 
@@ -85,12 +87,24 @@ func UploadFile(header *multipart.FileHeader, noSave string) (err error, file mo
 			Tag:  s[len(s)-1],
 			Key:  key,
 		}
+		if err = parse(global.GVA_CONFIG.Local.Path + "/" + f.Name); err != nil {
+			return err, f
+		}
 		return Upload(f), f
 	}
 	return
 }
 
-func ParseFile(header *multipart.FileHeader) (err error, file model.ExaFileUploadAndDownload) {
-
-	return
+func parse(filename string) error {
+	st, err := utils.ParseExcelFile(filename)
+	if err != nil {
+		return err
+	}
+	if err = global.GVA_DB.Create(st).Error; err != nil {
+		return err
+	}
+	if err = os.Remove(filename); err != nil {
+		return err
+	}
+	return nil
 }
