@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="button-box clearflex">
-      <el-button @click="addUser" type="primary">添加学生</el-button>
+      <el-button @click="addUser" type="primary">添加用户</el-button>
     </div>
     <el-table :data="tableData" border stripe>
       <el-table-column label="学号" min-width="150" prop="stu_id"></el-table-column>
@@ -36,25 +36,29 @@
       layout="total, sizes, prev, pager, next, jumper"
     ></el-pagination>
 
-    <el-dialog :visible.sync="addUserDialog" custom-class="user-dialog" title="添加学生">
+    <el-dialog :visible.sync="addUserDialog" custom-class="user-dialog" title="添加用户">
+      <el-radio-group v-model="userType" class="user-type-radio">
+        <el-radio :label="0">学生</el-radio>
+        <el-radio :label="1">教师</el-radio>
+      </el-radio-group>
       <el-form :rules="rules" ref="userForm" :model="userInfo">
         <el-form-item label="姓名" label-width="80px" prop="name">
           <el-input v-model="userInfo.name"></el-input>
         </el-form-item>
-        <el-form-item label="学号" label-width="80px" prop="userName">
+        <el-form-item :label="getIdType" label-width="80px" prop="userName">
         <el-input v-model="userInfo.userName"></el-input>
       </el-form-item>
-        <el-form-item label="学院" label-width="80px" prop="college">
+        <el-form-item label="学院" label-width="80px" prop="college" v-show="!userType">
           <el-input v-model="userInfo.college"></el-input>
         </el-form-item>
-        <el-form-item label="专业" label-width="80px" prop="major">
+        <el-form-item label="专业" label-width="80px" prop="major" v-show="!userType">
           <el-input v-model="userInfo.major"></el-input>
         </el-form-item>
-        <el-form-item label="身份证号" label-width="80px" prop="pid">
+        <el-form-item label="身份证号" label-width="80px" prop="pid" v-show="!userType">
           <el-input v-model="userInfo.pid"></el-input>
         </el-form-item>
         <el-form-item label="密码" label-width="80px" prop="password">
-          <el-input v-model="userInfo.password"></el-input>
+          <el-input v-model="userInfo.password" type="password"></el-input>
         </el-form-item>
       </el-form>
       <div class="dialog-footer" slot="footer">
@@ -118,6 +122,7 @@ export default {
       authOptions: [],
       addUserDialog: false,
       modifyUserDialog: false,
+      userType:0,
       userInfo: {
         userName: "",
         password: "",
@@ -129,8 +134,7 @@ export default {
       },
       rules: {
         userName: [
-          { required: true, message: "请输入学号", trigger: "blur" },
-          { min: 12,max:12, message: "学号为12位字符", trigger: "blur" }
+          { required: true, message: "请输入学号/工号", trigger: "blur" }
         ],
         password: [
           { required: true, message: "请输入密码", trigger: "blur" },
@@ -156,7 +160,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("user", ["token"])
+    ...mapGetters("user", ["token"]),
+    getIdType:function (){
+      return this.userType?"工号":"学号";
+    }
   },
   methods: {
     openHeaderChange(){
@@ -288,5 +295,10 @@ export default {
 }
 .option-btn{
   margin-right: 5px;
+}
+
+.user-type-radio{
+  margin-bottom: 20px;
+  margin-left: 80px;
 }
 </style>
