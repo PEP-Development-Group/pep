@@ -3,16 +3,17 @@ package model
 
 import (
 	"gin-vue-admin/global"
-      "time"
 )
 
 // 如果含有time.Time 请自行import time包
 type Class struct {
       global.GVA_MODEL
-      Cname  string `json:"cname" form:"cname" gorm:"column:cname;comment:课程名;type:varchar(20);size:20;"`
       Ccredit  int `json:"ccredit" form:"ccredit" gorm:"column:ccredit;comment:学分;type:int;size:10;"`
-      Tid  int `json:"tid" form:"tid" gorm:"column:tid;comment:教师ID;type:smallint;"`
+      Cname  string `json:"cname" form:"cname" gorm:"column:cname;comment:课程名;type:varchar(20);size:20;"`
+      Etime  time.Time `json:"etime" form:"etime" gorm:"column:etime;comment:选课结束;type:datetime;"`
+      Stime  time.Time `json:"stime" form:"stime" gorm:"column:stime;comment:选课开始;type:datetime;"`
       Time  time.Time `json:"time" form:"time" gorm:"column:time;comment:上课时间;type:datetime;"`
+      Tname  string `json:"tname" form:"tname" gorm:"column:tname;comment:教师名;type:varchar(5);size:5;"`
 }
 
 
@@ -35,11 +36,11 @@ func (Class) TableName() string {
 // 工作流注册代码
 
 // initWorkflowModel内部注册
-// model.WorkflowBusinessStruct["Cls"] = func() model.GVA_Workflow {
+// model.WorkflowBusinessStruct["class"] = func() model.GVA_Workflow {
 //   return new(model.ClassWorkflow)
 // }
 
 // initWorkflowTable内部注册
-// model.WorkflowBusinessTable["Cls"] = func() interface{} {
+// model.WorkflowBusinessTable["class"] = func() interface{} {
 // 	return new(model.Class)
 // }
