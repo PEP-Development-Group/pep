@@ -39,17 +39,11 @@
         tooltip-effect="dark"
     >
       <el-table-column type="selection" width="50" align="center"></el-table-column>
-      <el-table-column label="日期" min-width="120" sortable>
-        <template slot-scope="scope">
-          <div class="text-wrapper">
-            {{ scope.row.CreatedAt|formatDate }}
-          </div>
-        </template>
-      </el-table-column>
+      <el-table-column label="任课教师" prop="tname" min-width="120" sortable></el-table-column>
+      <el-table-column label="课程名" prop="cname" min-width="180" sortable></el-table-column>
       <el-table-column label="学时" prop="ccredit" min-width="80" sortable filter-placement="top"
                        :filters="[{text: '2学时',value: 2},{text: '4学时',value: 4}]"
                        :filter-method="filterHandler"></el-table-column>
-      <el-table-column label="课程名" prop="cname" min-width="180" sortable></el-table-column>
       <el-table-column label="选课开始" prop="stime" min-width="120" sortable>
         <template slot-scope="scope">
           <div class="text-wrapper">
@@ -71,7 +65,6 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="任课教师" prop="tname" min-width="120" sortable></el-table-column>
       <el-table-column label="操作" width="200" align="center">
         <template slot-scope="scope">
           <el-button class="table-button" @click="updateClass(scope.row)" size="small" type="primary"
