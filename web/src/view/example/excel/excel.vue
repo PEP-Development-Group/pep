@@ -11,15 +11,16 @@
         :on-remove="handleRemove"
         class="upload-demo upload-con"
         accept=".xls,.xlsx"
-        :auto-upload="false"
+        :auto-upload="true"
+        :on-success="updateSuccess"
         drag
     >
       <i class="el-icon-upload"></i>
       <div class="el-upload__text">将文件拖到此处，或<em>点击选取</em></div>
       <div class="el-upload__tip" slot="tip">只能上传.xls和.xlsx格式文件</div>
     </el-upload>
-    <br/>
-    <el-button style="margin: 30px;" type="success" @click="submitUpload">上传学生名单</el-button>
+    <!--    <br/>-->
+    <!--    <el-button style="margin: 30px;" type="success" @click="submitUpload">上传学生名单</el-button>-->
   </div>
 </template>
 <script>
@@ -45,17 +46,21 @@ export default {
     ...mapGetters('user', ['userInfo', 'token'])
   },
   methods: {
-    submitUpload() {
-      this.$refs.upload.submit();
-      //TODO 提交学生名单
-      if (this.fileList.length === 0)
-        this.$message.error(`未选择文件`)
-      else {
-        this.$alert(`成功导入学生名单`)
-        this.$refs.upload.clearFiles();
-      }
-
+    updateSuccess() {
+      this.$alert(`成功导入学生名单`)
     },
+    // submitUpload() {
+    //   this.$refs.upload.submit();
+    //   //TODO 提交学生名单
+    //   if (this.$refs.upload.uploadFiles.length === 0) {
+    //     this.$message.error(`未选择文件`)
+    //   } else {
+    //     this.$alert(`成功导入学生名单`)
+    //     console.log("Clear")
+    //     this.$refs.upload.clearFiles();
+    //   }
+    //
+    // },
     handleRemove(file) {
       this.$message.warning(
           `移除了${file.name}`
