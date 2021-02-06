@@ -7,7 +7,7 @@ type Register struct {
 	Username    string `json:"userName"`
 	Password    string `json:"password"`
 	Name        string `json:"name" gorm:"default:'QMPlusUser'"`
-	HeaderImg   string `json:"headerImg" gorm:"default:'http://www.henrongyi.top/avatar/lufu.jpg'"`
+	// HeaderImg   string `json:"headerImg" gorm:"default:'http://www.henrongyi.top/avatar/lufu.jpg'"`
 	AuthorityId string `json:"authorityId" gorm:"default:888"`
 
 	College string `json:"college"`
