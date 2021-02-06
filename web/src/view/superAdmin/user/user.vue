@@ -149,21 +149,18 @@ export default {
           {min: 6, message: "最低6位字符", trigger: "blur"}
         ],
         pid: [
-          {required: true, message: "请输入身份证号", trigger: "blur"},
+          // {required: true, message: "请输入身份证号", trigger: "blur"},
           {min: 18, max: 18, message: "请输入正确的身份证号", trigger: "blur"}
         ],
         name: [
           {required: true, message: "请输入姓名", trigger: "blur"}
         ],
-        college: [
-          {required: true, message: "请输入学院", trigger: "blur"}
-        ],
-        major: [
-          {required: true, message: "请输入专业", trigger: "blur"}
-        ],
-        authorityId: [
-          {required: true, message: "请选择用户角色", trigger: "blur"}
-        ]
+        // college: [
+        //   {required: true, message: "请输入学院", trigger: "blur"}
+        // ],
+        // major: [
+        //   {required: true, message: "请输入专业", trigger: "blur"}
+        // ]
       }
     };
   },
@@ -209,6 +206,7 @@ export default {
       }
     },
     async enterAddUserDialog() {
+      this.userInfo.authorityId="888";
       this.$refs.userForm.validate(async valid => {
         if (valid) {
           const res = await register(this.userInfo);
