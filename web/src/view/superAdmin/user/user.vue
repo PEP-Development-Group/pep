@@ -2,18 +2,18 @@
   <div>
     <div class="button-box clearflex">
       <el-radio-group v-model="userType" size="small">
-        <el-radio-button :label="0">学生</el-radio-button>
-        <el-radio-button :label="1">教师</el-radio-button>
+        <el-radio-button :label="1">学生</el-radio-button>
+        <el-radio-button :label="2">教师</el-radio-button>
       </el-radio-group>
       <el-button @click="addUser" type="primary">添加用户</el-button>
     </div>
 
-    <el-table :data="tableData" border stripe>
+    <el-table ref="userTable" :data="[tableData,userType]|userFilter" border stripe>
       <el-table-column :label="getIdType" min-width="150" prop="username"></el-table-column>
       <el-table-column label="姓名" min-width="150" prop="name"></el-table-column>
-      <el-table-column label="学院" min-width="150" prop="college" v-if="!userType"></el-table-column>
-      <el-table-column label="专业" min-width="150" prop="major" v-if="!userType"></el-table-column>
-      <el-table-column label="取消次数" min-width="150" prop="cancel_nums" v-if="!userType"></el-table-column>
+      <el-table-column label="学院" min-width="150" prop="college" v-if="userType===1"></el-table-column>
+      <el-table-column label="专业" min-width="150" prop="major" v-if="userType===1"></el-table-column>
+      <el-table-column label="取消次数" min-width="150" prop="cancel_nums" v-if="userType===1"></el-table-column>
       <el-table-column label="操作" width="300" align="center">
         <template slot-scope="scope">
           <el-button type="warning" icon="el-icon-edit" size="small" slot="reference" @click="modifyUser"
@@ -46,8 +46,8 @@
 
     <el-dialog :visible.sync="addUserDialog" custom-class="user-dialog" title="添加用户">
       <el-radio-group v-model="userType" class="user-type-radio">
-        <el-radio :label="0">学生</el-radio>
-        <el-radio :label="1">教师</el-radio>
+        <el-radio :label="1">学生</el-radio>
+        <el-radio :label="2">教师</el-radio>
       </el-radio-group>
       <el-form :rules="rules" ref="userForm" :model="userInfo">
         <el-form-item label="姓名" label-width="80px" prop="name">
@@ -56,13 +56,13 @@
         <el-form-item :label="getIdType" label-width="80px" prop="userName">
           <el-input v-model="userInfo.userName"></el-input>
         </el-form-item>
-        <el-form-item label="学院" label-width="80px" prop="college" v-show="!userType">
+        <el-form-item label="学院" label-width="80px" prop="college" v-show="userType===1">
           <el-input v-model="userInfo.college"></el-input>
         </el-form-item>
-        <el-form-item label="专业" label-width="80px" prop="major" v-show="!userType">
+        <el-form-item label="专业" label-width="80px" prop="major" v-show="userType===1">
           <el-input v-model="userInfo.major"></el-input>
         </el-form-item>
-        <el-form-item label="身份证号" label-width="80px" prop="pid" v-show="!userType">
+        <el-form-item label="身份证号" label-width="80px" prop="pid" v-show="userType===1">
           <el-input v-model="userInfo.pid"></el-input>
         </el-form-item>
         <el-form-item label="密码" label-width="80px" prop="password">
@@ -130,7 +130,7 @@ export default {
       authOptions: [],
       addUserDialog: false,
       modifyUserDialog: false,
-      userType: 0,
+      userType: 1,
       userInfo: {
         userName: "",
         password: "",
@@ -164,10 +164,17 @@ export default {
       }
     };
   },
+  filters: {
+    userFilter(list) {
+      return list[0].filter((item) => {
+        return item.authorityId === list[1].toString()
+      })
+    }
+  },
   computed: {
     ...mapGetters("user", ["token"]),
     getIdType: function () {
-      return this.userType ? "工号" : "学号";
+      return this.userType === 2 ? "工号" : "学号";
     }
   },
   methods: {
@@ -206,7 +213,7 @@ export default {
       }
     },
     async enterAddUserDialog() {
-      this.userInfo.authorityId="888";
+      this.userInfo.authorityId = this.userType.toString();
       this.$refs.userForm.validate(async valid => {
         if (valid) {
           const res = await register(this.userInfo);
