@@ -4,8 +4,8 @@
       <el-row :class="[isShadowBg?'shadowBg':'']" @click.native="changeShadow()"></el-row>
       <el-aside class="main-cont main-left">
         <div class="tilte">
-          <img alt class="logoimg" src="~@/assets/nav_logo.png" />
-          <h2 class="tit-text" v-if="isSider">Gin-Vue-Admin</h2>
+          <img alt class="logoimg" src="~@/assets/saulogo.png" />
+          <h2 class="tit-text" v-if="isSider">物理实验中心</h2>
         </div>
         <Aside class="aside" />
       </el-aside>
@@ -35,21 +35,12 @@
               </el-col>
                <el-col :xs="12" :lg="9" :md="9" :sm="14" :xl="9">
                  <div class="fl-right right-box">
-                <Search />
-                <Screenfull class="screenfull" :style="{cursor:'pointer'}"></Screenfull>
                 <el-dropdown>
                   <span class="header-avatar">
-                   <CustomPic/>
-                    <span style="margin-left: 5px">{{userInfo.nickName}}</span>
+                    <span style="margin-left: 5px">{{userInfo.name}}</span>
                     <i class="el-icon-arrow-down"></i>
                   </span>
                   <el-dropdown-menu class="dropdown-group" slot="dropdown">
-                    <el-dropdown-item>
-                      <span>
-                        更多信息
-                        <el-badge is-dot />
-                      </span>
-                    </el-dropdown-item>
                     <el-dropdown-item @click.native="toPerson" icon="el-icon-s-custom">个人信息</el-dropdown-item>
                     <el-dropdown-item @click.native="LoginOut" icon="el-icon-table-lamp">登 出</el-dropdown-item>
                   </el-dropdown-menu>
@@ -62,7 +53,7 @@
             <!-- 当前面包屑用路由自动生成可根据需求修改 -->
             <!--
             :to="{ path: item.path }" 暂时注释不用-->
-            <HistoryComponent />
+<!--            <HistoryComponent />-->
           </div>
         </transition>
         <transition mode="out-in" name="el-fade-in-linear">
