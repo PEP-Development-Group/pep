@@ -61,13 +61,13 @@
                 <li>
                   <p class="title">姓名</p>
                   <p class="desc">
-                    {{userInfo.nickName}}
+                    {{userInfo.name}}
                   </p>
                 </li>
                 <li>
                   <p class="title">学号</p>
                   <p class="desc">
-                    {{userInfo.ID}}
+                    {{userInfo.username}}
                   </p>
                 </li>
                 <li>

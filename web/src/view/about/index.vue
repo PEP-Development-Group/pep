@@ -3,7 +3,7 @@
     <el-row :gutter="10">
       <el-col :span="12">
         <el-card>
-          <div slot="header">gin-vue-admin</div>
+          <div slot="header">物理实验中心</div>
           <div>
             <el-row>
               <el-col :span="8" :offset="8">
