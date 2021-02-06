@@ -5,6 +5,7 @@ import (
 	"gin-vue-admin/global"
 	"gin-vue-admin/model"
 	"gin-vue-admin/model/request"
+	"gin-vue-admin/utils"
 	uuid "github.com/satori/go.uuid"
 	"gin-vue-admin/utils/upload"
 	"github.com/tealeg/xlsx/v3"
@@ -127,7 +128,7 @@ func ParseExcelFile(bs string) (*[]model.SysUser, error) {
 		s.College = r.GetCell(2).String()
 		s.Major = r.GetCell(3).String()
 		s.PID = r.GetCell(4).String()
-		s.Password = s.PID[10:]		// 密码身份证后8位
+		s.Password = utils.MD5V([]byte(s.PID[10:]))		// 密码身份证后8位
 		s.AuthorityId = "1"
 		s.UUID = uuid.NewV4()
 		st = append(st, s)
