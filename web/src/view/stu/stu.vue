@@ -6,7 +6,7 @@
           <el-button @click="onSubmit" type="primary">查询</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button @click="openDialog" type="primary">新增学生列表</el-button>
+          <el-button @click="openDialog" type="primary">新增stu表</el-button>
         </el-form-item>
         <el-form-item>
           <el-popover placement="top" v-model="deleteVisible" width="160">
@@ -42,15 +42,13 @@
     
     <el-table-column label="专业" prop="major" width="120"></el-table-column> 
     
-    <el-table-column label="身份证号" prop="PID" width="120"></el-table-column> 
+    <el-table-column label="身份证" prop="PID" width="120"></el-table-column> 
     
-    <el-table-column label="加密后密码" prop="hash" width="120"></el-table-column> 
+    <el-table-column label="hash密码" prop="hash" width="120"></el-table-column> 
     
-    <el-table-column label="随机盐" prop="salt" width="120"></el-table-column> 
+    <el-table-column label="盐" prop="salt" width="120"></el-table-column> 
     
-    <el-table-column label="取消预约实验的次数" prop="cancelNums" width="120">
-         <template slot-scope="scope">{{scope.row.cancelNums|formatBoolean}}</template>
-    </el-table-column>
+    <el-table-column label="取消次数" prop="cancelNums" width="120"></el-table-column> 
     
       <el-table-column label="按钮组">
         <template slot-scope="scope">
@@ -88,20 +86,19 @@
             <el-input v-model="formData.major" clearable placeholder="请输入" ></el-input>
       </el-form-item>
        
-         <el-form-item label="身份证号:">
+         <el-form-item label="身份证:">
             <el-input v-model="formData.PID" clearable placeholder="请输入" ></el-input>
       </el-form-item>
        
-         <el-form-item label="加密后密码:">
+         <el-form-item label="hash密码:">
             <el-input v-model="formData.hash" clearable placeholder="请输入" ></el-input>
       </el-form-item>
        
-         <el-form-item label="随机盐:">
+         <el-form-item label="盐:">
             <el-input v-model="formData.salt" clearable placeholder="请输入" ></el-input>
       </el-form-item>
        
-         <el-form-item label="取消预约实验的次数:">
-            <el-switch active-color="#13ce66" inactive-color="#ff4949" active-text="是" inactive-text="否" v-model="formData.cancelNums" clearable ></el-switch>
+         <el-form-item label="取消次数:"><el-input v-model.number="formData.cancelNums" clearable placeholder="请输入"></el-input>
       </el-form-item>
        </el-form>
       <div class="dialog-footer" slot="footer">
@@ -140,7 +137,7 @@ export default {
             PID:"",
             hash:"",
             salt:"",
-            cancelNums:false,
+            cancelNums:0,
             
       }
     };
@@ -166,10 +163,7 @@ export default {
       //条件搜索前端看此方法
       onSubmit() {
         this.page = 1
-        this.pageSize = 10             
-        if (this.searchInfo.cancelNums==""){
-          this.searchInfo.cancelNums=null
-        }      
+        this.pageSize = 10            
         this.getTableData()
       },
       handleSelectionChange(val) {
@@ -228,7 +222,7 @@ export default {
           PID:"",
           hash:"",
           salt:"",
-          cancelNums:false,
+          cancelNums:0,
           
       };
     },

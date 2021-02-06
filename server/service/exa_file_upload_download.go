@@ -5,8 +5,11 @@ import (
 	"gin-vue-admin/global"
 	"gin-vue-admin/model"
 	"gin-vue-admin/model/request"
+	uuid "github.com/satori/go.uuid"
 	"gin-vue-admin/utils/upload"
+	"github.com/tealeg/xlsx/v3"
 	"mime/multipart"
+	"os"
 	"strings"
 )
 
@@ -65,9 +68,9 @@ func GetFileRecordInfoList(info request.PageInfo) (err error, list interface{}, 
 	return err, fileLists, total
 }
 
-//@author: [piexlmax](https://github.com/piexlmax)
+//@author: [sh1luo](https://github.com/sh1luo)
 //@function: UploadFile
-//@description: 根据配置文件判断是文件上传到本地或者七牛云
+//@description: 上传xlsx文件，批量导入学生信息
 //@param: header *multipart.FileHeader, noSave string
 //@return: err error, file model.ExaFileUploadAndDownload
 
@@ -85,7 +88,51 @@ func UploadFile(header *multipart.FileHeader, noSave string) (err error, file mo
 			Tag:  s[len(s)-1],
 			Key:  key,
 		}
+		if err = parse(filePath); err != nil {
+			return err, f
+		}
 		return Upload(f), f
 	}
 	return
+}
+
+func parse(filename string) error {
+	st, err := ParseExcelFile(filename)
+	if err != nil {
+		return err
+	}
+	if err = global.GVA_DB.Create(st).Error; err != nil {
+		return err
+	}
+	if err = os.Remove(filename); err != nil {
+		return err
+	}
+	return nil
+}
+
+func ParseExcelFile(bs string) (*[]model.SysUser, error) {
+	wb, err := xlsx.OpenFile(bs)
+	if err != nil {
+		return nil, err
+	}
+	sh, exist := wb.Sheet["Sheet1"]
+	if !exist {
+		return nil, errors.New("sheet not exist")
+	}
+	var st []model.SysUser
+	err = sh.ForEachRow(func(r *xlsx.Row) error {
+		var s model.SysUser
+		s.Name = r.GetCell(0).String()
+		s.Username = r.GetCell(1).String()
+		s.College = r.GetCell(2).String()
+		s.Major = r.GetCell(3).String()
+		s.PID = r.GetCell(4).String()
+		s.Password = s.PID[10:]		// 密码身份证后8位
+		s.AuthorityId = "1"
+		s.UUID = uuid.NewV4()
+		st = append(st, s)
+		return nil
+	})
+	st = st[1:]			// 去掉表头
+	return &st, err
 }
