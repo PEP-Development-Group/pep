@@ -1,19 +1,28 @@
 <template>
 <div>
     <el-form :model="formData" label-position="right" label-width="80px">
+             <el-form-item label="学分:"><el-input v-model.number="formData.ccredit" clearable placeholder="请输入"></el-input>
+          </el-form-item>
+           
              <el-form-item label="课程名:">
                 <el-input v-model="formData.cname" clearable placeholder="请输入" ></el-input>
           </el-form-item>
            
-             <el-form-item label="学分:"><el-input v-model.number="formData.ccredit" clearable placeholder="请输入"></el-input>
-          </el-form-item>
+             <el-form-item label="选课结束:">
+                  <el-date-picker type="date" placeholder="选择日期" v-model="formData.etime" clearable></el-date-picker>
+           </el-form-item>
            
-             <el-form-item label="教师ID:"><el-input v-model.number="formData.tid" clearable placeholder="请输入"></el-input>
-          </el-form-item>
+             <el-form-item label="选课开始:">
+                  <el-date-picker type="date" placeholder="选择日期" v-model="formData.stime" clearable></el-date-picker>
+           </el-form-item>
            
              <el-form-item label="上课时间:">
                   <el-date-picker type="date" placeholder="选择日期" v-model="formData.time" clearable></el-date-picker>
            </el-form-item>
+           
+             <el-form-item label="教师名:">
+                <el-input v-model="formData.tname" clearable placeholder="请输入" ></el-input>
+          </el-form-item>
            <el-form-item>
            <el-button v-if="this.wf.clazz == 'start'" @click="start" type="primary">启动</el-button>
            <!-- complete传入流转参数 决定下一步会流转到什么位置 此处可以设置多个按钮来做不同的流转 -->
@@ -55,10 +64,12 @@ export default {
    },
   data() {
     return {formData: {
-            cname:"",
             ccredit:0,
-            tid:0,
+            cname:"",
+            etime:new Date(),
+            stime:new Date(),
             time:new Date(),
+            tname:"",
             
       }
     };
@@ -95,7 +106,7 @@ export default {
             wf:{
               workflowMoveID:this.workflowMoveID,
               businessId:0,
-              businessType:"Cls",
+              businessType:"class",
               workflowProcessID:this.wf.workflowProcessID,
               workflowNodeID:this.wf.id,
               promoterID:this.userInfo.ID,
@@ -118,7 +129,7 @@ export default {
             wf:{
               workflowMoveID:this.workflowMoveID,
               businessID:this.formData.ID,
-              businessType:"Cls",
+              businessType:"class",
               workflowProcessID:this.wf.workflowProcessID,
               workflowNodeID:this.wf.id,
               promoterID:this.userInfo.ID,

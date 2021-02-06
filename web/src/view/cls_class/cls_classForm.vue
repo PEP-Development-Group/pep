@@ -1,19 +1,28 @@
 <template>
 <div>
     <el-form :model="formData" label-position="right" label-width="80px">
+             <el-form-item label="学分:"><el-input v-model.number="formData.ccredit" clearable placeholder="请输入"></el-input>
+          </el-form-item>
+           
              <el-form-item label="课程名:">
                 <el-input v-model="formData.cname" clearable placeholder="请输入" ></el-input>
           </el-form-item>
            
-             <el-form-item label="学分:"><el-input v-model.number="formData.ccredit" clearable placeholder="请输入"></el-input>
-          </el-form-item>
+             <el-form-item label="选课结束:">
+                  <el-date-picker type="date" placeholder="选择日期" v-model="formData.etime" clearable></el-date-picker>
+           </el-form-item>
            
-             <el-form-item label="教师ID:"><el-input v-model.number="formData.tid" clearable placeholder="请输入"></el-input>
-          </el-form-item>
+             <el-form-item label="选课开始:">
+                  <el-date-picker type="date" placeholder="选择日期" v-model="formData.stime" clearable></el-date-picker>
+           </el-form-item>
            
              <el-form-item label="上课时间:">
                   <el-date-picker type="date" placeholder="选择日期" v-model="formData.time" clearable></el-date-picker>
            </el-form-item>
+           
+             <el-form-item label="教师名:">
+                <el-input v-model="formData.tname" clearable placeholder="请输入" ></el-input>
+          </el-form-item>
            <el-form-item>
            <el-button @click="save" type="primary">保存</el-button>
            <el-button @click="back" type="primary">返回</el-button>
@@ -35,10 +44,12 @@ export default {
   data() {
     return {
       type: "",formData: {
-            cname:"",
             ccredit:0,
-            tid:0,
+            cname:"",
+            etime:new Date(),
+            stime:new Date(),
             time:new Date(),
+            tname:"",
             
       }
     };
@@ -73,7 +84,7 @@ export default {
     if(this.$route.query.id){
     const res = await findClass({ ID: this.$route.query.id })
     if(res.code == 0){
-       this.formData = res.data.reCls
+       this.formData = res.data.reclass
        this.type == "update"
      }
     }else{

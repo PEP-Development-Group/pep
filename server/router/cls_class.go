@@ -7,7 +7,7 @@ import (
 )
 
 func InitClassRouter(Router *gin.RouterGroup) {
-	ClassRouter := Router.Group("Cls").Use(middleware.OperationRecord())
+	ClassRouter := Router.Group("class").Use(middleware.OperationRecord())
 	{
 		ClassRouter.POST("createClass", v1.CreateClass)   // 新建Class
 		ClassRouter.DELETE("deleteClass", v1.DeleteClass) // 删除Class

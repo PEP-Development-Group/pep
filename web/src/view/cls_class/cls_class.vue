@@ -1,12 +1,21 @@
 <template>
   <div>
     <div class="search-term">
-      <el-form :inline="true" :model="searchInfo" class="demo-form-inline">        
+      <el-form :inline="true" :model="searchInfo" class="demo-form-inline">
+        <el-form-item label="学分">
+          <el-input placeholder="搜索条件" v-model="searchInfo.ccredit"></el-input>
+        </el-form-item>    
+        <el-form-item label="课程名">
+          <el-input placeholder="搜索条件" v-model="searchInfo.cname"></el-input>
+        </el-form-item>          
+        <el-form-item label="教师名">
+          <el-input placeholder="搜索条件" v-model="searchInfo.tname"></el-input>
+        </el-form-item>    
         <el-form-item>
           <el-button @click="onSubmit" type="primary">查询</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button @click="openDialog" type="primary">新增课程</el-button>
+          <el-button @click="openDialog" type="primary">新增课程表</el-button>
         </el-form-item>
         <el-form-item>
           <el-popover placement="top" v-model="deleteVisible" width="160">
@@ -34,13 +43,17 @@
          <template slot-scope="scope">{{scope.row.CreatedAt|formatDate}}</template>
     </el-table-column>
     
-    <el-table-column label="课程名" prop="cname" width="120"></el-table-column> 
-    
     <el-table-column label="学分" prop="ccredit" width="120"></el-table-column> 
     
-    <el-table-column label="教师ID" prop="tid" width="120"></el-table-column> 
+    <el-table-column label="课程名" prop="cname" width="120"></el-table-column> 
+    
+    <el-table-column label="选课结束" prop="etime" width="120"></el-table-column> 
+    
+    <el-table-column label="选课开始" prop="stime" width="120"></el-table-column> 
     
     <el-table-column label="上课时间" prop="time" width="120"></el-table-column> 
+    
+    <el-table-column label="教师名" prop="tname" width="120"></el-table-column> 
     
       <el-table-column label="按钮组">
         <template slot-scope="scope">
@@ -63,19 +76,28 @@
 
     <el-dialog :before-close="closeDialog" :visible.sync="dialogFormVisible" title="弹窗操作">
       <el-form :model="formData" label-position="right" label-width="80px">
+         <el-form-item label="学分:"><el-input v-model.number="formData.ccredit" clearable placeholder="请输入"></el-input>
+      </el-form-item>
+       
          <el-form-item label="课程名:">
             <el-input v-model="formData.cname" clearable placeholder="请输入" ></el-input>
       </el-form-item>
        
-         <el-form-item label="学分:"><el-input v-model.number="formData.ccredit" clearable placeholder="请输入"></el-input>
-      </el-form-item>
+         <el-form-item label="选课结束:">
+              <el-date-picker type="date" placeholder="选择日期" v-model="formData.etime" clearable></el-date-picker>
+       </el-form-item>
        
-         <el-form-item label="教师ID:"><el-input v-model.number="formData.tid" clearable placeholder="请输入"></el-input>
-      </el-form-item>
+         <el-form-item label="选课开始:">
+              <el-date-picker type="date" placeholder="选择日期" v-model="formData.stime" clearable></el-date-picker>
+       </el-form-item>
        
          <el-form-item label="上课时间:">
               <el-date-picker type="date" placeholder="选择日期" v-model="formData.time" clearable></el-date-picker>
        </el-form-item>
+       
+         <el-form-item label="教师名:">
+            <el-input v-model="formData.tname" clearable placeholder="请输入" ></el-input>
+      </el-form-item>
        </el-form>
       <div class="dialog-footer" slot="footer">
         <el-button @click="closeDialog">取 消</el-button>
@@ -106,10 +128,12 @@ export default {
       type: "",
       deleteVisible: false,
       multipleSelection: [],formData: {
-            cname:"",
             ccredit:0,
-            tid:0,
+            cname:"",
+            etime:new Date(),
+            stime:new Date(),
             time:new Date(),
+            tname:"",
             
       }
     };
@@ -135,7 +159,7 @@ export default {
       //条件搜索前端看此方法
       onSubmit() {
         this.page = 1
-        this.pageSize = 10        
+        this.pageSize = 10          
         this.getTableData()
       },
       handleSelectionChange(val) {
@@ -180,17 +204,19 @@ export default {
       const res = await findClass({ ID: row.ID });
       this.type = "update";
       if (res.code == 0) {
-        this.formData = res.data.reCls;
+        this.formData = res.data.reclass;
         this.dialogFormVisible = true;
       }
     },
     closeDialog() {
       this.dialogFormVisible = false;
       this.formData = {
-          cname:"",
           ccredit:0,
-          tid:0,
+          cname:"",
+          etime:new Date(),
+          stime:new Date(),
           time:new Date(),
+          tname:"",
           
       };
     },

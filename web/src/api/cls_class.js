@@ -7,10 +7,10 @@ import service from '@/utils/request'
 // @Produce application/json
 // @Param data body model.Class true "创建Class"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
-// @Router /Cls/createClass [post]
+// @Router /class/createClass [post]
 export const createClass = (data) => {
      return service({
-         url: "/Cls/createClass",
+         url: "/class/createClass",
          method: 'post',
          data
      })
@@ -24,10 +24,10 @@ export const createClass = (data) => {
 // @Produce application/json
 // @Param data body model.Class true "删除Class"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"删除成功"}"
-// @Router /Cls/deleteClass [delete]
+// @Router /class/deleteClass [delete]
  export const deleteClass = (data) => {
      return service({
-         url: "/Cls/deleteClass",
+         url: "/class/deleteClass",
          method: 'delete',
          data
      })
@@ -40,10 +40,10 @@ export const createClass = (data) => {
 // @Produce application/json
 // @Param data body request.IdsReq true "批量删除Class"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"删除成功"}"
-// @Router /Cls/deleteClass [delete]
+// @Router /class/deleteClass [delete]
  export const deleteClassByIds = (data) => {
      return service({
-         url: "/Cls/deleteClassByIds",
+         url: "/class/deleteClassByIds",
          method: 'delete',
          data
      })
@@ -56,10 +56,10 @@ export const createClass = (data) => {
 // @Produce application/json
 // @Param data body model.Class true "更新Class"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"更新成功"}"
-// @Router /Cls/updateClass [put]
+// @Router /class/updateClass [put]
  export const updateClass = (data) => {
      return service({
-         url: "/Cls/updateClass",
+         url: "/class/updateClass",
          method: 'put',
          data
      })
@@ -73,10 +73,10 @@ export const createClass = (data) => {
 // @Produce application/json
 // @Param data body model.Class true "用id查询Class"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"查询成功"}"
-// @Router /Cls/findClass [get]
+// @Router /class/findClass [get]
  export const findClass = (params) => {
      return service({
-         url: "/Cls/findClass",
+         url: "/class/findClass",
          method: 'get',
          params
      })
@@ -90,10 +90,10 @@ export const createClass = (data) => {
 // @Produce application/json
 // @Param data body request.PageInfo true "分页获取Class列表"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
-// @Router /Cls/getClassList [get]
+// @Router /class/getClassList [get]
  export const getClassList = (params) => {
      return service({
-         url: "/Cls/getClassList",
+         url: "/class/getClassList",
          method: 'get',
          params
      })
