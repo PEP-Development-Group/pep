@@ -74,6 +74,15 @@ func GetClassInfoList(info request.ClassSearch) (err error, list interface{}, to
 	db := global.GVA_DB.Model(&model.Class{})
     var classs []model.Class
     // 如果有条件搜索 下方会自动创建搜索语句
+    if info.Ccredit != 0 {
+        db = db.Where("`ccredit` = ?",info.Ccredit)
+    }
+    if info.Cname != "" {
+        db = db.Where("`cname` LIKE ?","%"+ info.Cname+"%")
+    }
+    if info.Tname != "" {
+        db = db.Where("`tname` LIKE ?","%"+ info.Tname+"%")
+    }
 	err = db.Count(&total).Error
 	err = db.Limit(limit).Offset(offset).Find(&classs).Error
 	return err, classs, total

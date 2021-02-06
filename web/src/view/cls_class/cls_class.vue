@@ -1,7 +1,16 @@
 <template>
   <div>
     <div class="search-term">
-      <el-form :inline="true" :model="searchInfo" class="demo-form-inline">            
+      <el-form :inline="true" :model="searchInfo" class="demo-form-inline">
+        <el-form-item label="学分">
+          <el-input placeholder="搜索条件" v-model="searchInfo.ccredit"></el-input>
+        </el-form-item>    
+        <el-form-item label="课程名">
+          <el-input placeholder="搜索条件" v-model="searchInfo.cname"></el-input>
+        </el-form-item>          
+        <el-form-item label="教师名">
+          <el-input placeholder="搜索条件" v-model="searchInfo.tname"></el-input>
+        </el-form-item>    
         <el-form-item>
           <el-button @click="onSubmit" type="primary">查询</el-button>
         </el-form-item>
