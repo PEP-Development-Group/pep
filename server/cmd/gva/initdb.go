@@ -38,7 +38,7 @@ var initdbCmd = &cobra.Command{
 		frame, _ := cmd.Flags().GetString("frame")
 		path, _ := cmd.Flags().GetString("path")
 		global.GVA_VP = core.Viper(path)
-		global.GVA_LOG = core.Zap()           // 初始化zap日志库
+		global.GVA_LOG = core.Zap() // 初始化zap日志库
 		Mysql.CheckDatabase()
 		Mysql.CheckUtf8mb4()
 		Mysql.Info()

@@ -4,9 +4,9 @@ import uuid "github.com/satori/go.uuid"
 
 // User register structure
 type Register struct {
-	Username    string `json:"userName"`
-	Password    string `json:"password"`
-	Name        string `json:"name" gorm:"default:'用户'"`
+	Username string `json:"userName"`
+	Password string `json:"password"`
+	Name     string `json:"name" gorm:"default:'用户'"`
 
 	// HeaderImg   string `json:"headerImg" gorm:"default:'http://www.henrongyi.top/avatar/lufu.jpg'"`
 

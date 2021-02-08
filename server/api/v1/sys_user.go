@@ -54,7 +54,7 @@ func tokenNext(c *gin.Context, user model.SysUser) {
 		StandardClaims: jwt.StandardClaims{
 			NotBefore: time.Now().Unix() - 1000,                              // 签名生效时间
 			ExpiresAt: time.Now().Unix() + global.GVA_CONFIG.JWT.ExpiresTime, // 过期时间 7天  配置文件
-			Issuer:    "pep",                                             	  // 签名的发行者
+			Issuer:    "pep",                                                 // 签名的发行者
 		},
 	}
 	token, err := j.CreateToken(claims)
@@ -118,13 +118,13 @@ func Register(c *gin.Context) {
 		return
 	}
 	user := &model.SysUser{
-		Username: R.Username,
-		Name: R.Name,
-		Password: R.Password,
+		Username:    R.Username,
+		Name:        R.Name,
+		Password:    R.Password,
 		AuthorityId: R.AuthorityId,
-		College: R.College,
-		Major: R.Major,
-		PID: R.PID,
+		College:     R.College,
+		Major:       R.Major,
+		PID:         R.PID,
 	}
 	err, userReturn := service.Register(*user)
 	if err != nil {

@@ -35,7 +35,7 @@ func DeleteClass(class model.Class) (err error) {
 //@return: err error
 
 func DeleteClassByIds(ids request.IdsReq) (err error) {
-	err = global.GVA_DB.Delete(&[]model.Class{},"id in ?",ids.Ids).Error
+	err = global.GVA_DB.Delete(&[]model.Class{}, "id in ?", ids.Ids).Error
 	return err
 }
 
@@ -70,19 +70,19 @@ func GetClass(id uint) (err error, class model.Class) {
 func GetClassInfoList(info request.ClassSearch) (err error, list interface{}, total int64) {
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
-    // 创建db
+	// 创建db
 	db := global.GVA_DB.Model(&model.Class{})
-    var classs []model.Class
-    // 如果有条件搜索 下方会自动创建搜索语句
-    if info.Ccredit != 0 {
-        db = db.Where("`ccredit` = ?",info.Ccredit)
-    }
-    if info.Cname != "" {
-        db = db.Where("`cname` LIKE ?","%"+ info.Cname+"%")
-    }
-    if info.Tname != "" {
-        db = db.Where("`tname` LIKE ?","%"+ info.Tname+"%")
-    }
+	var classs []model.Class
+	// 如果有条件搜索 下方会自动创建搜索语句
+	if info.Ccredit != 0 {
+		db = db.Where("`ccredit` = ?", info.Ccredit)
+	}
+	if info.Cname != "" {
+		db = db.Where("`cname` LIKE ?", "%"+info.Cname+"%")
+	}
+	if info.Tname != "" {
+		db = db.Where("`tname` LIKE ?", "%"+info.Tname+"%")
+	}
 	err = db.Count(&total).Error
 	err = db.Limit(limit).Offset(offset).Find(&classs).Error
 	return err, classs, total

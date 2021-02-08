@@ -75,6 +75,6 @@ func GetFileList(c *gin.Context) {
 			Total:    total,
 			Page:     pageInfo.Page,
 			PageSize: pageInfo.PageSize,
-		},"获取成功", c)
+		}, "获取成功", c)
 	}
 }
