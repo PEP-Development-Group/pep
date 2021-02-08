@@ -1,10 +1,44 @@
 package service
 
 import (
+	"gin-vue-admin/constant"
 	"gin-vue-admin/global"
 	"gin-vue-admin/model"
 	"gin-vue-admin/model/request"
 )
+
+//@author: [sh1luo](https://github.com/sh1luo)
+//@function: CreateClass
+//@description: 创建选课记录
+//@param: class request.SelectClass
+//@return: err error
+
+func SelectClass(class request.SelectClass) (err error) {
+	cls := model.Class{}
+	db := global.GVA_DB.Where("id = ?", class.Cid)
+	err = db.First(&cls).Error
+	if err != nil {
+		return constant.ErrClassNotExist
+	}
+	sl := model.SelectClass{}
+	if cls.Selected < cls.Total {
+		sl.Username = class.Username
+		sl.Cid = class.Cid
+		db.UpdateColumn("selected", cls.Selected + 1)
+		return global.GVA_DB.Create(&sl).Error
+	}
+	return constant.ErrClassHasFull
+}
+
+//@author: [sh1luo](https://github.com/sh1luo)
+//@function: DeleteSelect
+//@description: 退课
+//@param: class request.SelectClass
+//@return: err error
+
+func DeleteSelect(class request.SelectClass) (err error) {
+	return global.GVA_DB.Where("cid = ? AND username = ?", class.Cid, class.Username).Delete(&model.SelectClass{}).Error
+}
 
 //@author: [piexlmax](https://github.com/piexlmax)
 //@function: CreateClass

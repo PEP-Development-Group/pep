@@ -1,14 +1,70 @@
 package v1
 
 import (
+	"gin-vue-admin/constant"
 	"gin-vue-admin/global"
 	"gin-vue-admin/model"
 	"gin-vue-admin/model/request"
 	"gin-vue-admin/model/response"
 	"gin-vue-admin/service"
+	"gin-vue-admin/utils"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
+
+// @Tags Class
+// @Summary 选择Class
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body model.Class true "选择Class"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"选课成功"}"
+// @Router /class/selectClass [post]
+func SelectClass(c *gin.Context) {
+	var class request.SelectClass
+	_ = c.ShouldBindJSON(&class)
+	if err := utils.Verify(class, utils.StudentVerify); err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	if err := service.SelectClass(class); err != nil {
+		global.GVA_LOG.Error("选课失败!", zap.Any("err", err))
+		if err == constant.ErrClassNotExist {
+			response.FailWithMessage("课程不存在", c)
+		} else {
+			response.FailWithMessage("选课人数已满", c)
+		}
+	} else {
+		response.OkWithMessage("选课成功", c)
+	}
+}
+
+// @Tags Class
+// @Summary 退选Class
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body request.SelectClass true "退选Class"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"退课成功"}"
+// @Router /class/deleteSelect [delete]
+func DeleteSelect(c *gin.Context) {
+	var class request.SelectClass
+	_ = c.ShouldBindJSON(&class)
+	if err := utils.Verify(class, utils.StudentVerify); err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	if err := service.DeleteSelect(class); err != nil {
+		global.GVA_LOG.Error("退选失败!", zap.Any("err", err))
+		if err == constant.ErrClassNotExist {
+			response.FailWithMessage("课程不存在", c)
+		} else {
+			response.FailWithMessage("选课人数已满", c)
+		}
+	} else {
+		response.OkWithMessage("退选成功", c)
+	}
+}
 
 // @Tags Class
 // @Summary 创建Class

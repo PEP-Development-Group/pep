@@ -15,5 +15,8 @@ func InitClassRouter(Router *gin.RouterGroup) {
 		ClassRouter.PUT("updateClass", v1.UpdateClass)              // 更新Class
 		ClassRouter.GET("findClass", v1.FindClass)                  // 根据ID获取Class
 		ClassRouter.GET("getClassList", v1.GetClassList)            // 获取Class列表
+
+		ClassRouter.POST("selectClass", v1.SelectClass)				// 选课
+		ClassRouter.DELETE("deleteSelect", v1.DeleteSelect)			// 退选
 	}
 }

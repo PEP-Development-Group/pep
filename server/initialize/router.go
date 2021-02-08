@@ -28,7 +28,7 @@ func Routers() *gin.Engine {
 	{
 		router.InitBaseRouter(PublicGroup) // 注册基础功能路由 不做鉴权
 
-		router.InitClassRouter(PublicGroup) // 选课路由
+
 		router.InitBoatsRouter(PublicGroup)	// 未使用
 	}
 	PrivateGroup := Router.Group("")
@@ -50,6 +50,8 @@ func Routers() *gin.Engine {
 		router.InitSysDictionaryDetailRouter(PrivateGroup)   // 字典详情管理
 		router.InitFileUploadAndDownloadRouter(PrivateGroup) // 文件上传下载功能路由
 		router.InitWorkflowProcessRouter(PrivateGroup)       // 工作流相关接口
+
+		router.InitClassRouter(PrivateGroup) // 课程管理
 	}
 	global.GVA_LOG.Info("router register success")
 	return Router

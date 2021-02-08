@@ -15,12 +15,22 @@ type Class struct {
 	Stime   time.Time `json:"stime" form:"stime" gorm:"column:stime;comment:选课开始;type:datetime;"`
 	Time    time.Time `json:"time" form:"time" gorm:"column:time;comment:上课时间;type:datetime;"`
 	Tname   string    `json:"tname" form:"tname" gorm:"column:tname;comment:教师名;type:varchar(5);size:5;"`
-	Seleted int       `json:"seleted" form:"seleted" gorm:"column:seleted;comment:已选人数;type:int;size:10;"`
+	Selected int       `json:"selected" form:"selected" gorm:"column:selected;comment:已选人数;type:int;size:10;default:0"`
 	Total   int       `json:"total" form:"total" gorm:"column:total;comment:总人数;type:int;size:10;"`
+}
+
+type SelectClass struct {
+	global.GVA_MODEL
+	Username   string    `json:"username" gorm:"column:username;comment:学号;type:int;"`
+	Cid        int       `json:"cid" gorm:"column:cno;comment:课程id;type:int;"`
 }
 
 func (Class) TableName() string {
 	return "cls_class"
+}
+
+func (SelectClass) TableName() string {
+	return "cls_select"
 }
 
 // 如果使用工作流功能 需要打开下方注释 并到initialize的workflow中进行注册 且必须指定TableName
