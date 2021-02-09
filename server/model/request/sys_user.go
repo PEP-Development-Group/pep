@@ -6,15 +6,16 @@ import uuid "github.com/satori/go.uuid"
 type Register struct {
 	Username string `json:"userName"`
 	Password string `json:"password"`
-	Name     string `json:"name" gorm:"default:'用户'"`
-
-	// HeaderImg   string `json:"headerImg" gorm:"default:'http://www.henrongyi.top/avatar/lufu.jpg'"`
+	Name     string `json:"name" gorm:"default:'系统用户'"`
 
 	AuthorityId string `json:"authorityId"`
 
 	College string `json:"college"`
 	Major   string `json:"major"`
 	PID     string `json:"pid"`
+
+	CancelNums   int `json:"cancel_nums"`
+	TotalCredits int `json:"total_credits"`
 }
 
 // User login structure

@@ -11,7 +11,7 @@
  Target Server Version : 80021
  File Encoding         : 65001
 
- Date: 08/02/2021 23:23:04
+ Date: 09/02/2021 14:03:41
 */
 
 SET NAMES utf8mb4;
@@ -796,7 +796,7 @@ CREATE TABLE `sys_operation_records`  (
   `user_id` bigint(0) UNSIGNED NULL DEFAULT NULL COMMENT '用户id',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_sys_operation_records_deleted_at`(`deleted_at`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 393 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 400 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_operation_records
@@ -1210,17 +1210,17 @@ CREATE TABLE `sys_users`  (
   `created_at` datetime(0) NULL DEFAULT NULL,
   `updated_at` datetime(0) NULL DEFAULT NULL,
   `deleted_at` datetime(0) NULL DEFAULT NULL,
-  `uuid` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '用户UUID',
-  `username` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '用户登录名',
-  `password` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '用户登录密码',
-  `nick_name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '系统用户' COMMENT '用户昵称',
-  `header_img` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT 'http://qmplusimg.henrongyi.top/head.png' COMMENT '用户头像',
-  `authority_id` varchar(90) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '888' COMMENT '用户角色ID',
-  `major` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
-  `name` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '系统用户' COMMENT '用户昵称',
-  `college` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
-  `p_id` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
-  `cancel_nums` bigint(0) NULL DEFAULT 0 COMMENT '取消次数',
+  `uuid` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '用户UUID',
+  `username` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '用户登录名',
+  `password` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '用户登录密码',
+  `name` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '系统用户' COMMENT '用户昵称',
+  `authority_id` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '888' COMMENT '用户角色ID',
+  `college` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '学院',
+  `major` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '专业',
+  `pid` char(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '身份证号',
+  `cancel_nums` int(0) UNSIGNED NULL DEFAULT 0 COMMENT '取消次数',
+  `have_credits` int(0) UNSIGNED NULL DEFAULT 0 COMMENT '已修学时',
+  `total_credits` int(0) UNSIGNED NULL DEFAULT 0 COMMENT '应修学时',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_sys_users_deleted_at`(`deleted_at`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 38 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
@@ -1228,18 +1228,18 @@ CREATE TABLE `sys_users`  (
 -- ----------------------------
 -- Records of sys_users
 -- ----------------------------
-INSERT INTO `sys_users` VALUES (1, '2021-02-03 15:56:53', '2021-02-03 15:56:53', NULL, '9ebe38a3-f5ab-43ce-9f4f-77741b397c67', 'admin', 'e10adc3949ba59abbe56e057f20f883e', '超级管理员', 'http://qmplusimg.henrongyi.top/gva_header.jpg', '888', '物理实验', '系统用户', '物理实验', NULL, 0);
-INSERT INTO `sys_users` VALUES (2, '2021-02-03 15:56:53', '2021-02-03 15:56:53', NULL, '7f6ad1ea-658d-4d43-96fb-6841a0667a23', 'a303176530', '3ec063004a6f31642261936a379fde3d', 'QMPlusUser', 'http://qmplusimg.henrongyi.top/1572075907logo.png', '9528', '物理实验', '系统用户', '物理实验', NULL, 0);
-INSERT INTO `sys_users` VALUES (28, '2021-02-06 15:53:45', '2021-02-06 15:53:45', NULL, 'c3ca0465-6f4a-4c16-a43e-7e7c5a1d879d', '1.83411010125E+11', 'eb46edd4c572eff7a9f9bde05ddd41e7', '系统用户', 'http://qmplusimg.henrongyi.top/head.png', '1', '软件工程', '刘继坤', '计算机', '41030319991010251X', 0);
-INSERT INTO `sys_users` VALUES (29, '2021-02-06 15:53:45', '2021-02-06 15:53:45', NULL, '7c6377b4-4760-4ade-a1cc-7a5b1238829f', 'aa', 'eb46edd4c572eff7a9f9bde05ddd41e7', '系统用户', 'http://qmplusimg.henrongyi.top/head.png', '1', 'aaaa', '段霁航', 'aaa', '41030319991010251X', 0);
-INSERT INTO `sys_users` VALUES (30, '2021-02-06 15:53:45', '2021-02-06 15:53:45', NULL, '84890e13-0134-49df-b6d4-04ba710d90b5', 'dd', 'eb46edd4c572eff7a9f9bde05ddd41e7', '系统用户', 'http://qmplusimg.henrongyi.top/head.png', '1', 'dddd', '王跃霖', 'ddd', '41030319991010251X', 0);
-INSERT INTO `sys_users` VALUES (31, '2021-02-06 15:53:45', '2021-02-06 15:53:45', NULL, '09a0fcb9-65d9-4638-9ca3-d8b8f06af5d2', 'ee', 'eb46edd4c572eff7a9f9bde05ddd41e7', '系统用户', 'http://qmplusimg.henrongyi.top/head.png', '1', 'eeee', '何志强', 'eee', '41030319991010251X', 0);
-INSERT INTO `sys_users` VALUES (32, '2021-02-06 15:53:45', '2021-02-06 15:53:45', NULL, 'f09a5933-34d6-4b1b-83c6-edc3d6b36b9e', 'bb', 'eb46edd4c572eff7a9f9bde05ddd41e7', '系统用户', 'http://qmplusimg.henrongyi.top/head.png', '1', 'bbbb', '炮姐', 'bbb', '41030319991010251X', 0);
-INSERT INTO `sys_users` VALUES (33, '2021-02-06 15:57:09', '2021-02-06 15:57:09', '2021-02-08 14:20:31', 'd1cf4095-1231-4063-b34e-9f236d6c52ac', '1.83411010125E+11', 'eb46edd4c572eff7a9f9bde05ddd41e7', '系统用户', 'http://qmplusimg.henrongyi.top/head.png', '1', '软件工程', '刘继坤', '计算机', '41030319991010251X', 0);
-INSERT INTO `sys_users` VALUES (34, '2021-02-06 15:57:09', '2021-02-06 15:57:09', NULL, 'd231b771-34fd-4780-9db6-5cea7aa84470', 'aa', 'eb46edd4c572eff7a9f9bde05ddd41e7', '系统用户', 'http://qmplusimg.henrongyi.top/head.png', '1', 'aaaa', '段霁航', 'aaa', '41030319991010251X', 0);
-INSERT INTO `sys_users` VALUES (35, '2021-02-06 15:57:09', '2021-02-06 15:57:09', NULL, 'b5d7aaed-6e02-4e40-95f2-1d6fa5eea57d', 'dd', 'eb46edd4c572eff7a9f9bde05ddd41e7', '系统用户', 'http://qmplusimg.henrongyi.top/head.png', '1', 'dddd', '王跃霖', 'ddd', '41030319991010251X', 0);
-INSERT INTO `sys_users` VALUES (36, '2021-02-06 15:57:09', '2021-02-06 15:57:09', '2021-02-08 14:20:44', '042e73a9-d810-4551-a1a8-8a5059892454', 'ee', 'eb46edd4c572eff7a9f9bde05ddd41e7', '系统用户', 'http://qmplusimg.henrongyi.top/head.png', '1', 'eeee', '何志强', 'eee', '41030319991010251X', 0);
-INSERT INTO `sys_users` VALUES (37, '2021-02-06 15:57:09', '2021-02-06 15:57:09', NULL, '663fb854-0169-4da6-bbc0-eda39cf9244d', 'bb', 'eb46edd4c572eff7a9f9bde05ddd41e7', '系统用户', 'http://qmplusimg.henrongyi.top/head.png', '1', 'bbbb', '炮姐', 'bbb', '41030319991010251X', 0);
+INSERT INTO `sys_users` VALUES (1, '2021-02-03 15:56:53', '2021-02-03 15:56:53', NULL, '9ebe38a3-f5ab-43ce-9f4f-77741b397c67', 'admin', 'e10adc3949ba59abbe56e057f20f883e', '系统用户', '888', '物理实验', '物理实验', NULL, 0, 0, 0);
+INSERT INTO `sys_users` VALUES (2, '2021-02-03 15:56:53', '2021-02-03 15:56:53', NULL, '7f6ad1ea-658d-4d43-96fb-6841a0667a23', 'a303176530', '3ec063004a6f31642261936a379fde3d', '系统用户', '9528', '物理实验', '物理实验', NULL, 0, 0, 0);
+INSERT INTO `sys_users` VALUES (28, '2021-02-06 15:53:45', '2021-02-06 15:53:45', NULL, 'c3ca0465-6f4a-4c16-a43e-7e7c5a1d879d', '1.83411010125E+11', 'eb46edd4c572eff7a9f9bde05ddd41e7', '刘继坤', '1', '计算机', '软件工程', '41030319991010251X', 0, 0, 0);
+INSERT INTO `sys_users` VALUES (29, '2021-02-06 15:53:45', '2021-02-06 15:53:45', NULL, '7c6377b4-4760-4ade-a1cc-7a5b1238829f', 'aa', 'eb46edd4c572eff7a9f9bde05ddd41e7', '段霁航', '1', 'aaa', 'aaaa', '41030319991010251X', 0, 0, 0);
+INSERT INTO `sys_users` VALUES (30, '2021-02-06 15:53:45', '2021-02-06 15:53:45', NULL, '84890e13-0134-49df-b6d4-04ba710d90b5', 'dd', 'eb46edd4c572eff7a9f9bde05ddd41e7', '王跃霖', '1', 'ddd', 'dddd', '41030319991010251X', 0, 0, 0);
+INSERT INTO `sys_users` VALUES (31, '2021-02-06 15:53:45', '2021-02-06 15:53:45', NULL, '09a0fcb9-65d9-4638-9ca3-d8b8f06af5d2', 'ee', 'eb46edd4c572eff7a9f9bde05ddd41e7', '何志强', '1', 'eee', 'eeee', '41030319991010251X', 0, 0, 0);
+INSERT INTO `sys_users` VALUES (32, '2021-02-06 15:53:45', '2021-02-06 15:53:45', NULL, 'f09a5933-34d6-4b1b-83c6-edc3d6b36b9e', 'bb', 'eb46edd4c572eff7a9f9bde05ddd41e7', '炮姐', '1', 'bbb', 'bbbb', '41030319991010251X', 0, 0, 0);
+INSERT INTO `sys_users` VALUES (33, '2021-02-06 15:57:09', '2021-02-06 15:57:09', '2021-02-08 14:20:31', 'd1cf4095-1231-4063-b34e-9f236d6c52ac', '1.83411010125E+11', 'eb46edd4c572eff7a9f9bde05ddd41e7', '刘继坤', '1', '计算机', '软件工程', '41030319991010251X', 0, 0, 0);
+INSERT INTO `sys_users` VALUES (34, '2021-02-06 15:57:09', '2021-02-06 15:57:09', NULL, 'd231b771-34fd-4780-9db6-5cea7aa84470', 'aa', 'eb46edd4c572eff7a9f9bde05ddd41e7', '段霁航', '1', 'aaa', 'aaaa', '41030319991010251X', 0, 0, 0);
+INSERT INTO `sys_users` VALUES (35, '2021-02-06 15:57:09', '2021-02-06 15:57:09', NULL, 'b5d7aaed-6e02-4e40-95f2-1d6fa5eea57d', 'dd', 'eb46edd4c572eff7a9f9bde05ddd41e7', '王跃霖', '1', 'ddd', 'dddd', '41030319991010251X', 0, 0, 0);
+INSERT INTO `sys_users` VALUES (36, '2021-02-06 15:57:09', '2021-02-06 15:57:09', '2021-02-08 14:20:44', '042e73a9-d810-4551-a1a8-8a5059892454', 'ee', 'eb46edd4c572eff7a9f9bde05ddd41e7', '何志强', '1', 'eee', 'eeee', '41030319991010251X', 0, 0, 0);
+INSERT INTO `sys_users` VALUES (37, '2021-02-06 15:57:09', '2021-02-06 15:57:09', NULL, '663fb854-0169-4da6-bbc0-eda39cf9244d', 'bb', 'eb46edd4c572eff7a9f9bde05ddd41e7', '炮姐', '1', 'bbb', 'bbbb', '41030319991010251X', 0, 0, 0);
 
 -- ----------------------------
 -- Table structure for workflow_edges

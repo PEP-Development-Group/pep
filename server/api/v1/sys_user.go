@@ -118,13 +118,15 @@ func Register(c *gin.Context) {
 		return
 	}
 	user := &model.SysUser{
-		Username:    R.Username,
-		Name:        R.Name,
-		Password:    R.Password,
-		AuthorityId: R.AuthorityId,
-		College:     R.College,
-		Major:       R.Major,
-		PID:         R.PID,
+		Username:     R.Username,
+		Name:         R.Name,
+		Password:     R.Password,
+		AuthorityId:  R.AuthorityId,
+		College:      R.College,
+		Major:        R.Major,
+		PID:          R.PID,
+		CancelNums:   R.CancelNums,
+		TotalCredits: R.TotalCredits,
 	}
 	err, userReturn := service.Register(*user)
 	if err != nil {

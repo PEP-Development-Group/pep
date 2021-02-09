@@ -9,14 +9,17 @@ type SysUser struct {
 	global.GVA_MODEL
 	UUID     uuid.UUID `json:"uuid" gorm:"comment:用户UUID"`
 	Username string    `json:"username" gorm:"comment:学号/工号"`
-	Password string    `json:"-" gorm:"comment:用户登录密码"`
-	Name     string    `json:"name" gorm:"default:管理员;comment:真名" `
-	// HeaderImg   string       `json:"headerImg" gorm:"default:http://qmplusimg.henrongyi.top/head.png;comment:用户头像"`
+	Password string    `json:"-" gorm:"type:varchar;comment:登录密码"`
+	Name     string    `json:"name" gorm:"type:varchar;size:5;default:系统用户;comment:姓名"`
+
 	Authority   SysAuthority `json:"authority" gorm:"foreignKey:AuthorityId;references:AuthorityId;comment:用户角色"`
 	AuthorityId string       `json:"authorityId" gorm:"default:888;comment:用户角色ID"`
 
 	CancelNums int    `json:"cancel_nums" gorm:"default:0;comment:取消次数"`
-	College    string `json:"college"`
-	Major      string `json:"major"`
-	PID        string `json:"pid"`
+	College    string `json:"college" gorm:"type:varchar;comment:学院"`
+	Major      string `json:"major" gorm:"type:varchar;comment:专业"`
+	PID        string `json:"pid" gorm:"type:char;comment:身份证号"`
+
+	HaveCredits int `json:"have_credits" gorm:"comment:已修学时"`
+	TotalCredits int `json:"total_credits" gorm:"comment:应修学时"`
 }
