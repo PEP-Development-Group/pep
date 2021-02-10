@@ -1,124 +1,155 @@
 <template>
   <div>
-    <div class="search-term">
-      <el-form :inline="true" :model="searchInfo" class="demo-form-inline">        
-        <el-form-item>
-          <el-button @click="onSubmit" type="primary">查询</el-button>
-        </el-form-item>
-        <el-form-item>
-          <el-button @click="openDialog" type="primary">新增boats表</el-button>
-        </el-form-item>
-        <el-form-item>
-          <el-popover placement="top" v-model="deleteVisible" width="160">
-            <p>确定要删除吗？</p>
-              <div style="text-align: right; margin: 0">
-                <el-button @click="deleteVisible = false" size="mini" type="text">取消</el-button>
-                <el-button @click="onDelete" size="mini" type="primary">确定</el-button>
-              </div>
-            <el-button icon="el-icon-delete" size="mini" slot="reference" type="danger">批量删除</el-button>
-          </el-popover>
-        </el-form-item>
-      </el-form>
-    </div>
-    <el-table
-      :data="tableData"
-      @selection-change="handleSelectionChange"
-      border
-      ref="multipleTable"
-      stripe
-      style="width: 100%"
-      tooltip-effect="dark"
-    >
-    <el-table-column type="selection" width="55"></el-table-column>
-    <el-table-column label="日期" width="180">
-         <template slot-scope="scope">{{scope.row.CreatedAt|formatDate}}</template>
-    </el-table-column>
-    
-    <el-table-column label="bid字段" prop="bid" width="120"></el-table-column> 
-    
-    <el-table-column label="bname字段" prop="bname" width="120"></el-table-column> 
-    
-    <el-table-column label="color字段" prop="color" width="120"></el-table-column> 
-    
-    <el-table-column label="sex字段" prop="sex" width="120">
-         <template slot-scope="scope">{{scope.row.sex|formatBoolean}}</template>
-    </el-table-column>
-    
-      <el-table-column label="按钮组">
-        <template slot-scope="scope">
-          <el-button class="table-button" @click="updateBoats(scope.row)" size="small" type="primary" icon="el-icon-edit">变更</el-button>
-          <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteRow(scope.row)">删除</el-button>
+    <el-collapse v-model="activeNames">
+      <el-collapse-item v-for="item in courseList" class="class-con">
+        <template slot="title">
+          <div class="class-title-con">
+            <span class="class-title">{{ item.name }}</span>
+            <el-tag effect="dark" size="small" class="hours-tag" type="success">{{ item.hours }}学时</el-tag>
+          </div>
         </template>
-      </el-table-column>
-    </el-table>
+        <el-card v-for="l in item.lessons" class="lesson" shadow="hover">
 
-    <el-pagination
-      :current-page="page"
-      :page-size="pageSize"
-      :page-sizes="[10, 30, 50, 100]"
-      :style="{float:'right',padding:'20px'}"
-      :total="total"
-      @current-change="handleCurrentChange"
-      @size-change="handleSizeChange"
-      layout="total, sizes, prev, pager, next, jumper"
-    ></el-pagination>
-
-    <el-dialog :before-close="closeDialog" :visible.sync="dialogFormVisible" title="弹窗操作">
-      <el-form :model="formData" label-position="right" label-width="80px">
-         <el-form-item label="bid字段:"><el-input v-model.number="formData.bid" clearable placeholder="请输入"></el-input>
-      </el-form-item>
-       
-         <el-form-item label="bname字段:">
-            <el-input v-model="formData.bname" clearable placeholder="请输入" ></el-input>
-      </el-form-item>
-       
-         <el-form-item label="color字段:">
-            <el-input v-model="formData.color" clearable placeholder="请输入" ></el-input>
-      </el-form-item>
-       
-         <el-form-item label="sex字段:">
-            <el-switch active-color="#13ce66" inactive-color="#ff4949" active-text="是" inactive-text="否" v-model="formData.sex" clearable ></el-switch>
-      </el-form-item>
-       </el-form>
-      <div class="dialog-footer" slot="footer">
-        <el-button @click="closeDialog">取 消</el-button>
-        <el-button @click="enterDialog" type="primary">确 定</el-button>
-      </div>
-    </el-dialog>
+          <el-progress class="lesson-progress" type="circle" :width="18" :show-text="false"
+                       :percentage="l.nowSize/l.maxSize*100"
+                       :stroke-width="2"></el-progress>
+          <span class="lesson-info">
+          <span class="space">{{ l.time }}</span>
+          <span class="space">{{ l.teacher }}</span>
+          <el-tag effect="dark" size="mini" color="#79baca" class="space">{{ l.classroom }}</el-tag>
+          <el-tag effect="dark" size="mini" type="warning" class="space">本周</el-tag>
+          </span>
+          <span class="lesson-op">
+            <span class="progress">{{ l.nowSize }}/{{ l.maxSize }}</span>
+          <el-button type="primary">选课</el-button>
+          </span>
+        </el-card>
+      </el-collapse-item>
+    </el-collapse>
   </div>
 </template>
 
 <script>
 import {
-    createBoats,
-    deleteBoats,
-    deleteBoatsByIds,
-    updateBoats,
-    findBoats,
-    getBoatsList
-} from "@/api/boats";  //  此处请自行替换地址
-import { formatTimeToStr } from "@/utils/date";
+  createClass,
+  deleteClass,
+  deleteClassByIds,
+  updateClass,
+  findClass,
+  getClassList
+} from "@/api/cls_class";  //  此处请自行替换地址
+import {formatTimeToStr} from "@/utils/date";
 import infoList from "@/mixins/infoList";
+import {store} from '@/store/index'
+
 export default {
   name: "Boats",
   mixins: [infoList],
   data() {
     return {
-      listApi: getBoatsList,
+      listApi: getClassList,
       dialogFormVisible: false,
       type: "",
+      activeNames: [1],
       deleteVisible: false,
-      multipleSelection: [],formData: {
-            bid:0,
-            bname:"",
-            color:"",
-            sex:false,
-            
-      }
+      multipleSelection: [], formData: {
+        bid: 0,
+        bname: "",
+        color: "",
+        sex: false,
+
+      },
+      courseList: [
+        {
+          id: 1,
+          name: "椭圆偏振光法测定介质薄膜的厚度和折射率",
+          hours: 2,
+          lessons: [
+            {
+              id: 2,
+              teacher: "栾玉国",
+              time: "12周 周四 34节",
+              classroom: "A205",
+              maxSize: 40,
+              nowSize: 26,
+              startTime: "2021-11-1",
+              endTime: "2021-11-15"
+            }, {
+              id: 2,
+              type: "lesson",
+              teacher: "栾玉国",
+              time: "12周 周四 34节",
+              classroom: "A205",
+              maxSize: 50,
+              nowSize: 34,
+              startTime: "2021-11-1",
+              endTime: "2021-11-15"
+            }, {
+              id: 2,
+              type: "lesson",
+              teacher: "栾玉国",
+              time: "12周 周四 34节",
+              classroom: "A205",
+              maxSize: 20,
+              nowSize: 16,
+              startTime: "2021-11-1",
+              endTime: "2021-11-15"
+            }, {
+              id: 2,
+              type: "lesson",
+              teacher: "栾玉国",
+              time: "12周 周四 34节",
+              classroom: "A205",
+              maxSize: 40,
+              nowSize: 26,
+              startTime: "2021-11-1",
+              endTime: "2021-11-15"
+            }, {
+              id: 2,
+              type: "lesson",
+              teacher: "王老师",
+              time: "12周 周四 34节",
+              classroom: "A205",
+              maxSize: 40,
+              nowSize: 1,
+              startTime: "2021-11-1",
+              endTime: "2021-11-15"
+            }
+          ]
+        }, {
+          id: 1,
+          type: "course",
+          name: "分光计",
+          hours: 4,
+          lessons: [
+            {
+              id: 2,
+              type: "lesson",
+              teacher: "栾玉国",
+              time: "12周 周四 34节",
+              classroom: "A205",
+              maxSize: 40,
+              nowSize: 26,
+              startTime: "2021-11-1",
+              endTime: "2021-11-15"
+            }, {
+              id: 2,
+              type: "lesson",
+              teacher: "王老师",
+              time: "12周 周四 34节",
+              classroom: "A205",
+              maxSize: 40,
+              nowSize: 26,
+              startTime: "2021-11-1",
+              endTime: "2021-11-15"
+            }
+          ]
+        }
+      ]
     };
   },
   filters: {
-    formatDate: function(time) {
+    formatDate: function (time) {
       if (time != null && time != "") {
         var date = new Date(time);
         return formatTimeToStr(date, "yyyy-MM-dd hh:mm:ss");
@@ -126,64 +157,72 @@ export default {
         return "";
       }
     },
-    formatBoolean: function(bool) {
+    formatBoolean: function (bool) {
       if (bool != null) {
-        return bool ? "是" :"否";
+        return bool ? "是" : "否";
       } else {
         return "";
       }
     }
   },
   methods: {
-      //条件搜索前端看此方法
-      onSubmit() {
-        this.page = 1
-        this.pageSize = 10         
-        if (this.searchInfo.sex==""){
-          this.searchInfo.sex=null
-        }      
+    filterHandler(value, row, column) {
+      const property = column['property'];
+      return row[property] === value;
+    },
+    selectClass(id) {
+      console.log(id)
+      console.log(store.state.user.userInfo.username)
+    },
+    //条件搜索前端看此方法
+    onSubmit() {
+      this.page = 1
+      this.pageSize = 10
+      if (this.searchInfo.sex == "") {
+        this.searchInfo.sex = null
+      }
+      this.getTableData()
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val
+    },
+    deleteRow(row) {
+      this.$confirm('确定要删除吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.deleteBoats(row);
+      });
+    },
+    async onDelete() {
+      const ids = []
+      if (this.multipleSelection.length == 0) {
+        this.$message({
+          type: 'warning',
+          message: '请选择要删除的数据'
+        })
+        return
+      }
+      this.multipleSelection &&
+      this.multipleSelection.map(item => {
+        ids.push(item.ID)
+      })
+      const res = await deleteBoatsByIds({ids})
+      if (res.code == 0) {
+        this.$message({
+          type: 'success',
+          message: '删除成功'
+        })
+        if (this.tableData.length == ids.length) {
+          this.page--;
+        }
+        this.deleteVisible = false
         this.getTableData()
-      },
-      handleSelectionChange(val) {
-        this.multipleSelection = val
-      },
-      deleteRow(row){
-        this.$confirm('确定要删除吗?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-           this.deleteBoats(row);
-        });
-      },
-      async onDelete() {
-        const ids = []
-        if(this.multipleSelection.length == 0){
-          this.$message({
-            type: 'warning',
-            message: '请选择要删除的数据'
-          })
-          return
-        }
-        this.multipleSelection &&
-          this.multipleSelection.map(item => {
-            ids.push(item.ID)
-          })
-        const res = await deleteBoatsByIds({ ids })
-        if (res.code == 0) {
-          this.$message({
-            type: 'success',
-            message: '删除成功'
-          })
-          if (this.tableData.length == ids.length) {
-              this.page--;
-          }
-          this.deleteVisible = false
-          this.getTableData()
-        }
-      },
+      }
+    },
     async updateBoats(row) {
-      const res = await findBoats({ ID: row.ID });
+      const res = await findBoats({ID: row.ID});
       this.type = "update";
       if (res.code == 0) {
         this.formData = res.data.reboats;
@@ -193,22 +232,22 @@ export default {
     closeDialog() {
       this.dialogFormVisible = false;
       this.formData = {
-          bid:0,
-          bname:"",
-          color:"",
-          sex:false,
-          
+        bid: 0,
+        bname: "",
+        color: "",
+        sex: false,
+
       };
     },
     async deleteBoats(row) {
-      const res = await deleteBoats({ ID: row.ID });
+      const res = await deleteBoats({ID: row.ID});
       if (res.code == 0) {
         this.$message({
           type: "success",
           message: "删除成功"
         });
         if (this.tableData.length == 1) {
-            this.page--;
+          this.page--;
         }
         this.getTableData();
       }
@@ -228,8 +267,8 @@ export default {
       }
       if (res.code == 0) {
         this.$message({
-          type:"success",
-          message:"创建/更改成功"
+          type: "success",
+          message: "创建/更改成功"
         })
         this.closeDialog();
         this.getTableData();
@@ -238,14 +277,80 @@ export default {
     openDialog() {
       this.type = "create";
       this.dialogFormVisible = true;
+    },
+    async created() {
+      await this.getTableData();
+
     }
-  },
-  async created() {
-    await this.getTableData();
-  
+  }
 }
-};
 </script>
 
 <style>
+.hours-tag {
+  margin-left: 10px;
+}
+
+.class-title {
+  display: inline-block;
+  font-weight: bold;
+  margin-left: 20px;
+  line-height: normal;
+  vertical-align: middle;
+  max-width: calc(100% - 80px);
+}
+
+.class-title-con {
+  width: 100%;
+}
+
+.class-con {
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  margin-bottom: 3px;
+}
+
+.class-con .el-collapse-item__header {
+  height: auto;
+  padding: 5px 0;
+}
+
+.class-con .el-collapse-item__wrap {
+  background-color: #fafafa;
+}
+
+.lesson-info {
+  font-size: 18px;
+  display: inline-block;
+  line-height: normal;
+  vertical-align: middle;
+  max-width: calc(100% - 120px);
+}
+
+.lesson {
+  box-sizing: border-box;
+  margin: 8px;
+  /*font-size: medium;*/
+}
+
+.lesson-progress {
+  vertical-align: middle;
+  margin-right: 2px;
+  margin-left: -8px;
+}
+
+.lesson-op {
+  float: right;
+}
+
+.space {
+  vertical-align: middle;
+  margin: 6px;
+}
+
+.progress {
+  font-weight: bold;
+  font-size: small;
+  margin: 5px;
+}
+
 </style>
