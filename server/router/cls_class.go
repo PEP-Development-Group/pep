@@ -16,7 +16,7 @@ func InitClassRouter(Router *gin.RouterGroup) {
 		ClassRouter.GET("findClass", v1.FindClass)                  // 根据ID获取Class
 		ClassRouter.GET("getClassList", v1.GetClassList)            // 获取Class列表
 
-		ClassRouter.POST("selectClass", v1.SelectClass)				// 选课
-		ClassRouter.DELETE("deleteSelect", v1.DeleteSelect)			// 退选
+		ClassRouter.POST("selectClass", v1.SelectClass)     // 选课
+		ClassRouter.DELETE("deleteSelect", v1.DeleteSelect) // 退选
 	}
 }

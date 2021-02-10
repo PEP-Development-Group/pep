@@ -16,10 +16,9 @@ type SysUser struct {
 	AuthorityId string       `json:"authorityId" gorm:"default:888;comment:用户角色ID"`
 
 	CancelNums int    `json:"cancel_nums" gorm:"default:0;comment:取消次数"`
-	College    string `json:"college" gorm:"type:varchar;comment:学院"`
-	Major      string `json:"major" gorm:"type:varchar;comment:专业"`
-	PID        string `json:"pid" gorm:"type:char;comment:身份证号"`
+	Class      string `json:"class"`
+	PID        string `json:"pid" gorm:"column:pid;type:char;comment:身份证号"`
 
-	HaveCredits int `json:"have_credits" gorm:"comment:已修学时"`
+	HaveCredits  int `json:"have_credits" gorm:"comment:已修学时"`
 	TotalCredits int `json:"total_credits" gorm:"comment:应修学时"`
 }

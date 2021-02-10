@@ -10,9 +10,8 @@ type Register struct {
 
 	AuthorityId string `json:"authorityId"`
 
-	College string `json:"college"`
-	Major   string `json:"major"`
-	PID     string `json:"pid"`
+	Class string `json:"class"`
+	PID   string `json:"pid"`
 
 	CancelNums   int `json:"cancel_nums"`
 	TotalCredits int `json:"total_credits"`

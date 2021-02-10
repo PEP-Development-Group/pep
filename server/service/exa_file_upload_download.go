@@ -75,30 +75,27 @@ func GetFileRecordInfoList(info request.PageInfo) (err error, list interface{}, 
 //@param: header *multipart.FileHeader, noSave string
 //@return: err error, file model.ExaFileUploadAndDownload
 
-func UploadFile(header *multipart.FileHeader, noSave string) (err error, file model.ExaFileUploadAndDownload) {
+func UploadFile(header *multipart.FileHeader, cancelNums int) (err error, file model.ExaFileUploadAndDownload) {
 	oss := upload.NewOss()
 	filePath, key, uploadErr := oss.UploadFile(header)
 	if uploadErr != nil {
 		panic(err)
 	}
-	if noSave == "0" {
-		s := strings.Split(header.Filename, ".")
-		f := model.ExaFileUploadAndDownload{
-			Url:  filePath,
-			Name: header.Filename,
-			Tag:  s[len(s)-1],
-			Key:  key,
-		}
-		if err = parse(filePath); err != nil {
-			return err, f
-		}
-		return Upload(f), f
+	s := strings.Split(header.Filename, ".")
+	f := model.ExaFileUploadAndDownload{
+		Url:  filePath,
+		Name: header.Filename,
+		Tag:  s[len(s)-1],
+		Key:  key,
 	}
-	return
+	if err = parse(filePath, cancelNums); err != nil {
+		return err, f
+	}
+	return Upload(f), f
 }
 
-func parse(filename string) error {
-	st, err := ParseExcelFile(filename)
+func parse(filename string, cancelNums int) error {
+	st, err := ParseExcelFile(filename, cancelNums)
 	if err != nil {
 		return err
 	}
@@ -111,7 +108,7 @@ func parse(filename string) error {
 	return nil
 }
 
-func ParseExcelFile(bs string) (*[]model.SysUser, error) {
+func ParseExcelFile(bs string, cancelNums int) (*[]model.SysUser, error) {
 	wb, err := xlsx.OpenFile(bs)
 	if err != nil {
 		return nil, err
@@ -123,14 +120,15 @@ func ParseExcelFile(bs string) (*[]model.SysUser, error) {
 	var st []model.SysUser
 	err = sh.ForEachRow(func(r *xlsx.Row) error {
 		var s model.SysUser
-		s.Name = r.GetCell(0).String()
+		s.Class = r.GetCell(0).String()
 		s.Username = r.GetCell(1).String()
-		s.College = r.GetCell(2).String()
-		s.Major = r.GetCell(3).String()
-		s.PID = r.GetCell(4).String()
-		s.Password = utils.MD5V([]byte(s.PID[10:])) // 密码身份证后8位
+		s.Name = r.GetCell(2).String()
+		s.PID = r.GetCell(3).String()
+		s.TotalCredits, _ = r.GetCell(4).Int()
+		s.Password = utils.MD5V([]byte(s.PID)) // 密码身份证后8位
 		s.AuthorityId = "1"
 		s.UUID = uuid.NewV4()
+		s.CancelNums = cancelNums
 		st = append(st, s)
 		return nil
 	})

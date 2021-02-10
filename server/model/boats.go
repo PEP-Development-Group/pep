@@ -7,18 +7,16 @@ import (
 
 // 如果含有time.Time 请自行import time包
 type Boats struct {
-      global.GVA_MODEL
-      Bid  int `json:"bid" form:"bid" gorm:"column:bid;comment:;type:int;size:10;"`
-      Bname  string `json:"bname" form:"bname" gorm:"column:bname;comment:;type:varchar(255);size:255;"`
-      Color  string `json:"color" form:"color" gorm:"column:color;comment:;type:varchar(255);size:255;"`
-      Sex  *bool `json:"sex" form:"sex" gorm:"column:sex;comment:;type:tinyint;"`
+	global.GVA_MODEL
+	Bid   int    `json:"bid" form:"bid" gorm:"column:bid;comment:;type:int;size:10;"`
+	Bname string `json:"bname" form:"bname" gorm:"column:bname;comment:;type:varchar(255);size:255;"`
+	Color string `json:"color" form:"color" gorm:"column:color;comment:;type:varchar(255);size:255;"`
+	Sex   *bool  `json:"sex" form:"sex" gorm:"column:sex;comment:;type:tinyint;"`
 }
-
 
 func (Boats) TableName() string {
-  return "boats"
+	return "boats"
 }
-
 
 // 如果使用工作流功能 需要打开下方注释 并到initialize的workflow中进行注册 且必须指定TableName
 // type BoatsWorkflow struct {

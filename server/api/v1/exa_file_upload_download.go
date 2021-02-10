@@ -8,6 +8,7 @@ import (
 	"gin-vue-admin/service"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
+	"strconv"
 )
 
 // @Tags ExaFileUploadAndDownload
@@ -20,14 +21,15 @@ import (
 // @Router /fileUploadAndDownload/upload [post]
 func UploadFile(c *gin.Context) {
 	var file model.ExaFileUploadAndDownload
-	noSave := c.DefaultQuery("noSave", "0")
+	cancelNums := c.DefaultQuery("cancelNums", "3")
 	_, header, err := c.Request.FormFile("file")
 	if err != nil {
 		global.GVA_LOG.Error("接收文件失败!", zap.Any("err", err))
 		response.FailWithMessage("接收文件失败", c)
 		return
 	}
-	err, file = service.UploadFile(header, noSave) // 文件上传后拿到文件路径
+	cn, _ := strconv.Atoi(cancelNums)
+	err, file = service.UploadFile(header, cn) // 文件上传后拿到文件路径
 	if err != nil {
 		global.GVA_LOG.Error("修改数据库链接失败!", zap.Any("err", err))
 		response.FailWithMessage("修改数据库链接失败", c)

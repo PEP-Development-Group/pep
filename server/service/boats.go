@@ -35,7 +35,7 @@ func DeleteBoats(boats model.Boats) (err error) {
 //@return: err error
 
 func DeleteBoatsByIds(ids request.IdsReq) (err error) {
-	err = global.GVA_DB.Delete(&[]model.Boats{},"id in ?",ids.Ids).Error
+	err = global.GVA_DB.Delete(&[]model.Boats{}, "id in ?", ids.Ids).Error
 	return err
 }
 
@@ -70,10 +70,10 @@ func GetBoats(id uint) (err error, boats model.Boats) {
 func GetBoatsInfoList(info request.BoatsSearch) (err error, list interface{}, total int64) {
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
-    // 创建db
+	// 创建db
 	db := global.GVA_DB.Model(&model.Boats{})
-    var boatss []model.Boats
-    // 如果有条件搜索 下方会自动创建搜索语句
+	var boatss []model.Boats
+	// 如果有条件搜索 下方会自动创建搜索语句
 	err = db.Count(&total).Error
 	err = db.Limit(limit).Offset(offset).Find(&boatss).Error
 	return err, boatss, total

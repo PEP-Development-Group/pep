@@ -24,7 +24,7 @@ func SelectClass(class request.SelectClass) (err error) {
 	if cls.Selected < cls.Total {
 		sl.Username = class.Username
 		sl.Cid = class.Cid
-		db.UpdateColumn("selected", cls.Selected + 1)
+		db.UpdateColumn("selected", cls.Selected+1)
 		return global.GVA_DB.Create(&sl).Error
 	}
 	return constant.ErrClassHasFull
