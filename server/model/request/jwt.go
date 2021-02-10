@@ -10,7 +10,7 @@ type CustomClaims struct {
 	UUID        uuid.UUID
 	ID          uint
 	Username    string
-	NickName    string
+	Name        string
 	AuthorityId string
 	BufferTime  int64
 	jwt.StandardClaims

@@ -1,0 +1,26 @@
+{
+    "code": 0,
+    "data": {
+        "startDate": "03-01",
+        "courseList": [
+            {
+                "id": 1,
+                "name": "分光计",
+                "hours": 2,
+                "lists": [
+                    {
+                        "id": 990,
+                        "name": "栾玉国",
+                        "time": "2021-03-21 08:20:00",
+                        "desc": "第3周 周4 12节",
+                        "classroom": "A201",
+                        "max": 40,
+                        "now": 20,
+                        "selected": true
+                    }
+                ]
+            }
+        ]
+    },
+    "msg": "获取成功"
+}

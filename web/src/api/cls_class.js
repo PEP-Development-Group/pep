@@ -1,6 +1,38 @@
 import service from '@/utils/request'
 
 // @Tags Class
+// @Summary 选课
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body 参数就两个，发群里了 true "选课"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"选课成功"}"
+// @Router /class/selectClass [post]
+export const selectClass = (data) => {
+    return service({
+        url: "/class/selectClass",
+        method: 'post',
+        data
+    })
+}
+
+// @Tags Class
+// @Summary 退课
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body 参数就两个，发群里了 true "退课"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"退课成功"}"
+// @Router /class/deleteSelect [delete]
+export const deleteSelect = (data) => {
+    return service({
+        url: "/class/deleteSelect",
+        method: 'delete',
+        data
+    })
+}
+
+// @Tags Class
 // @Summary 创建Class
 // @Security ApiKeyAuth
 // @accept application/json

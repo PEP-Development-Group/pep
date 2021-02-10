@@ -47,7 +47,7 @@ func tokenNext(c *gin.Context, user model.SysUser) {
 	claims := request.CustomClaims{
 		UUID:        user.UUID,
 		ID:          user.ID,
-		NickName:    user.Name,
+		Name:        user.Name,
 		Username:    user.Username,
 		AuthorityId: user.AuthorityId,
 		BufferTime:  global.GVA_CONFIG.JWT.BufferTime, // 缓冲时间1天 缓冲时间内会获得新的token刷新令牌 此时一个用户会存在两个有效令牌 但是前端只留一个 另一个会丢失

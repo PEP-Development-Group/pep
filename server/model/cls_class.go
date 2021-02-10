@@ -17,6 +17,7 @@ type Class struct {
 	Tname   string    `json:"tname" form:"tname" gorm:"column:tname;comment:教师名;type:varchar(5);size:5;"`
 	Selected int       `json:"selected" form:"selected" gorm:"column:selected;comment:已选人数;type:int;size:10;default:0"`
 	Total   int       `json:"total" form:"total" gorm:"column:total;comment:总人数;type:int;size:10;"`
+	Classroom string `json:"classroom" form:"classroom"`
 }
 
 type SelectClass struct {
