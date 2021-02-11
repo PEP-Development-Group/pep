@@ -188,7 +188,7 @@ import {
   getBaseMenuById
 } from "@/api/menu";
 import infoList from "@/mixins/infoList";
-import icon from "@/view/superAdmin/menu/icon";
+import icon from "@/view/system/superAdmin/menu/icon";
 export default {
   name: "Menus",
   mixins: [infoList],

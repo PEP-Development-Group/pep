@@ -1,4 +1,5 @@
 import service from '@/utils/request'
+//课程管理相关的API集中在此处
 
 // @Tags Class
 // @Summary 选课
@@ -130,3 +131,11 @@ export const createClass = (data) => {
          params
      })
  }
+
+export const getClassListForElective = (params) => {
+    return service(({
+        url: "/class/getClassList",//TODO 后端API未完成
+        method: 'get',
+        params
+    }))
+}

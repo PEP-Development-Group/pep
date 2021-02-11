@@ -1,11 +1,11 @@
 <template>
   <div>
     <el-collapse v-model="activeNames">
-      <el-collapse-item v-for="item in courseList" class="class-con">
+      <el-collapse-item v-for="item in tableData" class="class-con">
         <template slot="title">
           <div class="class-title-con">
-            <span class="class-title">{{ item.name }}</span>
-            <el-tag effect="dark" size="small" class="hours-tag" type="success">{{ item.hours }}学时</el-tag>
+            <span class="class-title">{{ item.cname }}</span>
+            <el-tag effect="dark" size="small" class="hours-tag" type="success">{{ item.ccredit }}学时</el-tag>
           </div>
         </template>
         <el-card v-for="l in item.lessons" class="lesson" shadow="hover">
@@ -15,13 +15,14 @@
                        :stroke-width="2"></el-progress>
           <span class="lesson-info">
           <span class="space">{{ l.time }}</span>
-          <span class="space">{{ l.teacher }}</span>
+          <span class="space">{{ l.tname }}</span>
           <el-tag effect="dark" size="mini" color="#79baca" class="space">{{ l.classroom }}</el-tag>
           <el-tag effect="dark" size="mini" type="warning" class="space">本周</el-tag>
           </span>
           <span class="lesson-op">
             <span class="progress">{{ l.nowSize }}/{{ l.maxSize }}</span>
-          <el-button type="primary">选课</el-button>
+          <el-button type="primary" v-if="l.selected===0">选课</el-button>
+          <el-button type="danger" v-else>推选</el-button>
           </span>
         </el-card>
       </el-collapse-item>
@@ -31,16 +32,11 @@
 
 <script>
 import {
-  createClass,
-  deleteClass,
-  deleteClassByIds,
-  updateClass,
-  findClass,
   getClassList
-} from "@/api/cls_class";  //  此处请自行替换地址
+} from "@/api/boats.js";  //  此处请自行替换地址
 import {formatTimeToStr} from "@/utils/date";
 import infoList from "@/mixins/infoList";
-import {store} from '@/store/index'
+import {store} from '@/store'
 
 export default {
   name: "Boats",
@@ -48,17 +44,7 @@ export default {
   data() {
     return {
       listApi: getClassList,
-      dialogFormVisible: false,
-      type: "",
       activeNames: [1],
-      deleteVisible: false,
-      multipleSelection: [], formData: {
-        bid: 0,
-        bname: "",
-        color: "",
-        sex: false,
-
-      },
       courseList: [
         {
           id: 1,
@@ -166,123 +152,33 @@ export default {
     }
   },
   methods: {
-    filterHandler(value, row, column) {
-      const property = column['property'];
-      return row[property] === value;
-    },
-    selectClass(id) {
-      console.log(id)
-      console.log(store.state.user.userInfo.username)
-    },
-    //条件搜索前端看此方法
-    onSubmit() {
-      this.page = 1
-      this.pageSize = 10
-      if (this.searchInfo.sex == "") {
-        this.searchInfo.sex = null
-      }
-      this.getTableData()
-    },
-    handleSelectionChange(val) {
-      this.multipleSelection = val
-    },
-    deleteRow(row) {
-      this.$confirm('确定要删除吗?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.deleteBoats(row);
-      });
-    },
-    async onDelete() {
-      const ids = []
-      if (this.multipleSelection.length == 0) {
-        this.$message({
-          type: 'warning',
-          message: '请选择要删除的数据'
-        })
-        return
-      }
-      this.multipleSelection &&
-      this.multipleSelection.map(item => {
-        ids.push(item.ID)
-      })
-      const res = await deleteBoatsByIds({ids})
-      if (res.code == 0) {
-        this.$message({
-          type: 'success',
-          message: '删除成功'
-        })
-        if (this.tableData.length == ids.length) {
-          this.page--;
-        }
-        this.deleteVisible = false
-        this.getTableData()
-      }
-    },
-    async updateBoats(row) {
-      const res = await findBoats({ID: row.ID});
-      this.type = "update";
-      if (res.code == 0) {
-        this.formData = res.data.reboats;
-        this.dialogFormVisible = true;
-      }
-    },
-    closeDialog() {
-      this.dialogFormVisible = false;
-      this.formData = {
-        bid: 0,
-        bname: "",
-        color: "",
-        sex: false,
-
-      };
-    },
-    async deleteBoats(row) {
-      const res = await deleteBoats({ID: row.ID});
-      if (res.code == 0) {
-        this.$message({
-          type: "success",
-          message: "删除成功"
-        });
-        if (this.tableData.length == 1) {
-          this.page--;
-        }
-        this.getTableData();
-      }
-    },
-    async enterDialog() {
-      let res;
-      switch (this.type) {
-        case "create":
-          res = await createBoats(this.formData);
-          break;
-        case "update":
-          res = await updateBoats(this.formData);
-          break;
-        default:
-          res = await createBoats(this.formData);
-          break;
-      }
-      if (res.code == 0) {
-        this.$message({
-          type: "success",
-          message: "创建/更改成功"
-        })
-        this.closeDialog();
-        this.getTableData();
-      }
-    },
-    openDialog() {
-      this.type = "create";
-      this.dialogFormVisible = true;
-    },
-    async created() {
-      await this.getTableData();
-
-    }
+    // filterHandler(value, row, column) {
+    //   const property = column['property'];
+    //   return row[property] === value;
+    // },
+    // selectClass(id) {
+    //   console.log(id)
+    //   console.log(store.state.user.userInfo.username)
+    // },
+    // async deleteBoats(row) {
+    //   const res = await deleteBoats({ID: row.ID});
+    //   if (res.code == 0) {
+    //     this.$message({
+    //       type: "success",
+    //       message: "删除成功"
+    //     });
+    //     if (this.tableData.length == 1) {
+    //       this.page--;
+    //     }
+    //     this.getTableData();
+    //   }
+    // },
+  },
+  async created() {
+    console.log("created")
+    await this.getTableData();
   }
+
 }
 </script>
 
@@ -306,7 +202,7 @@ export default {
 
 .class-con {
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-  margin-bottom: 3px;
+  margin-bottom: 5px;
 }
 
 .class-con .el-collapse-item__header {
@@ -339,6 +235,8 @@ export default {
 }
 
 .lesson-op {
+  background-color: #f1f3f4;
+  border-radius: 4px;
   float: right;
 }
 
@@ -348,6 +246,7 @@ export default {
 }
 
 .progress {
+  color: #666666;
   font-weight: bold;
   font-size: small;
   margin: 5px;

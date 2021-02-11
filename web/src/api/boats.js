@@ -9,12 +9,12 @@ import service from '@/utils/request'
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
 // @Router /boats/createBoats [post]
 export const createBoats = (data) => {
-     return service({
-         url: "/boats/createBoats",
-         method: 'post',
-         data
-     })
- }
+    return service({
+        url: "/boats/createBoats",
+        method: 'post',
+        data
+    })
+}
 
 
 // @Tags Boats
@@ -25,13 +25,13 @@ export const createBoats = (data) => {
 // @Param data body model.Boats true "删除Boats"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"删除成功"}"
 // @Router /boats/deleteBoats [delete]
- export const deleteBoats = (data) => {
-     return service({
-         url: "/boats/deleteBoats",
-         method: 'delete',
-         data
-     })
- }
+export const deleteBoats = (data) => {
+    return service({
+        url: "/boats/deleteBoats",
+        method: 'delete',
+        data
+    })
+}
 
 // @Tags Boats
 // @Summary 删除Boats
@@ -41,13 +41,13 @@ export const createBoats = (data) => {
 // @Param data body request.IdsReq true "批量删除Boats"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"删除成功"}"
 // @Router /boats/deleteBoats [delete]
- export const deleteBoatsByIds = (data) => {
-     return service({
-         url: "/boats/deleteBoatsByIds",
-         method: 'delete',
-         data
-     })
- }
+export const deleteBoatsByIds = (data) => {
+    return service({
+        url: "/boats/deleteBoatsByIds",
+        method: 'delete',
+        data
+    })
+}
 
 // @Tags Boats
 // @Summary 更新Boats
@@ -57,13 +57,13 @@ export const createBoats = (data) => {
 // @Param data body model.Boats true "更新Boats"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"更新成功"}"
 // @Router /boats/updateBoats [put]
- export const updateBoats = (data) => {
-     return service({
-         url: "/boats/updateBoats",
-         method: 'put',
-         data
-     })
- }
+export const updateBoats = (data) => {
+    return service({
+        url: "/boats/updateBoats",
+        method: 'put',
+        data
+    })
+}
 
 
 // @Tags Boats
@@ -74,13 +74,13 @@ export const createBoats = (data) => {
 // @Param data body model.Boats true "用id查询Boats"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"查询成功"}"
 // @Router /boats/findBoats [get]
- export const findBoats = (params) => {
-     return service({
-         url: "/boats/findBoats",
-         method: 'get',
-         params
-     })
- }
+export const findBoats = (params) => {
+    return service({
+        url: "/boats/findBoats",
+        method: 'get',
+        params
+    })
+}
 
 
 // @Tags Boats
@@ -91,10 +91,12 @@ export const createBoats = (data) => {
 // @Param data body request.PageInfo true "分页获取Boats列表"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
 // @Router /boats/getBoatsList [get]
- export const getBoatsList = (params) => {
-     return service({
-         url: "/boats/getBoatsList",
-         method: 'get',
-         params
-     })
- }
+export const getBoatsList = (params) => {
+    return service({
+        url: "/boats/getBoatsList",
+        method: 'get',
+        params
+    })
+}
+
+
