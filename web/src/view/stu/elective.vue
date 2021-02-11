@@ -1,11 +1,11 @@
 <template>
   <div>
     <el-collapse v-model="activeNames">
-      <el-collapse-item v-for="item in tableData" class="class-con">
+      <el-collapse-item v-for="item in courseList" class="class-con">
         <template slot="title">
           <div class="class-title-con">
-            <span class="class-title">{{ item.cname }}</span>
-            <el-tag effect="dark" size="small" class="hours-tag" type="success">{{ item.ccredit }}学时</el-tag>
+            <span class="class-title">{{ item.name }}</span>
+            <el-tag effect="dark" size="small" class="hours-tag" type="success">{{ item.hours }}学时</el-tag>
           </div>
         </template>
         <el-card v-for="l in item.lessons" class="lesson" shadow="hover">
@@ -15,14 +15,14 @@
                        :stroke-width="2"></el-progress>
           <span class="lesson-info">
           <span class="space">{{ l.time }}</span>
-          <span class="space">{{ l.tname }}</span>
+          <span class="space">{{ l.teacher }}</span>
           <el-tag effect="dark" size="mini" color="#79baca" class="space">{{ l.classroom }}</el-tag>
           <el-tag effect="dark" size="mini" type="warning" class="space">本周</el-tag>
           </span>
           <span class="lesson-op">
             <span class="progress">{{ l.nowSize }}/{{ l.maxSize }}</span>
           <el-button type="primary" v-if="l.selected===0">选课</el-button>
-          <el-button type="danger" v-else>推选</el-button>
+          <el-button type="danger" v-else>退选</el-button>
           </span>
         </el-card>
       </el-collapse-item>
@@ -31,19 +31,19 @@
 </template>
 
 <script>
-import {
-  getClassList
-} from "@/api/boats.js";  //  此处请自行替换地址
+// import {
+//   getClassList
+// } from "@/api/boats.js";  //  此处请自行替换地址
 import {formatTimeToStr} from "@/utils/date";
 import infoList from "@/mixins/infoList";
-import {store} from '@/store'
+// import {store} from '@/store'
 
 export default {
   name: "Boats",
   mixins: [infoList],
   data() {
     return {
-      listApi: getClassList,
+      // listApi: getClassList,
       activeNames: [1],
       courseList: [
         {
@@ -175,8 +175,7 @@ export default {
     // },
   },
   async created() {
-    console.log("created")
-    await this.getTableData();
+    // await this.getTableData();
   }
 
 }
