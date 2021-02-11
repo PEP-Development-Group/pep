@@ -14,6 +14,7 @@
       <el-table-column label="学院" min-width="150" prop="college" v-if="userType===1"></el-table-column>
       <el-table-column label="专业" min-width="150" prop="major" v-if="userType===1"></el-table-column>
       <el-table-column label="取消次数" min-width="150" prop="cancel_nums" v-if="userType===1"></el-table-column>
+      <el-table-column label="应修学分" min-width="150" prop="total_credits" v-if="userType===1"></el-table-column>
       <el-table-column label="操作" width="300" align="center">
         <template slot-scope="scope">
           <el-button type="warning" icon="el-icon-edit" size="small" slot="reference" @click="modifyUser"
@@ -55,6 +56,9 @@
         </el-form-item>
         <el-form-item :label="getIdType" label-width="80px" prop="userName">
           <el-input v-model="userInfo.userName"></el-input>
+        </el-form-item>
+        <el-form-item label="应修学分" min-width="150" label-width="80px" v-show="userType===1">
+          <el-input v-model="userInfo.total_credits" type="number"></el-input>
         </el-form-item>
         <el-form-item label="学院" label-width="80px" prop="college" v-show="userType===1">
           <el-input v-model="userInfo.college"></el-input>
@@ -138,7 +142,8 @@ export default {
         college: "",
         major: "",
         pid: "",
-        authorityId: ""
+        authorityId: "",
+        total_credits: 48
       },
       rules: {
         userName: [

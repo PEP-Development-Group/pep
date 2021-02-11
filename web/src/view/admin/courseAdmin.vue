@@ -128,7 +128,7 @@ import {
   updateClass,
   findClass,
   getClassList
-} from "@/api/cls_class";  //  此处请自行替换地址
+} from "@/api/course";  //  此处请自行替换地址
 import {formatTimeToStr} from "@/utils/date";
 import infoList from "@/mixins/infoList";
 

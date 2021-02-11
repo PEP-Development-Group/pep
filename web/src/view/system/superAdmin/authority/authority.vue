@@ -96,9 +96,9 @@ import {
   copyAuthority
 } from "@/api/authority";
 
-import Menus from "@/view/superAdmin/authority/components/menus";
-import Apis from "@/view/superAdmin/authority/components/apis";
-import Datas from "@/view/superAdmin/authority/components/datas";
+import Menus from "@/view/system/superAdmin/authority/components/menus";
+import Apis from "@/view/system/superAdmin/authority/components/apis";
+import Datas from "@/view/system/superAdmin/authority/components/datas";
 
 import infoList from "@/mixins/infoList";
 export default {
