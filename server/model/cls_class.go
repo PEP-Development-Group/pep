@@ -18,6 +18,8 @@ type Class struct {
 	Selected  int       `json:"selected" form:"selected" gorm:"column:selected;comment:已选人数;type:int;size:10;default:0"`
 	Total     int       `json:"total" form:"total" gorm:"column:total;comment:总人数;type:int;size:10;"`
 	Classroom string    `json:"classroom" form:"classroom"`
+
+	Users []*SysUser `gorm:"many2many:user_classes;"`
 }
 
 type SelectClass struct {

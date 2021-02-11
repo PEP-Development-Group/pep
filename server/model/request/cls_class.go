@@ -9,7 +9,11 @@ type ClassSearch struct {
 	PageInfo
 }
 
+type ClassListSearch struct {
+
+}
+
 type SelectClass struct {
 	Username string `json:"username" form:"username"`
-	Cid      int    `json:"cid" form:"cid"`
+	Cid      uint    `json:"cid" form:"cid"`
 }

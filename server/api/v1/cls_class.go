@@ -13,11 +13,11 @@ import (
 )
 
 // @Tags Class
-// @Summary 选择Class
+// @Summary 选课
 // @Security ApiKeyAuth
 // @accept application/json
 // @Produce application/json
-// @Param data body model.Class true "选择Class"
+// @Param data body model.Class true "选课"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"选课成功"}"
 // @Router /class/selectClass [post]
 func SelectClass(c *gin.Context) {
@@ -63,6 +63,25 @@ func DeleteSelect(c *gin.Context) {
 		}
 	} else {
 		response.OkWithMessage("退选成功", c)
+	}
+}
+
+// @Tags Class
+// @Summary 获取个人已选课程
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body model.Class true "创建Class"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
+// @Router /class/createClass [post]
+func GetMyClass(c *gin.Context) {
+	var class model.Class
+	_ = c.ShouldBindJSON(&class)
+	if err := service.CreateClass(class); err != nil {
+		global.GVA_LOG.Error("创建失败!", zap.Any("err", err))
+		response.FailWithMessage("创建失败", c)
+	} else {
+		response.OkWithMessage("创建成功", c)
 	}
 }
 

@@ -21,4 +21,6 @@ type SysUser struct {
 
 	HaveCredits  int `json:"have_credits" gorm:"comment:已修学时"`
 	TotalCredits int `json:"total_credits" gorm:"comment:应修学时"`
+
+	Classes []*Class `gorm:"many2many:user_classes;foreignKey:Username;joinForeignKey:username;"`
 }

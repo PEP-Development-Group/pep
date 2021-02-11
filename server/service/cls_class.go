@@ -1,7 +1,6 @@
 package service
 
 import (
-	"gin-vue-admin/constant"
 	"gin-vue-admin/global"
 	"gin-vue-admin/model"
 	"gin-vue-admin/model/request"
@@ -13,21 +12,29 @@ import (
 //@param: class request.SelectClass
 //@return: err error
 
-func SelectClass(class request.SelectClass) (err error) {
-	cls := model.Class{}
-	db := global.GVA_DB.Where("id = ?", class.Cid)
-	err = db.First(&cls).Error
-	if err != nil {
-		return constant.ErrClassNotExist
-	}
-	sl := model.SelectClass{}
-	if cls.Selected < cls.Total {
-		sl.Username = class.Username
-		sl.Cid = class.Cid
-		db.UpdateColumn("selected", cls.Selected+1)
-		return global.GVA_DB.Create(&sl).Error
-	}
-	return constant.ErrClassHasFull
+func SelectClass(sel request.SelectClass) (err error) {
+	user := model.SysUser{Username: sel.Username}
+	return global.GVA_DB.Model(&user).Association("Classes").Append(&model.Class{
+		GVA_MODEL: global.GVA_MODEL{
+			ID: sel.Cid,
+		},
+	})
+
+
+	//cls := model.Class{}
+	//db := global.GVA_DB.Where("id = ?", class.Cid)
+	//err = db.First(&cls).Error
+	//if err != nil {
+	//	return constant.ErrClassNotExist
+	//}
+	//sl := model.SelectClass{}
+	//if cls.Selected < cls.Total {
+	//	sl.Username = class.Username
+	//	sl.Cid = class.Cid
+	//	db.UpdateColumn("selected", cls.Selected+1)
+	//	return global.GVA_DB.Create(&sl).Error
+	//}
+	//return constant.ErrClassHasFull
 }
 
 //@author: [sh1luo](https://github.com/sh1luo)
