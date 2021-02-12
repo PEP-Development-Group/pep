@@ -17,7 +17,7 @@ import (
 // @Security ApiKeyAuth
 // @accept application/json
 // @Produce application/json
-// @Param data body model.Class true "选课"
+// @Param data body request.SelectClass true "选课"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"选课成功"}"
 // @Router /class/selectClass [post]
 func SelectClass(c *gin.Context) {

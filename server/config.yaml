@@ -54,11 +54,11 @@ captcha:
 
 # mysql connect configuration
 mysql:
-  path: '127.0.0.1:3306'
+  path: 'rm-2zea2w6fx5s562393wo.mysql.rds.aliyuncs.com:3306'
   config: 'charset=utf8mb4&parseTime=True&loc=Local'
-  db-name: 'pep'
-  username: 'root'
-  password: 'shiluo'
+  db-name: 'saupep'
+  username: 'pep_admin'
+  password: 'SAUpep123'
   max-idle-conns: 10
   max-open-conns: 100
   log-mode: false
