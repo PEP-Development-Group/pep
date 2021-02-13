@@ -1,8 +1,8 @@
 <template>
   <div>
     <el-row :gutter="10">
-      <el-col :span="12" :offset="6">
-        <el-card>
+      <el-col :xs="{span:24,offset:0}" :sm="{span:8}">
+        <el-card style="margin-top:20px;">
           <div slot="header">前端</div>
           <div>
             <el-row>
@@ -59,6 +59,10 @@
           </div>
         </el-card>
 
+
+      </el-col>
+
+      <el-col :xs="{span:24,offset:0}" :sm="{span:8}">
         <el-card style="margin-top:20px;">
           <div slot="header">前端</div>
           <div>
@@ -116,7 +120,9 @@
             </el-row>
           </div>
         </el-card>
+      </el-col>
 
+      <el-col :xs="{span:24,offset:0}" :sm="{span:8}">
         <el-card style="margin-top:20px;">
           <div slot="header">后端</div>
           <div>
@@ -175,13 +181,15 @@
           </div>
         </el-card>
       </el-col>
+
     </el-row>
   </div>
 </template>
 
 <script>
-import { Commits, Members } from "@/api/github";
+import {Commits, Members} from "@/api/github";
 import Timeline from "timeline-vuejs";
+
 export default {
   name: "Test",
   components: {
@@ -205,7 +213,7 @@ export default {
       this.loadCommits();
     },
     loadCommits() {
-      Commits(this.page).then(({ data }) => {
+      Commits(this.page).then(({data}) => {
         data.forEach((element) => {
           if (element.commit.message) {
             this.dataTimeline.push({
@@ -219,7 +227,7 @@ export default {
       });
     },
     loadMembers() {
-      Members().then(({ data }) => {
+      Members().then(({data}) => {
         this.members = data;
         this.members.sort();
       });
