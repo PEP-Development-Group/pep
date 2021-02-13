@@ -1,94 +1,178 @@
 <template>
   <div>
     <el-row :gutter="10">
-      <el-col :span="12">
+      <el-col :span="12" :offset="6">
         <el-card>
-          <div slot="header">物理实验中心</div>
+          <div slot="header">前端</div>
           <div>
             <el-row>
               <el-col :span="8" :offset="8">
-                <a href="https://github.com/flipped-aurora/gin-vue-admin">
+                <a href="https://shuangxunian.gitee.io/">
                   <img
-                    class="org-img dom-center"
-                    src="@/assets/logo.png"
-                    alt="gin-vue-admin"
+                      class="org-img dom-center"
+                      src="@/assets/imgwyl.jpg"
+                      alt=""
                   />
                 </a>
               </el-col>
             </el-row>
+
             <el-row :gutter="10">
-              <el-col :span="8">
-                <a href="https://github.com/flipped-aurora/gin-vue-admin">
-                  <img
-                    class="dom-center"
-                    src="https://img.shields.io/github/watchers/flipped-aurora/gin-vue-admin.svg?label=Watch"
-                    alt=""
-                  />
-                </a>
+              <el-col :span="8" :offset="4">
+                <b>姓&emsp;&emsp;名：</b>
               </el-col>
-              <el-col :span="8">
-                <a href="https://github.com/flipped-aurora/gin-vue-admin">
-                  <img
-                    class="dom-center"
-                    src="https://img.shields.io/github/stars/flipped-aurora/gin-vue-admin.svg?style=social"
-                    alt=""/></a
-              ></el-col>
-              <el-col :span="8">
-                <a href="https://github.com/flipped-aurora/gin-vue-admin">
-                  <img
-                    class="dom-center"
-                    src="https://img.shields.io/github/forks/flipped-aurora/gin-vue-admin.svg?label=Fork"
-                    alt=""/></a
-              ></el-col>
+
+              <el-col :span="12">
+                <b>王跃霖</b>
+              </el-col>
+            </el-row>
+
+            <el-row :gutter="10" style="margin-top: -20px">
+              <el-col :span="8" :offset="4">
+                <p>昵&emsp;&emsp;称：</p>
+              </el-col>
+
+              <el-col :span="12">
+                <p>霜序廿</p>
+              </el-col>
+            </el-row>
+
+            <el-row :gutter="10" style="margin-top: -20px">
+              <el-col :span="8" :offset="4">
+                <p>班&emsp;&emsp;级：</p>
+              </el-col>
+
+              <el-col :span="12" style="margin-top: 2px">
+                <p>CS1705</p>
+              </el-col>
+            </el-row>
+
+            <el-row :gutter="10" style="margin-top: -20px">
+              <el-col :span="8" :offset="4">
+                <p>联系方式：</p>
+              </el-col>
+
+              <el-col :span="12" style="margin-top: -1px">
+                <p>shuangxunian@gmail.com</p>
+              </el-col>
             </el-row>
           </div>
         </el-card>
-        <el-card style="margin-top: 20px">
-          <div slot="header">flipped-aurora团队</div>
+
+        <el-card style="margin-top:20px;">
+          <div slot="header">前端</div>
           <div>
             <el-row>
               <el-col :span="8" :offset="8">
-                <a href="https://github.com/flipped-aurora">
+                <!-- 你的博客 -->
+                <a href="">
                   <img
-                    class="org-img dom-center"
-                    src="@/assets/flipped-aurora.png"
-                    alt="flipped-aurora"
+                      class="org-img dom-center"
+                      src="@/assets/imgdjh.jpg"
+                      alt=""
                   />
                 </a>
               </el-col>
             </el-row>
-            <el-row style="margin-left: 40px" :gutter="20">
-              <template v-for="(item, index) in members">
-                <el-col :span="8" :key="index">
-                  <a :href="item.html_url">
-                    <img class="avatar-img" :src="item.avatar_url" />
-                    <a class="author-name" style="">{{ item.login }}</a>
-                  </a>
-                </el-col>
-              </template>
+
+            <el-row :gutter="10">
+              <el-col :span="8" :offset="4">
+                <b>姓&emsp;&emsp;名：</b>
+              </el-col>
+
+              <el-col :span="12">
+                <b>段霁航</b>
+              </el-col>
+            </el-row>
+
+            <el-row :gutter="10" style="margin-top: -20px">
+              <el-col :span="8" :offset="4">
+                <p>昵&emsp;&emsp;称：</p>
+              </el-col>
+
+              <el-col :span="12">
+                <p></p>
+              </el-col>
+            </el-row>
+
+            <el-row :gutter="10" style="margin-top: -20px">
+              <el-col :span="8" :offset="4">
+                <p>班&emsp;&emsp;级：</p>
+              </el-col>
+
+              <el-col :span="12" style="margin-top: 2px">
+                <p></p>
+              </el-col>
+            </el-row>
+
+            <el-row :gutter="10" style="margin-top: -20px">
+              <el-col :span="8" :offset="4">
+                <p>联系方式：</p>
+              </el-col>
+
+              <el-col :span="12" style="margin-top: -1px">
+                <p></p>
+              </el-col>
             </el-row>
           </div>
         </el-card>
-      </el-col>
-      <el-col :span="12">
-        <el-card>
-          <div slot="header">
-            提交记录
-          </div>
+
+        <el-card style="margin-top:20px;">
+          <div slot="header">后端</div>
           <div>
-            <Timeline
-              :timeline-items="dataTimeline"
-              :message-when-no-items="messageWhenNoItems"
-              :uniqueTimeline="true"
-              :unique-year="true"
-              :show-day-and-month="true"
-              order="desc"
-              dateLocale="zh-CN"
-            />
+            <el-row>
+              <el-col :span="8" :offset="8">
+                <!-- 你的博客 -->
+                <a href="">
+                  <img
+                      class="org-img dom-center"
+                      src="@/assets/imgljk.jpg"
+                      alt=""
+                  />
+                </a>
+              </el-col>
+            </el-row>
+
+            <el-row :gutter="10">
+              <el-col :span="8" :offset="4">
+                <b>姓&emsp;&emsp;名：</b>
+              </el-col>
+
+              <el-col :span="12">
+                <b>刘继坤</b>
+              </el-col>
+            </el-row>
+
+            <el-row :gutter="10" style="margin-top: -20px">
+              <el-col :span="8" :offset="4">
+                <p>昵&emsp;&emsp;称：</p>
+              </el-col>
+
+              <el-col :span="12">
+                <p></p>
+              </el-col>
+            </el-row>
+
+            <el-row :gutter="10" style="margin-top: -20px">
+              <el-col :span="8" :offset="4">
+                <p>班&emsp;&emsp;级：</p>
+              </el-col>
+
+              <el-col :span="12" style="margin-top: 2px">
+                <p></p>
+              </el-col>
+            </el-row>
+
+            <el-row :gutter="10" style="margin-top: -20px">
+              <el-col :span="8" :offset="4">
+                <p>联系方式：</p>
+              </el-col>
+
+              <el-col :span="12" style="margin-top: -1px">
+                <p></p>
+              </el-col>
+            </el-row>
           </div>
-          <el-button class="load-more" @click="loadMore" type="text"
-            >Load more</el-button
-          >
         </el-card>
       </el-col>
     </el-row>
@@ -171,7 +255,7 @@ export default {
   color: darkblue;
   line-height: 100px;
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
 
 .dom-center {
