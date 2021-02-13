@@ -56,10 +56,10 @@ func DeleteSelect(c *gin.Context) {
 	}
 	if err := service.DeleteSelect(class); err != nil {
 		global.GVA_LOG.Error("退选失败!", zap.Any("err", err))
-		if err == constant.ErrClassNotExist {
-			response.FailWithMessage("课程不存在", c)
+		if err == constant.ErrDelClassTooMany {
+			response.FailWithMessage("退课次数太多", c)
 		} else {
-			response.FailWithMessage("选课人数已满", c)
+			response.FailWithMessage("未知原因，退课失败", c)
 		}
 	} else {
 		response.OkWithMessage("退选成功", c)
@@ -71,17 +71,21 @@ func DeleteSelect(c *gin.Context) {
 // @Security ApiKeyAuth
 // @accept application/json
 // @Produce application/json
-// @Param data body model.Class true "创建Class"
+// @Param data body model.Class true "获取ClassList"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
-// @Router /class/createClass [post]
-func GetMyClass(c *gin.Context) {
-	var class model.Class
+// @Router /class/getMyClass [get]
+func GetPersonalClasses(c *gin.Context) {
+	var class request.ClassList
 	_ = c.ShouldBindJSON(&class)
-	if err := service.CreateClass(class); err != nil {
-		global.GVA_LOG.Error("创建失败!", zap.Any("err", err))
-		response.FailWithMessage("创建失败", c)
+	if err := utils.Verify(class, utils.StudentVerify); err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	if _, err := service.GetPersonalClasses(class); err != nil {
+		global.GVA_LOG.Error("获取失败!", zap.Any("err", err))
+		response.FailWithMessage("获取失败", c)
 	} else {
-		response.OkWithMessage("创建成功", c)
+		response.OkWithMessage("获取成功", c)
 	}
 }
 
@@ -201,5 +205,29 @@ func GetClassList(c *gin.Context) {
 			Page:     pageInfo.Page,
 			PageSize: pageInfo.PageSize,
 		}, "获取成功", c)
+	}
+}
+
+// @Tags Class
+// @Summary 分页获取Class列表
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body request.ClassSearch true "分页获取Class列表"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
+// @Router /class/GetClassListWithPerson [get]
+func GetClassListWithPerson(c *gin.Context) {
+	var class request.ClassList
+	_ = c.ShouldBindJSON(&class)
+	if err := utils.Verify(class, utils.StudentVerify); err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+
+	if err, list, total := service.GetClassInfoListWithPerson(class); err != nil {
+		global.GVA_LOG.Error("获取失败", zap.Any("err", err))
+		response.FailWithMessage("获取失败", c)
+	} else {
+		response.OkWithData(gin.H{"courses": list,"total":total}, c)
 	}
 }

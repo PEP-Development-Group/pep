@@ -9,8 +9,8 @@ type ClassSearch struct {
 	PageInfo
 }
 
-type ClassListSearch struct {
-
+type ClassList struct {
+	Username string `json:"username" form:"username"`
 }
 
 type SelectClass struct {

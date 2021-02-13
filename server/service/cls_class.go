@@ -1,9 +1,14 @@
 package service
 
 import (
+	"errors"
+	"fmt"
+	"gin-vue-admin/constant"
 	"gin-vue-admin/global"
 	"gin-vue-admin/model"
 	"gin-vue-admin/model/request"
+	"gin-vue-admin/model/response"
+	"gorm.io/gorm"
 )
 
 //@author: [sh1luo](https://github.com/sh1luo)
@@ -12,29 +17,28 @@ import (
 //@param: class request.SelectClass
 //@return: err error
 
-func SelectClass(sel request.SelectClass) (err error) {
-	user := model.SysUser{Username: sel.Username}
-	return global.GVA_DB.Model(&user).Association("Classes").Append(&model.Class{
-		GVA_MODEL: global.GVA_MODEL{
-			ID: sel.Cid,
-		},
+func SelectClass(sc request.SelectClass) (err error) {
+	cls := model.Class{}
+	err = global.GVA_DB.Select("selected", "total", "id").Where("id = ?", sc.Cid).First(&cls).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return constant.ErrClassNotExist
+	}
+
+	if cls.Selected >= cls.Total {
+		return constant.ErrClassHasFull
+	}
+
+	return global.GVA_DB.Transaction(func(tx *gorm.DB) error {
+		err = tx.Model(&cls).Update("selected", cls.Selected+1).Error
+		if err != nil {
+			return err
+		}
+		scm := model.SelectClass{
+			Cid:      sc.Cid,
+			Username: sc.Username,
+		}
+		return tx.Create(&scm).Error
 	})
-
-
-	//cls := model.Class{}
-	//db := global.GVA_DB.Where("id = ?", class.Cid)
-	//err = db.First(&cls).Error
-	//if err != nil {
-	//	return constant.ErrClassNotExist
-	//}
-	//sl := model.SelectClass{}
-	//if cls.Selected < cls.Total {
-	//	sl.Username = class.Username
-	//	sl.Cid = class.Cid
-	//	db.UpdateColumn("selected", cls.Selected+1)
-	//	return global.GVA_DB.Create(&sl).Error
-	//}
-	//return constant.ErrClassHasFull
 }
 
 //@author: [sh1luo](https://github.com/sh1luo)
@@ -43,11 +47,52 @@ func SelectClass(sel request.SelectClass) (err error) {
 //@param: class request.SelectClass
 //@return: err error
 
-func DeleteSelect(class request.SelectClass) (err error) {
-	return global.GVA_DB.Where("cid = ? AND username = ?", class.Cid, class.Username).Delete(&model.SelectClass{}).Error
+func DeleteSelect(sc request.SelectClass) (err error) {
+	user := model.SysUser{}
+
+	err = global.GVA_DB.Select("CancelNums").Where("username = ?", sc.Username).First(&user).Error
+	if err != nil {
+		fmt.Print("err1")
+		return err
+	}
+
+	if user.CancelNums >= global.GVA_CONFIG.System.CancelNums {
+		return constant.ErrDelClassTooMany
+	}
+
+	return global.GVA_DB.Transaction(func(tx *gorm.DB) error {
+		err = tx.Model(&user).Where("username = ?", sc.Username).Update("CancelNums", user.CancelNums+1).Error
+		if err != nil {
+			fmt.Print("err2")
+			return err
+		}
+
+		cls := model.Class{}
+		db := tx.Select("selected").Where("id = ?", sc.Cid)
+		_ = db.First(&cls).Error
+		err = db.Update("selected", cls.Selected-1).Error
+		if err != nil {
+			return err
+		}
+
+		return tx.Where("class_id = ? AND username = ?", sc.Cid, sc.Username).Delete(&model.SelectClass{}).Error
+	})
 }
 
-//@author: [piexlmax](https://github.com/piexlmax)
+//@author: [sh1luo](https://github.com/sh1luo)
+//@function: GetPersonalClasses
+//@description: 获取个人选课列表
+//@param: class request.SelectClass
+//@return: err error
+
+func GetPersonalClasses(rq request.ClassList) (cls []model.Class, err error) {
+	// 获取所有选课记录的课程id
+	var scm []model.SelectClass
+	global.GVA_DB.Select("cid").Where("username = ?", rq.Username).Find(&scm)
+	return
+}
+
+//@author: [piexlmax](https//github.com/piexlmax)
 //@function: CreateClass
 //@description: 创建Class记录
 //@param: class model.Class
@@ -127,4 +172,100 @@ func GetClassInfoList(info request.ClassSearch) (err error, list interface{}, to
 	err = db.Count(&total).Error
 	err = db.Limit(limit).Offset(offset).Find(&classs).Error
 	return err, classs, total
+}
+
+//func GetClassInfoListWithPerson(rq request.ClassList) (err error, list interface{}, total int) {
+//	var cls []model.Class
+//	global.GVA_DB.Model(&model.Class{}).Order("cname").Find(&cls)
+//
+//	l := len(cls)
+//	m := make(map[uint]bool, l)
+//
+//	// 获取所有选课的课程id
+//	if l > 0 {
+//		var scs []model.SelectClass
+//		global.GVA_DB.Select("cid").Where("username = ?", rq.Username).Find(&scs)
+//		for _, sc :=  range scs {
+//			m[sc.Cid] = true
+//		}
+//	}
+//
+//	// 同名分类
+//	var classes response.ClassListResponse
+//	curGroup := &response.Group{}
+//	if l > 0 {
+//		curGroup.ID = 0
+//		curGroup.ClassName = cls[0].Cname
+//		curGroup.Hours = cls[0].Ccredit
+//	}
+//	idx := 1
+//	for i := 0; i < l; i++ {
+//		if i > 0 && cls[i].Cname != cls[i-1].Cname {
+//			classes.G = append(classes.G, *curGroup) // 加入之前的分组
+//			curGroup = &response.Group{}             // 创建新分组
+//			curGroup.ID = idx
+//			idx++
+//			curGroup.ClassName = cls[i].Cname
+//			curGroup.Hours = cls[i].Ccredit
+//		}
+//		c := response.Course{
+//			ID: cls[i].ID, TeacherName: cls[i].Tname, Time: cls[i].Time,
+//			Desc: cls[i].Desc, ClassRoom: cls[i].Classroom, Max: cls[i].Total,
+//			Now: cls[i].Selected,
+//		}
+//		if m[cls[i].ID] {
+//			c.Selected = true
+//		}
+//
+//		curGroup.List = append(curGroup.List, c)
+//	}
+//
+//	return err, classes, len(classes.G)
+//}
+
+func GetClassInfoListWithPerson(rq request.ClassList) (err error, list interface{}, total int) {
+	var cls []model.Class
+	global.GVA_DB.Find(&cls)
+
+	l := len(cls)
+	m := make(map[uint]bool, l)
+
+	var classes response.ClassListResponse
+	if l > 0 {
+		// 用于后续判断该用户是否选了该课程
+		var scs []model.SelectClass
+		global.GVA_DB.Select("class_id").Where("username = ?", rq.Username).Find(&scs)
+		for _, sc := range scs {
+			m[sc.Cid] = true
+		}
+
+		// 同名分类
+		classes.G = make(map[string]*response.Group, 15)
+		gidx := 0
+		for _, c := range cls {
+			if _, ok := classes.G[c.Cname]; !ok {
+				classes.G[c.Cname] = &response.Group{}
+				classes.G[c.Cname].ID = gidx
+				gidx++
+				classes.G[c.Cname].Hours = c.Ccredit
+				//classes.G[c.Cname].ClassName = c.Cname
+			}
+			co := response.Course{
+				ID:          c.ID,
+				TeacherName: c.Tname,
+				Time:        c.Time,
+				Desc:        c.Desc,
+				ClassRoom:   c.Classroom,
+				Max:         c.Total,
+				Now:         c.Selected,
+			}
+			if m[c.ID] {
+				co.Selected = true
+			}
+			classes.G[c.Cname].List = append(classes.G[c.Cname].List, co)
+
+		}
+	}
+
+	return err, classes.G, len(classes.G)
 }

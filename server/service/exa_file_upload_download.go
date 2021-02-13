@@ -75,7 +75,7 @@ func GetFileRecordInfoList(info request.PageInfo) (err error, list interface{}, 
 //@param: header *multipart.FileHeader, noSave string
 //@return: err error, file model.ExaFileUploadAndDownload
 
-func UploadFile(header *multipart.FileHeader, cancelNums int) (err error, file model.ExaFileUploadAndDownload) {
+func UploadFile(header *multipart.FileHeader) (err error, file model.ExaFileUploadAndDownload) {
 	oss := upload.NewOss()
 	filePath, key, uploadErr := oss.UploadFile(header)
 	if uploadErr != nil {
@@ -88,14 +88,14 @@ func UploadFile(header *multipart.FileHeader, cancelNums int) (err error, file m
 		Tag:  s[len(s)-1],
 		Key:  key,
 	}
-	if err = parse(filePath, cancelNums); err != nil {
+	if err = parse(filePath); err != nil {
 		return err, f
 	}
 	return Upload(f), f
 }
 
-func parse(filename string, cancelNums int) error {
-	st, err := ParseExcelFile(filename, cancelNums)
+func parse(filename string) error {
+	st, err := ParseExcelFile(filename)
 	if err != nil {
 		return err
 	}
@@ -108,7 +108,7 @@ func parse(filename string, cancelNums int) error {
 	return nil
 }
 
-func ParseExcelFile(bs string, cancelNums int) (*[]model.SysUser, error) {
+func ParseExcelFile(bs string) (*[]model.SysUser, error) {
 	wb, err := xlsx.OpenFile(bs)
 	if err != nil {
 		return nil, err
@@ -128,7 +128,6 @@ func ParseExcelFile(bs string, cancelNums int) (*[]model.SysUser, error) {
 		s.Password = utils.MD5V([]byte(s.PID)) // 密码身份证后8位
 		s.AuthorityId = "1"
 		s.UUID = uuid.NewV4()
-		s.CancelNums = cancelNums
 		st = append(st, s)
 		return nil
 	})

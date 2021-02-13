@@ -16,6 +16,8 @@ import (
 func main() {
 	// TODO:feature: 管理员留言消息
 	// TODO:optimize: 建立索引
+	// TODO:只能查询本人信息，验证x-token
+	// TODO:username改为int64
 
 	global.GVA_VP = core.Viper()          // 初始化Viper
 	global.GVA_LOG = core.Zap()           // 初始化zap日志库
