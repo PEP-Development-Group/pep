@@ -6,4 +6,6 @@ type System struct {
 	DbType        string `mapstructure:"db-type" json:"dbType" yaml:"db-type"`
 	OssType       string `mapstructure:"oss-type" json:"ossType" yaml:"oss-type"`
 	UseMultipoint bool   `mapstructure:"use-multipoint" json:"useMultipoint" yaml:"use-multipoint"`
+
+	CancelNums int `mapstructure:"cancel_nums" json:"cancel_nums" yaml:"cancel_nums"`
 }

@@ -3,15 +3,19 @@ package response
 import "time"
 
 // 学生选课列表返回
-type ClassList struct {
-	ID        int    `json:"id"`
-	ClassName string `json:"class_name"`
-	Hours     int    `json:"hours"`
-	l         []List
+type ClassListResponse struct {
+	G map[string]*Group `json:"classes"`
 }
 
-type List struct {
-	ID          int       `json:"id"`
+type Group struct {
+	ID        int    `json:"id"`
+	// ClassName string `json:"class_name"`
+	Hours     int    `json:"hours"`
+	List         []Course
+}
+
+type Course struct {
+	ID          uint       `json:"id"`
 	TeacherName string    `json:"teacher_name"`
 	Time        time.Time `json:"time"`
 	Desc        string    `json:"desc"`
@@ -25,7 +29,7 @@ type List struct {
 {
     "code": 0,
     "data": {
-        "courseList": [
+        "classes": [
             {
                 "id": 1,
                 "name": "分光计",
