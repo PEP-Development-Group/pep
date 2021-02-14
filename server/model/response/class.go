@@ -25,6 +25,20 @@ type Course struct {
 	Selected    bool      `json:"selected"`
 }
 
+type PersonalClassResponse struct {
+	Crs []ClassRecord `json:"crs"`
+}
+
+type ClassRecord struct {
+	ID        uint   `json:"id"`
+	Cname     string `json:"cname"`
+	Hours     int    `json:"hours"`
+	Tname     string `json:"tname"`
+	Desc      string `json:"desc"`
+	Classroom string `json:"classroom"`
+	Grade     uint   `json:"grade"`
+}
+
 /*
 {
     "code": 0,

@@ -1,7 +1,6 @@
 package v1
 
 import (
-	"gin-vue-admin/constant"
 	"gin-vue-admin/global"
 	"gin-vue-admin/model"
 	"gin-vue-admin/model/request"
@@ -29,11 +28,7 @@ func SelectClass(c *gin.Context) {
 	}
 	if err := service.SelectClass(class); err != nil {
 		global.GVA_LOG.Error("选课失败!", zap.Any("err", err))
-		if err == constant.ErrClassNotExist {
-			response.FailWithMessage("课程不存在", c)
-		} else {
-			response.FailWithMessage("选课人数已满", c)
-		}
+		response.FailWithMessage(err.Error(), c)
 	} else {
 		response.OkWithMessage("选课成功", c)
 	}
@@ -56,11 +51,7 @@ func DeleteSelect(c *gin.Context) {
 	}
 	if err := service.DeleteSelect(class); err != nil {
 		global.GVA_LOG.Error("退选失败!", zap.Any("err", err))
-		if err == constant.ErrDelClassTooMany {
-			response.FailWithMessage("退课次数太多", c)
-		} else {
-			response.FailWithMessage("未知原因，退课失败", c)
-		}
+		response.FailWithMessage(err.Error(), c)
 	} else {
 		response.OkWithMessage("退选成功", c)
 	}
@@ -81,11 +72,11 @@ func GetPersonalClasses(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	if _, err := service.GetPersonalClasses(class); err != nil {
+	if list, total, err := service.GetPersonalClasses(class); err != nil {
 		global.GVA_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", c)
 	} else {
-		response.OkWithMessage("获取成功", c)
+		response.OkWithData(gin.H{"list": list, "total": total}, c)
 	}
 }
 

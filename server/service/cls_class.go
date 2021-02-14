@@ -2,7 +2,6 @@ package service
 
 import (
 	"errors"
-	"fmt"
 	"gin-vue-admin/constant"
 	"gin-vue-admin/global"
 	"gin-vue-admin/model"
@@ -33,10 +32,13 @@ func SelectClass(sc request.SelectClass) (err error) {
 		if err != nil {
 			return err
 		}
-		scm := model.SelectClass{
-			Cid:      sc.Cid,
-			Username: sc.Username,
+		scm := model.SelectClass{}
+		err = tx.Where("class_id = ? AND username = ?", sc.Cid, sc.Username).First(&scm).Error
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			return constant.ErrClassHasSelected
 		}
+		scm.Cid = sc.Cid
+		scm.Username = sc.Username
 		return tx.Create(&scm).Error
 	})
 }
@@ -49,33 +51,39 @@ func SelectClass(sc request.SelectClass) (err error) {
 
 func DeleteSelect(sc request.SelectClass) (err error) {
 	user := model.SysUser{}
-
-	err = global.GVA_DB.Select("CancelNums").Where("username = ?", sc.Username).First(&user).Error
-	if err != nil {
-		fmt.Print("err1")
-		return err
-	}
-
-	if user.CancelNums >= global.GVA_CONFIG.System.CancelNums {
+	global.GVA_DB.Select("CancelNums").Where("username = ?", sc.Username).First(&user)
+	if user.CancelNums == 0 {
 		return constant.ErrDelClassTooMany
 	}
 
 	return global.GVA_DB.Transaction(func(tx *gorm.DB) error {
-		err = tx.Model(&user).Where("username = ?", sc.Username).Update("CancelNums", user.CancelNums+1).Error
+		cls := model.SelectClass{}
+
+		tmptx := tx.Where("class_id = ? AND username = ?", sc.Cid, sc.Username)
+		tmptx.First(&cls)
+		if errors.Is(tmptx.Error, gorm.ErrRecordNotFound) {
+			return constant.ErrClassHasNotSelected
+		}
+
+		err = tmptx.Delete(&model.SelectClass{}).Error
 		if err != nil {
-			fmt.Print("err2")
+			return constant.ErrDelClass
+		}
+
+		err = tx.Model(&user).Where("username = ?", sc.Username).Update("CancelNums", user.CancelNums-1).Error
+		if err != nil {
 			return err
 		}
 
-		cls := model.Class{}
-		db := tx.Select("selected").Where("id = ?", sc.Cid)
-		_ = db.First(&cls).Error
-		err = db.Update("selected", cls.Selected-1).Error
+		c := model.Class{}
+		tmptx2 := tx.Select("selected").Where("id = ?", sc.Cid)
+		tmptx2.First(&c)
+		err = tmptx2.Update("selected", c.Selected-1).Error
 		if err != nil {
-			return err
+			return constant.ErrDelClass
 		}
 
-		return tx.Where("class_id = ? AND username = ?", sc.Cid, sc.Username).Delete(&model.SelectClass{}).Error
+		return nil
 	})
 }
 
@@ -85,10 +93,38 @@ func DeleteSelect(sc request.SelectClass) (err error) {
 //@param: class request.SelectClass
 //@return: err error
 
-func GetPersonalClasses(rq request.ClassList) (cls []model.Class, err error) {
-	// 获取所有选课记录的课程id
+func GetPersonalClasses(rq request.ClassList) (resp response.PersonalClassResponse, total int, err error) {
 	var scm []model.SelectClass
-	global.GVA_DB.Select("cid").Where("username = ?", rq.Username).Find(&scm)
+	global.GVA_DB.Select("class_id", "grade").Where("username = ?", rq.Username).Find(&scm)
+	if len(scm) == 0 {
+		return
+	}
+
+	var ids []uint
+	m := make(map[uint]uint)
+	for _, sc := range scm {
+		ids = append(ids, sc.Cid)
+		m[sc.Cid] = sc.Grade
+	}
+
+	var cls []model.Class
+	global.GVA_DB.Select("id", "cname", "ccredit", "tname", "desc", "classroom").Find(&cls, ids)
+
+	for _, c := range cls {
+		if g, ok := m[c.ID]; ok {
+			resp.Crs = append(resp.Crs, response.ClassRecord{
+				ID:        c.ID,
+				Cname:     c.Cname,
+				Hours:     c.Ccredit,
+				Tname:     c.Tname,
+				Desc:      c.Desc,
+				Classroom: c.Classroom,
+				Grade:     g,
+			})
+		}
+	}
+
+	total = len(resp.Crs)
 	return
 }
 
@@ -110,7 +146,8 @@ func CreateClass(class model.Class) (err error) {
 //@return: err error
 
 func DeleteClass(class model.Class) (err error) {
-	err = global.GVA_DB.Delete(&class).Error
+	// 直接从db中删除
+	err = global.GVA_DB.Unscoped().Delete(&class).Error
 	return err
 }
 

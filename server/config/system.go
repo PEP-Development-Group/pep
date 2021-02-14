@@ -7,5 +7,6 @@ type System struct {
 	OssType       string `mapstructure:"oss-type" json:"ossType" yaml:"oss-type"`
 	UseMultipoint bool   `mapstructure:"use-multipoint" json:"useMultipoint" yaml:"use-multipoint"`
 
-	CancelNums int `mapstructure:"cancel_nums" json:"cancel_nums" yaml:"cancel_nums"`
+	FirstDay   string `mapstructure:"first-day" json:"first-day" yaml:"first-day"`
+	CancelNums int       `mapstructure:"cancel_nums" json:"cancel_nums" yaml:"cancel_nums"`
 }
