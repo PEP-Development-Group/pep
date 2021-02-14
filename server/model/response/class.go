@@ -8,14 +8,14 @@ type ClassListResponse struct {
 }
 
 type Group struct {
-	ID        int    `json:"id"`
+	ID int `json:"id"`
 	// ClassName string `json:"class_name"`
-	Hours     int    `json:"hours"`
-	List         []Course
+	Hours int `json:"hours"`
+	List  []Course
 }
 
 type Course struct {
-	ID          uint       `json:"id"`
+	ID          uint      `json:"id"`
 	TeacherName string    `json:"teacher_name"`
 	Time        time.Time `json:"time"`
 	Desc        string    `json:"desc"`

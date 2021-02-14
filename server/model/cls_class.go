@@ -11,7 +11,7 @@ type Class struct {
 	global.GVA_MODEL
 	Ccredit   int       `json:"ccredit" form:"ccredit" gorm:"column:ccredit;comment:学分;type:int"`
 	Cname     string    `json:"cname" form:"cname" gorm:"column:cname;comment:课程名;type:varchar(20);"`
-	Desc 		string `json:"desc" form:"desc" gorm:"column:desc;comment:上课时间中文描述;type:varchar(15);"`
+	Desc      string    `json:"desc" form:"desc" gorm:"column:desc;comment:上课时间中文描述;type:varchar(15);"`
 	Etime     time.Time `json:"etime" form:"etime" gorm:"column:etime;comment:选课结束;type:datetime;"`
 	Stime     time.Time `json:"stime" form:"stime" gorm:"column:stime;comment:选课开始;type:datetime;"`
 	Time      time.Time `json:"time" form:"time" gorm:"column:time;comment:上课时间;type:datetime;"`
@@ -24,7 +24,7 @@ type Class struct {
 type SelectClass struct {
 	global.GVA_MODEL
 	Username string `json:"username" gorm:"column:username;comment:学号;type:varchar(20);"`
-	Cid      uint    `json:"cid" gorm:"column:class_id;comment:课程id;type:int;"`
+	Cid      uint   `json:"cid" gorm:"column:class_id;comment:课程id;type:int;"`
 }
 
 func (Class) TableName() string {
