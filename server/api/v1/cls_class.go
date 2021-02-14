@@ -67,7 +67,7 @@ func DeleteSelect(c *gin.Context) {
 }
 
 // @Tags Class
-// @Summary 获取个人已选课程
+// @Summary 获取个人已选课程(首页用)
 // @Security ApiKeyAuth
 // @accept application/json
 // @Produce application/json
@@ -228,6 +228,6 @@ func GetClassListWithPerson(c *gin.Context) {
 		global.GVA_LOG.Error("获取失败", zap.Any("err", err))
 		response.FailWithMessage("获取失败", c)
 	} else {
-		response.OkWithData(gin.H{"courses": list,"total":total}, c)
+		response.OkWithData(gin.H{"courses": list, "total": total}, c)
 	}
 }

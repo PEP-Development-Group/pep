@@ -15,5 +15,5 @@ type ClassList struct {
 
 type SelectClass struct {
 	Username string `json:"username" form:"username"`
-	Cid      uint    `json:"cid" form:"cid"`
+	Cid      uint   `json:"cid" form:"cid"`
 }

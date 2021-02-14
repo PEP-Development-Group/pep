@@ -29,8 +29,8 @@ func UploadFile(c *gin.Context) {
 		return
 	}
 	cn, _ := strconv.Atoi(cancelNums)
-	global.GVA_CONFIG.System.CancelNums = cn	// 每人最多退课次数
-	err, file = service.UploadFile(header) // 文件上传后拿到文件路径
+	global.GVA_CONFIG.System.CancelNums = cn // 每人最多退课次数
+	err, file = service.UploadFile(header)   // 文件上传后拿到文件路径
 	if err != nil {
 		global.GVA_LOG.Error("修改数据库链接失败!", zap.Any("err", err))
 		response.FailWithMessage("修改数据库链接失败", c)
