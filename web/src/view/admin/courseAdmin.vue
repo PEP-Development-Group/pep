@@ -13,7 +13,7 @@
         </el-form-item>
         <div class="right-op">
           <el-form-item>
-            <el-button @click="openDialog" type="primary">新增课程</el-button>
+            <el-button @click="openDialog" type="primary" size="mini">新增课程</el-button>
           </el-form-item>
           <el-form-item>
             <el-popover placement="top" v-model="deleteVisible" width="160">
@@ -87,29 +87,41 @@
     ></el-pagination>
 
     <el-dialog :before-close="closeDialog" :visible.sync="dialogFormVisible" title="课程操作">
-      <el-form :model="formData" label-position="right" label-width="80px">
-        <el-form-item label="学分:">
-          <el-input v-model.number="formData.ccredit" clearable placeholder="请输入"></el-input>
-        </el-form-item>
-
+      <el-form :model="formData" label-position="right" label-width="80px" :inline="false">
         <el-form-item label="课程名:">
           <el-input v-model="formData.cname" clearable placeholder="请输入"></el-input>
         </el-form-item>
-
-        <el-form-item label="选课结束:">
-          <el-date-picker type="datetime" placeholder="选择日期" v-model="formData.etime" clearable></el-date-picker>
+        <el-form-item label="教师:">
+          <el-input v-model="formData.tname" clearable placeholder="请输入"></el-input>
         </el-form-item>
+        <el-form-item label="选课时间:">
+          <el-date-picker type="datetimerange" range-separator="至"
+                          start-placeholder="开始时间"
+                          end-placeholder="结束时间" placeholder="选择时间" v-model="timespan" clearable>
 
-        <el-form-item label="选课开始:">
-          <el-date-picker type="datetime" placeholder="选择日期" v-model="formData.stime" clearable></el-date-picker>
+          </el-date-picker>
         </el-form-item>
 
         <el-form-item label="上课时间:">
-          <el-date-picker type="datetime" placeholder="选择日期" v-model="formData.time" clearable></el-date-picker>
+          <el-input placeholder="请输入周数" v-model="formData.time">
+            <template slot="append">周</template>
+          </el-input>
         </el-form-item>
-
-        <el-form-item label="教师名:">
-          <el-input v-model="formData.tname" clearable placeholder="请输入"></el-input>
+        <el-form-item label="星期:">
+          <el-radio-group size="small" v-model="formData.dayOfWeek">
+            <el-radio-button v-for="(item,i) in dayOfWeekOP" :key="i" :label="item.value">
+              {{ item.label }}
+            </el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="课时:" class="inline-item">
+          <el-input-number v-model="formData.ccredit"></el-input-number>
+        </el-form-item>
+        <el-form-item label="节数:" class="inline-item">
+          <el-input-number v-model="formData.classTime"></el-input-number>
+        </el-form-item>
+        <el-form-item>
+          {{ desc }}
         </el-form-item>
       </el-form>
       <div class="dialog-footer" slot="footer">
@@ -127,7 +139,7 @@ import {
   deleteClassByIds,
   updateClass,
   findClass,
-  getClassList
+  getClass
 } from "@/api/course";  //  此处请自行替换地址
 import {formatTimeToStr} from "@/utils/date";
 import infoList from "@/mixins/infoList";
@@ -137,7 +149,7 @@ export default {
   mixins: [infoList],
   data() {
     return {
-      listApi: getClassList,
+      listApi: getClass,
       dialogFormVisible: false,
       type: "",
       deleteVisible: false,
@@ -146,10 +158,40 @@ export default {
         cname: "",
         etime: new Date(),
         stime: new Date(),
-        time: new Date(),
+        time: null,
         tname: "",
-
-      }
+        desc: "",
+        dayOfWeek: null,
+        classTime: 1,
+        classroom: "",
+        total: null
+      },
+      dayOfWeekOP: [
+        {
+          "label": "一",
+          "value": 1
+        }, {
+          "label": "二",
+          "value": 2
+        }, {
+          "label": "三",
+          "value": 3
+        }, {
+          "label": "四",
+          "value": 4
+        }, {
+          "label": "五",
+          "value": 5
+        }, {
+          "label": "六",
+          "value": 6
+        }, {
+          "label": "日",
+          "value": 7
+        }
+      ],
+      timespan: [],
+      dayOfWeek: ['一', '二', '三', '四', '五', '六', 'ri']
     };
   },
   filters: {
@@ -167,6 +209,12 @@ export default {
       } else {
         return "";
       }
+    }
+  },
+  computed: {
+    desc() {
+      if (this.formData.time && this.formData.dayOfWeek && this.formData.classTime)
+        return "第" + this.formData.time + "周  周" + this.dayOfWeek[this.formData.dayOfWeek - 1] + "  " + "第" + this.formData.classTime + "节"
     }
   },
   methods: {
@@ -286,6 +334,10 @@ export default {
 </script>
 
 <style lang="scss">
+.el-input {
+  width: auto;
+}
+
 .operator-box {
   margin-left: 10px;
 
@@ -296,5 +348,17 @@ export default {
 
 .text-wrapper, .text-wrapper .cell {
   white-space: pre-wrap !important;
+}
+
+.el-date-editor .el-range__icon, .el-date-editor .el-range-separator {
+  line-height: 22px;
+}
+
+.inline-item {
+  display: inline-block;
+}
+
+.el-form-item__content .el-input-group {
+  vertical-align: middle;
 }
 </style>

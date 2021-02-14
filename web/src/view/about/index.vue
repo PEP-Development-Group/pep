@@ -6,54 +6,31 @@
           <div slot="header">前端</div>
           <div>
             <el-row>
-              <el-col :span="8" :offset="8">
+              <el-col>
+
                 <a href="https://shuangxunian.gitee.io/">
-                  <img
-                      class="org-img dom-center"
-                      src="@/assets/imgwyl.jpg"
-                      alt=""
-                  />
+                  <el-avatar :src="imgwyl" class="org-img" shape="square"></el-avatar>
                 </a>
               </el-col>
             </el-row>
 
             <el-row :gutter="10">
-              <el-col :span="8" :offset="4">
-                <b>姓&emsp;&emsp;名：</b>
-              </el-col>
-
-              <el-col :span="12">
-                <b>王跃霖</b>
+              <el-col>
+                <b>霜序廿</b>
               </el-col>
             </el-row>
 
-            <el-row :gutter="10" style="margin-top: -20px">
-              <el-col :span="8" :offset="4">
-                <p>昵&emsp;&emsp;称：</p>
-              </el-col>
+            <el-row :gutter="10" style="margin-top: -15px">
 
-              <el-col :span="12">
-                <p>霜序廿</p>
-              </el-col>
-            </el-row>
-
-            <el-row :gutter="10" style="margin-top: -20px">
-              <el-col :span="8" :offset="4">
-                <p>班&emsp;&emsp;级：</p>
-              </el-col>
-
-              <el-col :span="12" style="margin-top: 2px">
-                <p>CS1705</p>
-              </el-col>
-            </el-row>
-
-            <el-row :gutter="10" style="margin-top: -20px">
-              <el-col :span="8" :offset="4">
-                <p>联系方式：</p>
-              </el-col>
-
-              <el-col :span="12" style="margin-top: -1px">
+              <el-col style="margin-top: 2px">
                 <p>shuangxunian@gmail.com</p>
+              </el-col>
+            </el-row>
+
+            <el-row :gutter="10" style="margin-top: -10px">
+
+              <el-col style="margin-top: -1px">
+                <p>wls来写一段废话</p>
               </el-col>
             </el-row>
           </div>
@@ -67,55 +44,30 @@
           <div slot="header">前端</div>
           <div>
             <el-row>
-              <el-col :span="8" :offset="8">
+              <el-col>
                 <!-- 你的博客 -->
                 <a href="">
-                  <img
-                      class="org-img dom-center"
-                      src="@/assets/imgdjh.jpg"
-                      alt=""
-                  />
+                  <el-avatar :src="imgdjh" class="org-img" shape="square"></el-avatar>
                 </a>
               </el-col>
             </el-row>
 
             <el-row :gutter="10">
-              <el-col :span="8" :offset="4">
-                <b>姓&emsp;&emsp;名：</b>
-              </el-col>
-
-              <el-col :span="12">
-                <b>段霁航</b>
+              <el-col>
+                <b>BladeHiker</b>
               </el-col>
             </el-row>
 
-            <el-row :gutter="10" style="margin-top: -20px">
-              <el-col :span="8" :offset="4">
-                <p>昵&emsp;&emsp;称：</p>
-              </el-col>
+            <el-row :gutter="10" style="margin-top: -15px">
 
-              <el-col :span="12">
-                <p></p>
+              <el-col style="margin-top: 2px">
+                <p>bladehiker@outlook.com</p>
               </el-col>
             </el-row>
 
-            <el-row :gutter="10" style="margin-top: -20px">
-              <el-col :span="8" :offset="4">
-                <p>班&emsp;&emsp;级：</p>
-              </el-col>
-
-              <el-col :span="12" style="margin-top: 2px">
-                <p></p>
-              </el-col>
-            </el-row>
-
-            <el-row :gutter="10" style="margin-top: -20px">
-              <el-col :span="8" :offset="4">
-                <p>联系方式：</p>
-              </el-col>
-
-              <el-col :span="12" style="margin-top: -1px">
-                <p></p>
+            <el-row :gutter="10" style="margin-top: -10px">
+              <el-col style="margin-top: -1px">
+                <p>这里写一段废话</p>
               </el-col>
             </el-row>
           </div>
@@ -127,55 +79,31 @@
           <div slot="header">后端</div>
           <div>
             <el-row>
-              <el-col :span="8" :offset="8">
+              <el-col>
                 <!-- 你的博客 -->
                 <a href="">
-                  <img
-                      class="org-img dom-center"
-                      src="@/assets/imgljk.jpg"
-                      alt=""
-                  />
+                  <el-avatar :src="imgljk" class="org-img" shape="square"></el-avatar>
                 </a>
               </el-col>
             </el-row>
 
             <el-row :gutter="10">
-              <el-col :span="8" :offset="4">
-                <b>姓&emsp;&emsp;名：</b>
-              </el-col>
-
-              <el-col :span="12">
-                <b>刘继坤</b>
+              <el-col>
+                <b>sh1luo</b>
               </el-col>
             </el-row>
 
-            <el-row :gutter="10" style="margin-top: -20px">
-              <el-col :span="8" :offset="4">
-                <p>昵&emsp;&emsp;称：</p>
-              </el-col>
+            <el-row :gutter="10" style="margin-top: -15px">
 
-              <el-col :span="12">
-                <p></p>
+              <el-col style="margin-top: 2px">
+                <p>silo1999@163.com</p>
               </el-col>
             </el-row>
 
-            <el-row :gutter="10" style="margin-top: -20px">
-              <el-col :span="8" :offset="4">
-                <p>班&emsp;&emsp;级：</p>
-              </el-col>
+            <el-row :gutter="10" style="margin-top: -10px">
 
-              <el-col :span="12" style="margin-top: 2px">
-                <p></p>
-              </el-col>
-            </el-row>
-
-            <el-row :gutter="10" style="margin-top: -20px">
-              <el-col :span="8" :offset="4">
-                <p>联系方式：</p>
-              </el-col>
-
-              <el-col :span="12" style="margin-top: -1px">
-                <p></p>
+              <el-col style="margin-top: -1px">
+                <p>这里也写一段废话</p>
               </el-col>
             </el-row>
           </div>
@@ -187,58 +115,31 @@
 </template>
 
 <script>
-import {Commits, Members} from "@/api/github";
-import Timeline from "timeline-vuejs";
-
 export default {
-  name: "Test",
-  components: {
-    Timeline,
-  },
+  name: "About",
   data() {
     return {
-      messageWhenNoItems: "There arent commits",
-      members: [],
-      dataTimeline: [],
-      page: 0,
+      imgwyl: require('@/assets/imgwyl.jpg'),
+      imgdjh: require('@/assets/imgdjh.jpg'),
+      imgljk: require('@/assets/imgljk.jpg'),
     };
   },
-  created() {
-    this.loadCommits();
-    this.loadMembers();
-  },
-  methods: {
-    loadMore() {
-      this.page++;
-      this.loadCommits();
-    },
-    loadCommits() {
-      Commits(this.page).then(({data}) => {
-        data.forEach((element) => {
-          if (element.commit.message) {
-            this.dataTimeline.push({
-              from: new Date(element.commit.author.date),
-              title: element.commit.author.name,
-              showDayAndMonth: true,
-              description: `<a style="color: #26191b" href="${element.html_url}">${element.commit.message}</a>`,
-            });
-          }
-        });
-      });
-    },
-    loadMembers() {
-      Members().then(({data}) => {
-        this.members = data;
-        this.members.sort();
-      });
-    },
-  },
+  methods: {}
 };
 </script>
 
 <style scoped>
-.load-more {
-  margin-left: 120px;
+.el-card {
+  text-align: center;
+}
+
+.el-card b {
+  font-size: x-large;
+  font-weight: lighter;
+}
+
+.el-card p {
+  font-size: small;
 }
 
 .avatar-img {
@@ -254,16 +155,6 @@ export default {
 .org-img {
   height: 150px;
   width: 150px;
-}
-
-.author-name {
-  float: left;
-  line-height: 65px !important;
-  margin-left: 10px;
-  color: darkblue;
-  line-height: 100px;
-  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-  "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
 
 .dom-center {

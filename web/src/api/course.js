@@ -42,12 +42,12 @@ export const deleteSelect = (data) => {
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
 // @Router /class/createClass [post]
 export const createClass = (data) => {
-     return service({
-         url: "/class/createClass",
-         method: 'post',
-         data
-     })
- }
+    return service({
+        url: "/class/createClass",
+        method: 'post',
+        data: data
+    })
+}
 
 
 // @Tags Class
@@ -58,13 +58,13 @@ export const createClass = (data) => {
 // @Param data body model.Class true "删除Class"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"删除成功"}"
 // @Router /class/deleteClass [delete]
- export const deleteClass = (data) => {
-     return service({
-         url: "/class/deleteClass",
-         method: 'delete',
-         data
-     })
- }
+export const deleteClass = (data) => {
+    return service({
+        url: "/class/deleteClass",
+        method: 'delete',
+        data: data
+    })
+}
 
 // @Tags Class
 // @Summary 删除Class
@@ -74,13 +74,13 @@ export const createClass = (data) => {
 // @Param data body request.IdsReq true "批量删除Class"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"删除成功"}"
 // @Router /class/deleteClass [delete]
- export const deleteClassByIds = (data) => {
-     return service({
-         url: "/class/deleteClassByIds",
-         method: 'delete',
-         data
-     })
- }
+export const deleteClassByIds = (data) => {
+    return service({
+        url: "/class/deleteClassByIds",
+        method: 'delete',
+        data: data
+    })
+}
 
 // @Tags Class
 // @Summary 更新Class
@@ -90,13 +90,13 @@ export const createClass = (data) => {
 // @Param data body model.Class true "更新Class"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"更新成功"}"
 // @Router /class/updateClass [put]
- export const updateClass = (data) => {
-     return service({
-         url: "/class/updateClass",
-         method: 'put',
-         data
-     })
- }
+export const updateClass = (data) => {
+    return service({
+        url: "/class/updateClass",
+        method: 'put',
+        data: data
+    })
+}
 
 
 // @Tags Class
@@ -107,13 +107,13 @@ export const createClass = (data) => {
 // @Param data body model.Class true "用id查询Class"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"查询成功"}"
 // @Router /class/findClass [get]
- export const findClass = (params) => {
-     return service({
-         url: "/class/findClass",
-         method: 'get',
-         params
-     })
- }
+export const findClass = (params) => {
+    return service({
+        url: "/class/findClass",
+        method: 'get',
+        params
+    })
+}
 
 
 // @Tags Class
@@ -124,18 +124,42 @@ export const createClass = (data) => {
 // @Param data body request.PageInfo true "分页获取Class列表"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
 // @Router /class/getClassList [get]
- export const getClassList = (params) => {
-     return service({
-         url: "/class/getClassList",
-         method: 'get',
-         params
-     })
- }
-
-export const getClassListForElective = (params) => {
-    return service(({
-        url: "/class/getClassList",//TODO 后端API未完成
+export const getClass = (params) => {
+    return service({
+        url: "/class/getClass",
         method: 'get',
         params
-    }))
+    })
+}
+
+export const GetClassListWithPerson = (params) => {
+    return service({
+        url: "/class/getClassList",
+        method: 'get',
+        params
+    })
+}
+
+export const SelectClass = (data) => {
+    return service({
+        url: "/class/selectClass",
+        method: 'post',
+        data: data
+    })
+}
+
+export const DeleteSelect = (data) => {
+    return service({
+        url: "/class/deleteSelect",
+        method: 'delete',
+        data: data
+    })
+}
+
+export const GetPersonalClasses = (params) => {
+    return service({
+        url: "/class/GetPersonalClasses",
+        method: 'get',
+        params
+    })
 }
