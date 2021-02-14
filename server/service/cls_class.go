@@ -93,10 +93,38 @@ func DeleteSelect(sc request.SelectClass) (err error) {
 //@param: class request.SelectClass
 //@return: err error
 
-func GetPersonalClasses(rq request.ClassList) (cls []model.Class, err error) {
-	// 获取所有选课记录的课程id
+func GetPersonalClasses(rq request.ClassList) (resp response.PersonalClassResponse, total int, err error) {
 	var scm []model.SelectClass
-	global.GVA_DB.Select("cid").Where("username = ?", rq.Username).Find(&scm)
+	global.GVA_DB.Select("class_id", "grade").Where("username = ?", rq.Username).Find(&scm)
+	if len(scm) == 0 {
+		return
+	}
+
+	var ids []uint
+	m := make(map[uint]uint)
+	for _, sc := range scm {
+		ids = append(ids, sc.Cid)
+		m[sc.Cid] = sc.Grade
+	}
+
+	var cls []model.Class
+	global.GVA_DB.Select("id", "cname", "ccredit", "tname", "desc", "classroom").Find(&cls, ids)
+
+	for _, c := range cls {
+		if g, ok := m[c.ID]; ok {
+			resp.Crs = append(resp.Crs, response.ClassRecord{
+				ID:        c.ID,
+				Cname:     c.Cname,
+				Hours:     c.Ccredit,
+				Tname:     c.Tname,
+				Desc:      c.Desc,
+				Classroom: c.Classroom,
+				Grade:     g,
+			})
+		}
+	}
+
+	total = len(resp.Crs)
 	return
 }
 
@@ -118,7 +146,8 @@ func CreateClass(class model.Class) (err error) {
 //@return: err error
 
 func DeleteClass(class model.Class) (err error) {
-	err = global.GVA_DB.Delete(&class).Error
+	// 直接从db中删除
+	err = global.GVA_DB.Unscoped().Delete(&class).Error
 	return err
 }
 

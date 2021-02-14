@@ -72,11 +72,11 @@ func GetPersonalClasses(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	if _, err := service.GetPersonalClasses(class); err != nil {
+	if list, total, err := service.GetPersonalClasses(class); err != nil {
 		global.GVA_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", c)
 	} else {
-		response.OkWithMessage("获取成功", c)
+		response.OkWithData(gin.H{"list": list, "total": total}, c)
 	}
 }
 

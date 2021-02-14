@@ -46,6 +46,7 @@ system:
   oss-type: 'local'    # 控制oss选择走本期还是 七牛等其他仓 自行增加其他oss仓可以在 server/utils/upload/upload.go 中 NewOss函数配置
   use-multipoint: false
   cancel_nums: 3
+  first-day: "2021-03-01 17:34:26"
 
 # captcha configuration
 captcha:
