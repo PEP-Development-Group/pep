@@ -18,6 +18,10 @@ func InitClassRouter(Router *gin.RouterGroup) {
 		ClassRouter.GET("getClass", v1.GetClassList)                 // Class管理列表
 		ClassRouter.GET("getPersonalClasses", v1.GetPersonalClasses) // 获取个人课表
 
+		ClassRouter.GET("getTeacherClassList", v1.GetTeacherClassList)         // 教师获取个人课表
+		ClassRouter.GET("getTeacherAClassStuList", v1.GetTeacherAClassStuList) // 教师某课所有学生情况
+		ClassRouter.PATCH("setStuGrade", v1.SetStuGrade) // 教师某课所有学生情况
+
 		ClassRouter.POST("selectClass", v1.SelectClass)     // 选课
 		ClassRouter.DELETE("deleteSelect", v1.DeleteSelect) // 退选
 	}
