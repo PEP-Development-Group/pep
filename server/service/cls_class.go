@@ -8,6 +8,7 @@ import (
 	"gin-vue-admin/model/request"
 	"gin-vue-admin/model/response"
 	"gorm.io/gorm"
+	"time"
 )
 
 //@author: [sh1luo](https://github.com/sh1luo)
@@ -76,8 +77,14 @@ func DeleteSelect(sc request.SelectClass) (err error) {
 		}
 
 		c := model.Class{}
-		tmptx2 := tx.Select("selected").Where("id = ?", sc.Cid)
+		tmptx2 := tx.Select("selected", "time").Where("id = ?", sc.Cid)
 		tmptx2.First(&c)
+
+		// 上课当天不允许退课
+		if time.Now().Day() == c.Time.Day() {
+			return constant.ErrDelClassOnDayOfClass
+		}
+
 		err = tmptx2.Update("selected", c.Selected-1).Error
 		if err != nil {
 			return constant.ErrDelClass

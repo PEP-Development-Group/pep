@@ -8,5 +8,5 @@ type System struct {
 	UseMultipoint bool   `mapstructure:"use-multipoint" json:"useMultipoint" yaml:"use-multipoint"`
 
 	FirstDay   string `mapstructure:"first-day" json:"first-day" yaml:"first-day"`
-	CancelNums int       `mapstructure:"cancel_nums" json:"cancel_nums" yaml:"cancel_nums"`
+	CancelNums int    `mapstructure:"cancel_nums" json:"cancel_nums" yaml:"cancel_nums"`
 }
