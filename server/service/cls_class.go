@@ -218,7 +218,7 @@ func GetClassInfoList(info request.ClassSearch) (err error, list interface{}, to
 	return err, classs, total
 }
 
-func GetClassInfoListWithPerson(rq request.UsernameRequest) (err error, list interface{}, total int) {
+func GetStuClassList(rq request.UsernameRequest) (err error, list interface{}, total int) {
 	var cls []model.Class
 	global.GVA_DB.Find(&cls)
 

@@ -9,7 +9,6 @@ type ClassListResponse struct {
 
 type Group struct {
 	ID int `json:"id"`
-	// ClassName string `json:"class_name"`
 	Hours int `json:"hours"`
 	List  []Course
 }
