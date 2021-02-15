@@ -200,11 +200,11 @@ func GetClassList(c *gin.Context) {
 }
 
 // @Tags Class
-// @Summary 分页获取Class列表
+// @Summary 学生获取个人课表
 // @Security ApiKeyAuth
 // @accept application/json
 // @Produce application/json
-// @Param data body request.ClassSearch true "分页获取Class列表"
+// @Param data body request.UsernameRequest true "学生获取个人课表"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
 // @Router /class/GetClassListWithPerson [get]
 func GetClassListWithPerson(c *gin.Context) {

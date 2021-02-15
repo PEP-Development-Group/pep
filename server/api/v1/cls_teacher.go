@@ -14,9 +14,9 @@ import (
 // @Security ApiKeyAuth
 // @accept application/json
 // @Produce application/json
-// @Param data body request.ClassSearch true "教师获取自己的上课列表"
+// @Param data body request.UsernameRequest true "教师获取自己的上课列表"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
-// @Router /class/GetClassListWithPerson [get]
+// @Router /class/GetTeacherClassList [get]
 func GetTeacherClassList(c *gin.Context) {
 	var class request.UsernameRequest
 	_ = c.ShouldBindJSON(&class)
@@ -34,9 +34,9 @@ func GetTeacherClassList(c *gin.Context) {
 // @Security ApiKeyAuth
 // @accept application/json
 // @Produce application/json
-// @Param data body request.ClassSearch true "教师查看自己某节课的学生列表"
+// @Param data body request.TeacherRequest true "教师查看自己某节课的学生列表"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
-// @Router /class/GetClassListWithPerson [get]
+// @Router /class/GetTeacherAClassStuList [get]
 func GetTeacherAClassStuList(c *gin.Context) {
 	var class request.TeacherRequest
 	_ = c.ShouldBindJSON(&class)
@@ -54,9 +54,9 @@ func GetTeacherAClassStuList(c *gin.Context) {
 // @Security ApiKeyAuth
 // @accept application/json
 // @Produce application/json
-// @Param data body request.ClassSearch true "教师上某学生某课成绩"
+// @Param data body request.TeacherRequest true "教师上某学生某课成绩"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"提交成功"}"
-// @Router /class/GetClassListWithPerson [patch]
+// @Router /class/SetStuGrade [patch]
 func SetStuGrade(c *gin.Context) {
 	// grade, username ,cid
 	var class request.TeacherRequest
