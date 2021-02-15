@@ -100,7 +100,7 @@ func DeleteSelect(sc request.SelectClass) (err error) {
 //@param: class request.SelectClass
 //@return: err error
 
-func GetPersonalClasses(rq request.ClassList) (resp response.PersonalClassResponse, total int, err error) {
+func GetPersonalClasses(rq request.UsernameRequest) (resp response.PersonalClassResponse, total int, err error) {
 	var scm []model.SelectClass
 	global.GVA_DB.Select("class_id", "grade").Where("username = ?", rq.Username).Find(&scm)
 	if len(scm) == 0 {
@@ -218,56 +218,7 @@ func GetClassInfoList(info request.ClassSearch) (err error, list interface{}, to
 	return err, classs, total
 }
 
-//func GetClassInfoListWithPerson(rq request.ClassList) (err error, list interface{}, total int) {
-//	var cls []model.Class
-//	global.GVA_DB.Model(&model.Class{}).Order("cname").Find(&cls)
-//
-//	l := len(cls)
-//	m := make(map[uint]bool, l)
-//
-//	// 获取所有选课的课程id
-//	if l > 0 {
-//		var scs []model.SelectClass
-//		global.GVA_DB.Select("cid").Where("username = ?", rq.Username).Find(&scs)
-//		for _, sc :=  range scs {
-//			m[sc.Cid] = true
-//		}
-//	}
-//
-//	// 同名分类
-//	var classes response.ClassListResponse
-//	curGroup := &response.Group{}
-//	if l > 0 {
-//		curGroup.ID = 0
-//		curGroup.ClassName = cls[0].Cname
-//		curGroup.Hours = cls[0].Ccredit
-//	}
-//	idx := 1
-//	for i := 0; i < l; i++ {
-//		if i > 0 && cls[i].Cname != cls[i-1].Cname {
-//			classes.G = append(classes.G, *curGroup) // 加入之前的分组
-//			curGroup = &response.Group{}             // 创建新分组
-//			curGroup.ID = idx
-//			idx++
-//			curGroup.ClassName = cls[i].Cname
-//			curGroup.Hours = cls[i].Ccredit
-//		}
-//		c := response.Course{
-//			ID: cls[i].ID, TeacherName: cls[i].Tname, Time: cls[i].Time,
-//			Desc: cls[i].Desc, ClassRoom: cls[i].Classroom, Max: cls[i].Total,
-//			Now: cls[i].Selected,
-//		}
-//		if m[cls[i].ID] {
-//			c.Selected = true
-//		}
-//
-//		curGroup.List = append(curGroup.List, c)
-//	}
-//
-//	return err, classes, len(classes.G)
-//}
-
-func GetClassInfoListWithPerson(rq request.ClassList) (err error, list interface{}, total int) {
+func GetClassInfoListWithPerson(rq request.UsernameRequest) (err error, list interface{}, total int) {
 	var cls []model.Class
 	global.GVA_DB.Find(&cls)
 
@@ -312,4 +263,78 @@ func GetClassInfoListWithPerson(rq request.ClassList) (err error, list interface
 	}
 
 	return err, classes.G, len(classes.G)
+}
+
+func GetTeacherClassList(rq request.UsernameRequest) (err error, list interface{}, total int) {
+	var t model.SysUser
+	err = global.GVA_DB.Select("name").First(&t, "username = ?", rq.Username).Error
+	if err != nil {
+		return
+	}
+
+	var cls []model.Class
+	err = global.GVA_DB.Select("id", "cname", "ccredit", "desc", "time", "selected", "classroom").Find(&cls, "tname = ?", t.Name).Error
+	if err != nil {
+		return
+	}
+
+	var resp response.TeacherClassResponse
+	for _, c := range cls {
+		resp.Tcrs = append(resp.Tcrs, response.TeacherClassRecord{
+			Cid:       c.ID,
+			Cname:     c.Cname,
+			Ccredit:   c.Ccredit,
+			Desc:      c.Desc,
+			Time:      c.Time,
+			Selected:  c.Selected,
+			Classroom: c.Classroom,
+		})
+	}
+
+	return nil, resp, len(resp.Tcrs)
+}
+
+func GetTeacherAClassStuList(rq request.TeacherRequest) (err error, list interface{}, total int) {
+	var scs []model.SelectClass
+	err = global.GVA_DB.Select("username", "grade").Find(&scs, "class_id = ?", rq.Cid).Error
+	if err != nil {
+		return
+	}
+
+	var names []string
+	m := make(map[string]uint)
+	for _, s := range scs {
+		names = append(names, s.Username)
+		m[s.Username] = s.Grade
+	}
+
+	var users []model.SysUser
+	err = global.GVA_DB.Select("username", "name", "class").Find(&users, "username IN ?", names).Error
+	if err != nil {
+		return
+	}
+
+	var resp response.TeacherClassStuResponse
+	for _, u := range users {
+		resp.Tcsrs = append(resp.Tcsrs, response.TeacherClassStuRecord{
+			Username: u.Username,
+			Name:     u.Name,
+			Class:    u.Class,
+			Grade:    m[u.Username],
+		})
+	}
+
+	return nil, resp.Tcsrs, len(resp.Tcsrs)
+}
+
+func SetStuGrade(rq request.TeacherRequest) (err error) {
+	var sc model.SelectClass
+	db := global.GVA_DB.Select("grade").Where("class_id = ? AND username = ?", rq.Cid, rq.Username).First(&sc)
+	if db.Error != nil {
+		return constant.InternalErr
+	}
+	if sc.Grade != 0 {
+		return constant.ErrSetGradeTooMany
+	}
+	return db.Update("grade", rq.Grade).Error
 }

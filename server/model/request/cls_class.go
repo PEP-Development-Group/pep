@@ -9,8 +9,15 @@ type ClassSearch struct {
 	PageInfo
 }
 
-type ClassList struct {
+type UsernameRequest struct {
 	Username string `json:"username" form:"username"`
+}
+
+type TeacherRequest struct {
+	Username string `json:"username"`
+	Tname    string `json:"tname"`
+	Cid      uint   `json:"cid"`
+	Grade    uint   `json:"grade"`
 }
 
 type SelectClass struct {

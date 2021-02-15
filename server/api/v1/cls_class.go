@@ -66,7 +66,7 @@ func DeleteSelect(c *gin.Context) {
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
 // @Router /class/getMyClass [get]
 func GetPersonalClasses(c *gin.Context) {
-	var class request.ClassList
+	var class request.UsernameRequest
 	_ = c.ShouldBindJSON(&class)
 	if err := utils.Verify(class, utils.StudentVerify); err != nil {
 		response.FailWithMessage(err.Error(), c)
@@ -208,14 +208,14 @@ func GetClassList(c *gin.Context) {
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
 // @Router /class/GetClassListWithPerson [get]
 func GetClassListWithPerson(c *gin.Context) {
-	var class request.ClassList
+	var class request.UsernameRequest
 	_ = c.ShouldBindJSON(&class)
 	if err := utils.Verify(class, utils.StudentVerify); err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
 
-	if err, list, total := service.GetClassInfoListWithPerson(class); err != nil {
+	if err, list, total := service.GetTeacherClassList(class); err != nil {
 		global.GVA_LOG.Error("获取失败", zap.Any("err", err))
 		response.FailWithMessage("获取失败", c)
 	} else {

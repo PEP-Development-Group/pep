@@ -39,6 +39,31 @@ type ClassRecord struct {
 	Grade     uint   `json:"grade"`
 }
 
+type TeacherClassResponse struct {
+	Tcrs []TeacherClassRecord `json:"classes"`
+}
+
+type TeacherClassRecord struct {
+	Cid       uint      `json:"cid"`
+	Cname     string    `json:"cname"`
+	Ccredit   int       `json:"ccredit"`
+	Desc      string    `json:"desc"`
+	Time      time.Time `json:"time"`
+	Selected  int       `json:"selected"`
+	Classroom string    `json:"classroom"`
+}
+
+type TeacherClassStuResponse struct {
+	Tcsrs []TeacherClassStuRecord `json:"students"`
+}
+
+type TeacherClassStuRecord struct {
+	Username string `json:"username"`
+	Name     string `json:"name"`
+	Class    string `json:"class"`
+	Grade    uint   `json:"grade"`
+}
+
 /*
 {
     "code": 0,
