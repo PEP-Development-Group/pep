@@ -62,7 +62,7 @@ func DeleteSelect(c *gin.Context) {
 // @accept application/json
 // @Produce application/json
 // @Param data body request.UsernameRequest true "学生选课课表（树状api）"
-// @Success 200 {string} string "{"success":true,"data":{"web/class.json"},"msg":"获取成功"}"
+// @Success 200 {string} string "{"success":true,"data":{""},"msg":"获取成功"}"
 // @Router /class/GetStuClassList [get]
 func GetStuClassList(c *gin.Context) {
 	var class request.UsernameRequest
