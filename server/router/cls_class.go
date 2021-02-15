@@ -15,7 +15,7 @@ func InitClassRouter(Router *gin.RouterGroup) {
 		ClassRouter.PUT("updateClass", v1.UpdateClass)              // 更新Class
 		ClassRouter.GET("findClass", v1.FindClass)                  // 根据ID获取Class
 
-		ClassRouter.GET("getClassList", v1.GetClassListWithPerson)   // 学生选课Class列表（树状api）
+		ClassRouter.GET("getClassList", v1.GetStuClassList)          // 学生选课Class列表（树状api）
 		ClassRouter.GET("getClass", v1.GetClassList)                 // Class管理列表
 		ClassRouter.GET("getPersonalClasses", v1.GetPersonalClasses) // 学生获取个人课表
 
