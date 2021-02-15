@@ -5,7 +5,7 @@
         <el-form-item label="课程名">
           <el-input placeholder="搜索条件" v-model="searchInfo.cname"></el-input>
         </el-form-item>
-        <el-form-item label="教师名">
+        <el-form-item label="教师">
           <el-input placeholder="搜索条件" v-model="searchInfo.tname"></el-input>
         </el-form-item>
         <el-form-item>
@@ -13,7 +13,7 @@
         </el-form-item>
         <div class="right-op">
           <el-form-item>
-            <el-button @click="openDialog" type="primary" size="mini">新增课程</el-button>
+            <el-button @click="openDialog" type="success" size="mini">新增课程</el-button>
           </el-form-item>
           <el-form-item>
             <el-popover placement="top" v-model="deleteVisible" width="160">
@@ -39,8 +39,8 @@
         tooltip-effect="dark"
     >
       <el-table-column type="selection" width="50" align="center"></el-table-column>
-      <el-table-column label="任课教师" prop="tname" min-width="120" sortable></el-table-column>
       <el-table-column label="课程名" prop="cname" min-width="180" sortable></el-table-column>
+      <el-table-column label="任课教师" prop="tname" min-width="120" sortable></el-table-column>
       <el-table-column label="学时" prop="ccredit" min-width="80" sortable filter-placement="top"
                        :filters="[{text: '2学时',value: 2},{text: '4学时',value: 4}]"
                        :filter-method="filterHandler"></el-table-column>
@@ -61,7 +61,7 @@
       <el-table-column label="上课时间" prop="time" min-width="120" sortable>
         <template slot-scope="scope">
           <div class="text-wrapper">
-            {{ scope.row.time|formatDate }}
+            {{ scope.row.desc | formatDesc }}
           </div>
         </template>
       </el-table-column>
@@ -94,6 +94,12 @@
         <el-form-item label="教师:">
           <el-input v-model="formData.tname" clearable placeholder="请输入"></el-input>
         </el-form-item>
+        <el-form-item label="教室:">
+          <el-input v-model="formData.classroom" clearable placeholder="请输入"></el-input>
+        </el-form-item>
+        <el-form-item label="总人数:">
+          <el-input-number v-model="formData.total" clearable placeholder="请输入"></el-input-number>
+        </el-form-item>
         <el-form-item label="选课时间:">
           <el-date-picker type="datetimerange" range-separator="至"
                           start-placeholder="开始时间"
@@ -103,12 +109,12 @@
         </el-form-item>
 
         <el-form-item label="上课时间:">
-          <el-input placeholder="请输入周数" v-model="formData.time">
+          <el-input placeholder="请输入周数" v-model="week" type="number">
             <template slot="append">周</template>
           </el-input>
         </el-form-item>
         <el-form-item label="星期:">
-          <el-radio-group size="small" v-model="formData.dayOfWeek">
+          <el-radio-group size="small" v-model="dayOfWeek">
             <el-radio-button v-for="(item,i) in dayOfWeekOP" :key="i" :label="item.value">
               {{ item.label }}
             </el-radio-button>
@@ -118,11 +124,27 @@
           <el-input-number v-model="formData.ccredit"></el-input-number>
         </el-form-item>
         <el-form-item label="节数:" class="inline-item">
-          <el-input-number v-model="formData.classTime"></el-input-number>
+          <el-input-number v-model="classTime"></el-input-number>
         </el-form-item>
-        <el-form-item>
-          {{ desc }}
-        </el-form-item>
+        <el-divider v-if="description"></el-divider>
+        <el-card
+            v-if="description&&formData.cname&&formData.ccredit&&formData.tname&&formData.classroom&&formData.total"
+            class="summary">
+          <template slot="header">
+            <span>课程 : {{ formData.cname }}</span>&nbsp;
+            <el-tag size="mini" effect="dark">{{ formData.ccredit }}学时</el-tag>
+            <span style="float: right;color: #666666">摘要</span>
+          </template>
+          <span>
+          {{ description|formatDesc }}
+          </span>
+          <span>{{ formData.tname }}</span>
+          <el-tag effect="light" size="mini">{{ formData.classroom }}</el-tag>
+          <br>
+          <span>最大选课人数 : {{ formData.total }}</span>
+          <br>
+          <span>选课开放时间 : {{ timespan[0]|formatDate }} ~ {{ timespan[1]|formatDate }}</span>
+        </el-card>
       </el-form>
       <div class="dialog-footer" slot="footer">
         <el-button @click="closeDialog">取 消</el-button>
@@ -144,6 +166,7 @@ import {
 import {formatTimeToStr} from "@/utils/date";
 import infoList from "@/mixins/infoList";
 
+const formatDayOfWeek = ['一', '二', '三', '四', '五', '六', '日']
 export default {
   name: "Class",
   mixins: [infoList],
@@ -153,19 +176,20 @@ export default {
       dialogFormVisible: false,
       type: "",
       deleteVisible: false,
-      multipleSelection: [], formData: {
+      multipleSelection: [],
+      formData: {
         ccredit: 2,
         cname: "",
-        etime: new Date(),
-        stime: new Date(),
+        etime: null,
+        stime: null,
         time: null,
         tname: "",
         desc: "",
-        dayOfWeek: null,
-        classTime: 1,
         classroom: "",
-        total: null
+        total: 1
       },
+      classTime: 1,
+      dayOfWeek: null,
       dayOfWeekOP: [
         {
           "label": "一",
@@ -191,14 +215,15 @@ export default {
         }
       ],
       timespan: [],
-      dayOfWeek: ['一', '二', '三', '四', '五', '六', 'ri']
+      week: 1
+
     };
   },
   filters: {
     formatDate: function (time) {
       if (time != null && time != "") {
         var date = new Date(time);
-        return formatTimeToStr(date, "yyyy-MM-dd \n hh:mm:ss");
+        return formatTimeToStr(date, "yyyy年MM月dd日 \n hh:mm:ss");
       } else {
         return "";
       }
@@ -209,12 +234,19 @@ export default {
       } else {
         return "";
       }
+    },
+    formatDesc: function (d) {
+      if (d) {
+        let descList = d.split('-')
+        return "第" + descList[0] + "周 周" + formatDayOfWeek[descList[1] - 1] + " 第" + descList[2] + "节";
+      }
     }
   },
   computed: {
-    desc() {
-      if (this.formData.time && this.formData.dayOfWeek && this.formData.classTime)
-        return "第" + this.formData.time + "周  周" + this.dayOfWeek[this.formData.dayOfWeek - 1] + "  " + "第" + this.formData.classTime + "节"
+    description() {
+      if (this.week && this.dayOfWeek && this.classTime)
+        return this.week + "-" + this.dayOfWeek + "-" + this.classTime
+      return null
     }
   },
   methods: {
@@ -271,6 +303,11 @@ export default {
       this.type = "update";
       if (res.code == 0) {
         this.formData = res.data.reclass;
+        this.timespan = [this.formData.stime, this.formData.etime]
+        let descList = this.formData.desc.split('-')
+        this.week = descList[0]
+        this.dayOfWeek = descList[1]
+        this.classTime = descList[2]
         this.dialogFormVisible = true;
       }
     },
@@ -299,8 +336,15 @@ export default {
         this.getTableData();
       }
     },
+    pretreatment() {
+      this.formData.stime = new Date(this.timespan[0])
+      this.formData.etime = new Date(this.timespan[1])
+      this.formData.desc = this.description
+      this.formData.time = new Date()//TODO
+    },
     async enterDialog() {
       let res;
+      this.pretreatment()
       switch (this.type) {
         case "create":
           res = await createClass(this.formData);
@@ -359,6 +403,25 @@ export default {
 }
 
 .el-form-item__content .el-input-group {
+  vertical-align: middle;
+}
+
+.summary .el-card__header span:nth-child(1) {
+  font-size: 16px;
+  vertical-align: middle;
+}
+
+.summary .el-card__body {
+  line-height: 30px;
+  font-size: 18px;
+  font-weight: lighter;
+}
+
+.summary span {
+  margin-right: 5px;
+}
+
+.summary .el-tag {
   vertical-align: middle;
 }
 </style>

@@ -11,12 +11,11 @@
           </div>
         </template>
         <el-card v-for="l in item.List" class="lesson" shadow="hover">
-
           <el-progress class="lesson-progress" type="circle" :width="18" :show-text="false"
                        :percentage="selectPercent(l.now,l.max)"
                        :stroke-width="2"></el-progress>
           <span class="lesson-info">
-          <span class="space">{{ l.time | formatDate }}</span>
+          <span class="space">{{ l.desc|formatDesc }}</span>
           <span class="space">{{ l.teacher_name }}</span>
           <el-tag effect="light" size="mini" class="space">{{ l.class_room }}</el-tag>
           <el-tag effect="dark" size="mini" type="info" class="space" :color="(colors.time[0])">本周</el-tag>
@@ -43,6 +42,7 @@ import infoList from "@/mixins/infoList";
 import {store} from '@/store'
 
 const userInfo = store.getters['user/userInfo']
+const formatDayOfWeek = ['一', '二', '三', '四', '五', '六', '日']
 
 export default {
   name: "Elective",
@@ -71,6 +71,11 @@ export default {
         return bool ? "是" : "否";
       } else {
         return "";
+      }
+    }, formatDesc: function (d) {
+      if (d) {
+        let descList = d.split('-')
+        return "第" + descList[0] + "周 周" + formatDayOfWeek[descList[1] - 1] + " 第" + descList[2] + "节";
       }
     }
   },
