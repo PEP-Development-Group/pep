@@ -65,6 +65,8 @@
           </div>
         </template>
       </el-table-column>
+      <el-table-column label="教室" prop="classroom" min-width="120" sortable></el-table-column>
+      <el-table-column label="人数" prop="total" min-width="80" sortable></el-table-column>
       <el-table-column label="操作" width="200" align="center">
         <template slot-scope="scope">
           <el-button class="table-button" @click="updateClass(scope.row)" size="small" type="primary"
