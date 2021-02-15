@@ -333,7 +333,7 @@ func SetStuGrade(rq request.TeacherRequest) (err error) {
 	if db.Error != nil {
 		return constant.InternalErr
 	}
-	if sc.Grade != 0 {
+	if sc.Grade != 102 {
 		return constant.ErrSetGradeTooMany
 	}
 	return db.Update("grade", rq.Grade).Error
