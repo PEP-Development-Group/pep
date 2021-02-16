@@ -23,7 +23,8 @@ func CreateJsonBlackListRecord(jwt string) (err error) {
 //@return: bool
 
 func IsBlacklist(jwt string) bool {
-	return global.GVA_REDIS.Get(jwt).String() != ""
+	exist, _ := global.GVA_REDIS.Get(jwt).Result()
+	return  exist != ""
 }
 
 //@author: [piexlmax](https://github.com/piexlmax)
