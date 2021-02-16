@@ -64,7 +64,7 @@ func tokenNext(c *gin.Context, user model.SysUser) {
 
 	if !global.GVA_CONFIG.System.UseMultipoint {
 		response.OkWithDetailed(response.LoginResponse{
-			User:      user,
+			// User:      user,
 			Token:     token,
 			ExpiresAt: claims.StandardClaims.ExpiresAt * 1000,
 		}, "登录成功", c)
