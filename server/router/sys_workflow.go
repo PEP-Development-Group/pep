@@ -2,12 +2,11 @@ package router
 
 import (
 	"gin-vue-admin/api/v1"
-	"gin-vue-admin/middleware"
 	"github.com/gin-gonic/gin"
 )
 
 func InitWorkflowProcessRouter(Router *gin.RouterGroup) {
-	WorkflowProcessRouter := Router.Group("workflowProcess").Use(middleware.OperationRecord())
+	WorkflowProcessRouter := Router.Group("workflowProcess")
 	{
 		WorkflowProcessRouter.POST("createWorkflowProcess", v1.CreateWorkflowProcess)             // 新建WorkflowProcess
 		WorkflowProcessRouter.DELETE("deleteWorkflowProcess", v1.DeleteWorkflowProcess)           // 删除WorkflowProcess

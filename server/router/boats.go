@@ -2,12 +2,11 @@ package router
 
 import (
 	"gin-vue-admin/api/v1"
-	"gin-vue-admin/middleware"
 	"github.com/gin-gonic/gin"
 )
 
 func InitGlobalRouter(Router *gin.RouterGroup) {
-	GlobalRouter := Router.Group("board").Use(middleware.OperationRecord())
+	GlobalRouter := Router.Group("board")
 	{
 		GlobalRouter.POST("createBoardRecord", v1.CreateRecord)       // 新建留言板记录
 		//GlobalRouter.DELETE("deleteBoats", v1.DeleteBoats)           // 删除Boats
