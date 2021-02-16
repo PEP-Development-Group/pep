@@ -132,11 +132,11 @@ export const getClass = (params) => {
     })
 }
 
-export const GetClassListWithPerson = (params) => {
+export const GetClassListWithPerson = (data) => {
     return service({
         url: "/class/getClassList",
         method: 'get',
-        params
+        data: data
     })
 }
 
@@ -160,6 +160,31 @@ export const GetPersonalClasses = (params) => {
     return service({
         url: "/class/GetPersonalClasses",
         method: 'get',
+        params
+    })
+}
+
+export const getTeacherClassList = (data) => {
+    return service({
+        url: "/class/getTeacherClassList",
+        method: 'get',
+
+
+    })
+}
+
+export const getTeacherAClassStuList = (params) => {
+    return service({
+        url: "/class/getTeacherAClassStuList",
+        method: 'get',
+        params
+    })
+}
+
+export const setStuGrade = (params) => {
+    return service({
+        url: "/class/setStuGrade",
+        method: 'patch',
         params
     })
 }

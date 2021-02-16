@@ -11,7 +11,8 @@
           </div>
         </template>
         <el-card v-for="l in item.List" class="lesson" shadow="hover">
-          <el-progress class="lesson-progress" type="circle" :width="18" :show-text="false"
+          <i class="el-icon-check check" v-if="l.selected"></i>
+          <el-progress v-else class="lesson-progress" type="circle" :width="18" :show-text="false"
                        :percentage="selectPercent(l.now,l.max)"
                        :stroke-width="2"></el-progress>
           <span class="lesson-info">
@@ -190,4 +191,8 @@ export default {
   margin: 5px;
 }
 
+.check {
+  font-size: 18px;
+  vertical-align: middle;
+}
 </style>

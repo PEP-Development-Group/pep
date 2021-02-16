@@ -61,13 +61,13 @@
                 <li>
                   <p class="title">姓名</p>
                   <p class="desc">
-                    {{userInfo.name}}
+                    {{ userInfo.name }}
                   </p>
                 </li>
                 <li>
                   <p class="title">学号</p>
                   <p class="desc">
-                    {{userInfo.username}}
+                    {{ userInfo.username }}
                   </p>
                 </li>
                 <li>
@@ -83,8 +83,6 @@
         </div>
       </el-col>
     </el-row>
-
-    <ChooseImg ref="chooseImg" @enter-img="enterImg" />
 
     <el-dialog :visible.sync="showPassword" @close="clearPassword" title="修改密码" width="360px">
       <el-form :model="pwdModify" :rules="rules" label-width="80px" ref="modifyPwdForm">
@@ -106,10 +104,10 @@
   </div>
 </template>
 <script>
-import ChooseImg from "@/components/chooseImg";
-import { setUserInfo,changePassword } from "@/api/user";
+import {setUserInfo, changePassword} from "@/api/user";
 
-import { mapGetters, mapMutations } from "vuex";
+import {mapGetters, mapMutations} from "vuex";
+
 const path = process.env.VUE_APP_BASE_API;
 export default {
   name: "Person",
@@ -121,16 +119,16 @@ export default {
       pwdModify: {},
       rules: {
         password: [
-          { required: true, message: "请输入密码", trigger: "blur" },
-          { min: 6, message: "最少6个字符", trigger: "blur" }
+          {required: true, message: "请输入密码", trigger: "blur"},
+          {min: 6, message: "最少6个字符", trigger: "blur"}
         ],
         newPassword: [
-          { required: true, message: "请输入新密码", trigger: "blur" },
-          { min: 6, message: "最少6个字符", trigger: "blur" }
+          {required: true, message: "请输入新密码", trigger: "blur"},
+          {min: 6, message: "最少6个字符", trigger: "blur"}
         ],
         confirmPassword: [
-          { required: true, message: "请输入确认密码", trigger: "blur" },
-          { min: 6, message: "最少6个字符", trigger: "blur" },
+          {required: true, message: "请输入确认密码", trigger: "blur"},
+          {min: 6, message: "最少6个字符", trigger: "blur"},
           {
             validator: (rule, value, callback) => {
               if (value !== this.pwdModify.newPassword) {
@@ -145,9 +143,6 @@ export default {
       }
     };
   },
-  components: {
-    ChooseImg
-  },
   computed: {
     ...mapGetters("user", ["userInfo", "token"])
   },
@@ -161,7 +156,7 @@ export default {
             password: this.pwdModify.password,
             newPassword: this.pwdModify.newPassword
           }).then((res) => {
-            if(res.code == 0){
+            if (res.code == 0) {
               this.$message.success("修改密码成功！");
             }
             this.showPassword = false;
@@ -183,9 +178,9 @@ export default {
       this.$refs.chooseImg.open();
     },
     async enterImg(url) {
-      const res = await setUserInfo({ headerImg: url, ID: this.userInfo.ID });
+      const res = await setUserInfo({headerImg: url, ID: this.userInfo.ID});
       if (res.code == 0) {
-        this.ResetUserInfo({ headerImg: url });
+        this.ResetUserInfo({headerImg: url});
         this.$message({
           type: "success",
           message: "设置成功"
@@ -206,9 +201,11 @@ export default {
   position: relative;
   overflow: hidden;
 }
+
 .avatar-uploader .el-upload:hover {
   border-color: #409eff;
 }
+
 .avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
@@ -217,48 +214,60 @@ export default {
   line-height: 178px;
   text-align: center;
 }
+
 .avatar {
   width: 178px;
   height: 178px;
   display: block;
 }
+
 .avatar-box {
   box-shadow: -2px 0 20px -16px;
   width: 80%;
   height: 100%;
+
   .user-card {
     min-height: calc(90vh - 200px);
     padding: 30px 20px;
     text-align: center;
+
     .el-avatar {
       border-radius: 50%;
     }
+
     .user-personality {
       padding: 24px 0;
       text-align: center;
+
       p {
         font-size: 16px;
       }
+
       .nickname {
         font-size: 26px;
       }
-      .person-info{
+
+      .person-info {
         margin-top: 6px;
         font-size: 14px;
-        color:#999
+        color: #999
       }
     }
+
     .user-information {
       width: 100%;
       height: 100%;
       text-align: left;
+
       ul {
         display: inline-block;
         height: 100%;
+
         li {
           i {
             margin-right: 8px;
           }
+
           padding: 20px 0;
           font-size: 16px;
           font-weight: 400;
@@ -268,6 +277,7 @@ export default {
     }
   }
 }
+
 .user-addcount {
   ul {
     li {
@@ -276,40 +286,47 @@ export default {
         font-size: 18px;
         color: #696969;
       }
+
       .desc {
         font-size: 16px;
         padding: 0 10px 20px 10px;
         color: #a9a9a9;
+
         a {
           color: rgb(64, 158, 255);
           float: right;
         }
       }
+
       border-bottom: 2px solid #f0f2f5;
     }
   }
 }
-.user-headpic-update{
-    width: 120px;
-    height: 120px;
-    line-height: 120px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: center;
-    border-radius: 20px;
-     &:hover{
+
+.user-headpic-update {
+  width: 120px;
+  height: 120px;
+  line-height: 120px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  border-radius: 20px;
+
+  &:hover {
+    color: #fff;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.15) 0%, rgba(0, 0, 0, 0.15) 100%), radial-gradient(at top center, rgba(255, 255, 255, 0.40) 0%, rgba(0, 0, 0, 0.40) 120%) #989898;
+    background-blend-mode: multiply, multiply;
+
+    .update {
       color: #fff;
-      background: linear-gradient(to bottom, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.15) 100%), radial-gradient(at top center, rgba(255,255,255,0.40) 0%, rgba(0,0,0,0.40) 120%) #989898;
-      background-blend-mode: multiply,multiply;
-      .update{
-        color:#fff ;
-      }
-    }
-    .update{
-      height: 120px;
-      width: 120px;
-      text-align: center;
-      color:transparent;
     }
   }
+
+  .update {
+    height: 120px;
+    width: 120px;
+    text-align: center;
+    color: transparent;
+  }
+}
 </style>
