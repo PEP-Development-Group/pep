@@ -2,12 +2,11 @@ package router
 
 import (
 	"gin-vue-admin/api/v1"
-	"gin-vue-admin/middleware"
 	"github.com/gin-gonic/gin"
 )
 
 func InitClassRouter(Router *gin.RouterGroup) {
-	ClassRouter := Router.Group("class").Use(middleware.OperationRecord())
+	ClassRouter := Router.Group("class")
 	{
 		ClassRouter.POST("createClass", v1.CreateClass)             // 新建Class
 		ClassRouter.DELETE("deleteClass", v1.DeleteClass)           // 删除Class
