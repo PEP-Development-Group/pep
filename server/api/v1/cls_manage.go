@@ -128,4 +128,3 @@ func GetClassList(c *gin.Context) {
 		}, "获取成功", c)
 	}
 }
-

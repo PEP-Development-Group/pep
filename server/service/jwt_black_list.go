@@ -1,22 +1,19 @@
 package service
 
 import (
-	"errors"
 	"gin-vue-admin/global"
-	"gin-vue-admin/model"
-	"gorm.io/gorm"
 	"time"
 )
 
 //@author: [piexlmax](https://github.com/piexlmax)
-//@function: JsonInBlacklist
+//@function: CreateJsonBlackListRecord
 //@description: 拉黑jwt
 //@param: jwtList model.JwtBlacklist
 //@return: err error
 
-func JsonInBlacklist(jwtList model.JwtBlacklist) (err error) {
-	err = global.GVA_DB.Create(&jwtList).Error
-	return
+func CreateJsonBlackListRecord(jwt string) (err error) {
+	timer := time.Duration(global.GVA_CONFIG.JWT.ExpiresTime) * time.Second
+	return global.GVA_REDIS.Set(jwt, "", timer).Err()
 }
 
 //@author: [piexlmax](https://github.com/piexlmax)
@@ -26,8 +23,7 @@ func JsonInBlacklist(jwtList model.JwtBlacklist) (err error) {
 //@return: bool
 
 func IsBlacklist(jwt string) bool {
-	isNotFound := errors.Is(global.GVA_DB.Where("jwt = ?", jwt).First(&model.JwtBlacklist{}).Error, gorm.ErrRecordNotFound)
-	return !isNotFound
+	return global.GVA_REDIS.Get(jwt).String() != ""
 }
 
 //@author: [piexlmax](https://github.com/piexlmax)

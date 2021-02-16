@@ -5,7 +5,6 @@ import (
 	"gin-vue-admin/model/request"
 	"gin-vue-admin/model/response"
 	"gin-vue-admin/service"
-	"gin-vue-admin/utils"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
@@ -19,13 +18,10 @@ import (
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"选课成功"}"
 // @Router /class/selectClass [post]
 func SelectClass(c *gin.Context) {
-	var class request.SelectClass
-	_ = c.ShouldBindJSON(&class)
-	if err := utils.Verify(class, utils.StudentVerify); err != nil {
-		response.FailWithMessage(err.Error(), c)
-		return
-	}
-	if err := service.SelectClass(class); err != nil {
+	var sc request.SelectClass
+	sc.Username = getUsername(c)
+	_ = c.ShouldBindJSON(&sc)
+	if err := service.SelectClass(sc); err != nil {
 		global.GVA_LOG.Error("选课失败!", zap.Any("err", err))
 		response.FailWithMessage(err.Error(), c)
 	} else {
@@ -42,13 +38,10 @@ func SelectClass(c *gin.Context) {
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"退课成功"}"
 // @Router /class/deleteSelect [delete]
 func DeleteSelect(c *gin.Context) {
-	var class request.SelectClass
-	_ = c.ShouldBindJSON(&class)
-	if err := utils.Verify(class, utils.StudentVerify); err != nil {
-		response.FailWithMessage(err.Error(), c)
-		return
-	}
-	if err := service.DeleteSelect(class); err != nil {
+	var sc request.SelectClass
+	sc.Username = getUsername(c)
+	_ = c.ShouldBindJSON(&sc)
+	if err := service.DeleteSelect(sc); err != nil {
 		global.GVA_LOG.Error("退选失败!", zap.Any("err", err))
 		response.FailWithMessage(err.Error(), c)
 	} else {
@@ -65,14 +58,9 @@ func DeleteSelect(c *gin.Context) {
 // @Success 200 {string} string "{"success":true,"data":{""},"msg":"获取成功"}"
 // @Router /class/GetStuClassList [get]
 func GetStuClassList(c *gin.Context) {
-	var class request.UsernameRequest
-	_ = c.ShouldBindJSON(&class)
-	if err := utils.Verify(class, utils.StudentVerify); err != nil {
-		response.FailWithMessage(err.Error(), c)
-		return
-	}
-
-	if err, list, total := service.GetStuClassList(class); err != nil {
+	var u request.UsernameRequest
+	u.Username = getUsername(c)
+	if err, list, total := service.GetStuClassList(u); err != nil {
 		global.GVA_LOG.Error("获取失败", zap.Any("err", err))
 		response.FailWithMessage("获取失败", c)
 	} else {
@@ -89,13 +77,9 @@ func GetStuClassList(c *gin.Context) {
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
 // @Router /class/getMyClass [get]
 func GetPersonalClasses(c *gin.Context) {
-	var class request.UsernameRequest
-	_ = c.ShouldBindJSON(&class)
-	if err := utils.Verify(class, utils.StudentVerify); err != nil {
-		response.FailWithMessage(err.Error(), c)
-		return
-	}
-	if list, total, err := service.GetPersonalClasses(class); err != nil {
+	var u request.UsernameRequest
+	u.Username = getUsername(c)
+	if list, total, err := service.GetPersonalClasses(u); err != nil {
 		global.GVA_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", c)
 	} else {

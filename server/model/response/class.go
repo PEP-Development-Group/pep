@@ -8,7 +8,7 @@ type ClassListResponse struct {
 }
 
 type Group struct {
-	ID int `json:"id"`
+	ID    int `json:"id"`
 	Hours int `json:"hours"`
 	List  []Course
 }

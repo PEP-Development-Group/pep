@@ -10,7 +10,6 @@ import (
 	"gin-vue-admin/utils"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
-	"github.com/go-redis/redis"
 	"go.uber.org/zap"
 	"time"
 )
@@ -47,22 +46,22 @@ func tokenNext(c *gin.Context, user model.SysUser) {
 	claims := request.CustomClaims{
 		UUID:        user.UUID,
 		ID:          user.ID,
-		Name:        user.Name,
 		Username:    user.Username,
 		AuthorityId: user.AuthorityId,
-		BufferTime:  global.GVA_CONFIG.JWT.BufferTime, // 缓冲时间1天 缓冲时间内会获得新的token刷新令牌 此时一个用户会存在两个有效令牌 但是前端只留一个 另一个会丢失
 		StandardClaims: jwt.StandardClaims{
 			NotBefore: time.Now().Unix() - 1000,                              // 签名生效时间
-			ExpiresAt: time.Now().Unix() + global.GVA_CONFIG.JWT.ExpiresTime, // 过期时间 7天  配置文件
+			ExpiresAt: time.Now().Unix() + global.GVA_CONFIG.JWT.ExpiresTime, // 过期时间在配置文件
 			Issuer:    "pep",                                                 // 签名的发行者
 		},
 	}
+
 	token, err := j.CreateToken(claims)
 	if err != nil {
 		global.GVA_LOG.Error("获取token失败", zap.Any("err", err))
 		response.FailWithMessage("获取token失败", c)
 		return
 	}
+
 	if !global.GVA_CONFIG.System.UseMultipoint {
 		response.OkWithDetailed(response.LoginResponse{
 			User:      user,
@@ -71,37 +70,38 @@ func tokenNext(c *gin.Context, user model.SysUser) {
 		}, "登录成功", c)
 		return
 	}
-	if err, jwtStr := service.GetRedisJWT(user.Username); err == redis.Nil {
-		if err := service.SetRedisJWT(token, user.Username); err != nil {
-			global.GVA_LOG.Error("设置登录状态失败", zap.Any("err", err))
-			response.FailWithMessage("设置登录状态失败", c)
-			return
-		}
-		response.OkWithDetailed(response.LoginResponse{
-			User:      user,
-			Token:     token,
-			ExpiresAt: claims.StandardClaims.ExpiresAt * 1000,
-		}, "登录成功", c)
-	} else if err != nil {
-		global.GVA_LOG.Error("设置登录状态失败", zap.Any("err", err))
-		response.FailWithMessage("设置登录状态失败", c)
-	} else {
-		var blackJWT model.JwtBlacklist
-		blackJWT.Jwt = jwtStr
-		if err := service.JsonInBlacklist(blackJWT); err != nil {
-			response.FailWithMessage("jwt作废失败", c)
-			return
-		}
-		if err := service.SetRedisJWT(token, user.Username); err != nil {
-			response.FailWithMessage("设置登录状态失败", c)
-			return
-		}
-		response.OkWithDetailed(response.LoginResponse{
-			User:      user,
-			Token:     token,
-			ExpiresAt: claims.StandardClaims.ExpiresAt * 1000,
-		}, "登录成功", c)
-	}
+
+	//if err, jwtStr := service.GetRedisJWT(user.Username); err == redis.Nil {
+	//	if err := service.SetRedisJWT(token, user.Username); err != nil {
+	//		global.GVA_LOG.Error("设置登录状态失败", zap.Any("err", err))
+	//		response.FailWithMessage("设置登录状态失败", c)
+	//		return
+	//	}
+	//	response.OkWithDetailed(response.LoginResponse{
+	//		User:      user,
+	//		Token:     token,
+	//		ExpiresAt: claims.StandardClaims.ExpiresAt * 1000,
+	//	}, "登录成功", c)
+	//} else if err != nil {
+	//	global.GVA_LOG.Error("设置登录状态失败", zap.Any("err", err))
+	//	response.FailWithMessage("设置登录状态失败", c)
+	//} else {
+	//	var blackJWT model.JwtBlacklist
+	//	blackJWT.Jwt = jwtStr
+	//	if err := service.CreateJsonBlackListRecord(blackJWT); err != nil {
+	//		response.FailWithMessage("jwt作废失败", c)
+	//		return
+	//	}
+	//	if err := service.SetRedisJWT(token, user.Username); err != nil {
+	//		response.FailWithMessage("设置登录状态失败", c)
+	//		return
+	//	}
+	//	response.OkWithDetailed(response.LoginResponse{
+	//		User:      user,
+	//		Token:     token,
+	//		ExpiresAt: claims.StandardClaims.ExpiresAt * 1000,
+	//	}, "登录成功", c)
+	//}
 }
 
 // @Tags SysUser
@@ -269,6 +269,18 @@ func getUserID(c *gin.Context) uint {
 	} else {
 		waitUse := claims.(*request.CustomClaims)
 		return waitUse.ID
+	}
+}
+
+// 从Gin的Context中获取从jwt解析出来的username
+func getUsername(c *gin.Context) string {
+	if claims, exists := c.Get("claims"); !exists {
+		global.GVA_LOG.Error("从Gin的Context中获取从jwt解析出来的username失败, 请检查路由是否使用jwt中间件")
+		c.Abort()
+		return ""
+	} else {
+		waitUse := claims.(*request.CustomClaims)
+		return waitUse.Username
 	}
 }
 

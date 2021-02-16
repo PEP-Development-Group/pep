@@ -14,13 +14,12 @@ type UsernameRequest struct {
 }
 
 type TeacherRequest struct {
-	Username string `json:"username"`
-	Tname    string `json:"tname"`
-	Cid      uint   `json:"cid"`
-	Grade    uint   `json:"grade"`
+	UsernameRequest `json:"ur" form:"ur"`
+	Cid             uint `json:"cid"`
+	Grade           uint `json:"grade"`
 }
 
 type SelectClass struct {
-	Username string `json:"username" form:"username"`
-	Cid      uint   `json:"cid" form:"cid"`
+	UsernameRequest `json:"ur" form:"ur"`
+	Cid             uint `json:"cid" form:"cid"`
 }
