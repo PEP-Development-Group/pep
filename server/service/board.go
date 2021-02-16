@@ -30,10 +30,7 @@ func CreateBoard(board model.Board) (err error) {
 //@return: err error, boats model.Boats
 
 func GetBoardRecords() (resp []string, err error) {
-	resp, err = global.GVA_REDIS.ZRangeByScore("board", redis.ZRangeBy{
-		Min: "0",
-		Max: "-1",
-	}).Result()
+	resp, err = global.GVA_REDIS.ZRange("board", 0,-1).Result()
 	return
 }
 
