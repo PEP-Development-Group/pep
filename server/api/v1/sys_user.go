@@ -48,7 +48,6 @@ func tokenNext(c *gin.Context, user model.SysUser) {
 		ID:          user.ID,
 		Username:    user.Username,
 		AuthorityId: user.AuthorityId,
-		BufferTime:  global.GVA_CONFIG.JWT.BufferTime, // 缓冲时间1天 缓冲时间内会获得新的token刷新令牌 此时一个用户会存在两个有效令牌 但是前端只留一个 另一个会丢失
 		StandardClaims: jwt.StandardClaims{
 			NotBefore: time.Now().Unix() - 1000,                              // 签名生效时间
 			ExpiresAt: time.Now().Unix() + global.GVA_CONFIG.JWT.ExpiresTime, // 过期时间在配置文件
