@@ -3,8 +3,7 @@
 # jwt configuration
 jwt:
   signing-key: 'pep'
-  expires-time: 604800
-  buffer-time: 86400
+  expires-time: 3600
 
 # zap logger configuration
 zap:

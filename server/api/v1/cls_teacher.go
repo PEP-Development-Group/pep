@@ -18,10 +18,10 @@ import (
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
 // @Router /class/GetTeacherClassList [get]
 func GetTeacherClassList(c *gin.Context) {
-	var class request.UsernameRequest
-	_ = c.ShouldBindJSON(&class)
+	var u request.UsernameRequest
+	u.Username = getUsername(c)
 
-	if err, list, total := service.GetTeacherClassList(class); err != nil {
+	if err, list, total := service.GetTeacherClassList(u); err != nil {
 		global.GVA_LOG.Error("获取失败", zap.Any("err", err))
 		response.FailWithMessage("获取失败", c)
 	} else {
@@ -38,7 +38,7 @@ func GetTeacherClassList(c *gin.Context) {
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
 // @Router /class/GetTeacherAClassStuList [get]
 func GetTeacherAClassStuList(c *gin.Context) {
-	var class request.TeacherRequest
+	var class request.SelectClass
 	_ = c.ShouldBindJSON(&class)
 
 	if err, list, total := service.GetTeacherAClassStuList(class); err != nil {
@@ -58,9 +58,9 @@ func GetTeacherAClassStuList(c *gin.Context) {
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"提交成功"}"
 // @Router /class/SetStuGrade [patch]
 func SetStuGrade(c *gin.Context) {
-	// grade, username ,cid
 	var class request.TeacherRequest
 	_ = c.ShouldBindJSON(&class)
+	class.Username = getUsername(c)
 
 	if err := service.SetStuGrade(class); err != nil {
 		global.GVA_LOG.Error("提交失败", zap.Any("err", err))
