@@ -29,7 +29,7 @@ func CreateRecord(c *gin.Context) {
 }
 
 // @Tags Boats
-// @Summary 获取留言列表
+// @Summary 获取留言
 // @Security ApiKeyAuth
 // @accept application/json
 // @Produce application/json
@@ -41,11 +41,11 @@ func GetRecord(c *gin.Context) {
 }
 
 // @Tags Boats
-// @Summary 删除Boats
+// @Summary 删除留言
 // @Security ApiKeyAuth
 // @accept application/json
 // @Produce application/json
-// @Param data body model.Boats true "删除Boats"
+// @Param data body model.Boats true "删除留言"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"删除成功"}"
 // @Router /board/deleteBoard [delete]
 func DeleteBoard(c *gin.Context) {
@@ -59,13 +59,13 @@ func DeleteBoard(c *gin.Context) {
 }
 
 // @Tags Boats
-// @Summary 更新Boats
+// @Summary 更新board
 // @Security ApiKeyAuth
 // @accept application/json
 // @Produce application/json
-// @Param data body model.Boats true "更新Boats"
+// @Param data body model.Boats true "更新board"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"更新成功"}"
-// @Router /boats/updateBoats [put]
+// @Router /boats/updateBoard [put]
 func UpdateBoard(c *gin.Context) {
 	var board model.Board
 	_ = c.ShouldBindJSON(&board)
