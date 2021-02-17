@@ -294,9 +294,9 @@ func GetTeacherClassList(rq request.UsernameRequest) (err error, list interface{
 	return nil, resp, len(resp.Tcrs)
 }
 
-func GetTeacherAClassStuList(rq request.SelectClass) (err error, list interface{}, total int) {
+func GetTeacherAClassStuList(cid uint) (err error, list interface{}, total int) {
 	var scs []model.SelectClass
-	err = global.GVA_DB.Select("username", "grade").Find(&scs, "class_id = ?", rq.Cid).Error
+	err = global.GVA_DB.Select("username", "grade").Find(&scs, "class_id = ?", cid).Error
 	if err != nil {
 		return
 	}
