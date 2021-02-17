@@ -1,28 +1,30 @@
 <template>
   <div>
     <el-collapse v-model="activeNames">
-      <el-collapse-item v-for="item in courseList" class="class-con">
+      <el-collapse-item v-for="(item,i) in courseList" class="class-con">
         <template slot="title">
           <div class="class-title-con">
-            <span class="class-title">{{ item.name }}</span>
-            <el-tag effect="dark" size="small" class="hours-tag" type="success">{{ item.hours }}学时</el-tag>
+            <span class="class-title">{{ i }}</span>
+            <el-tag effect="dark" size="small" class="hours-tag" type="info"
+                    :color="(colors.duration[item.hours-1])">{{ item.hours }}学时
+            </el-tag>
           </div>
         </template>
-        <el-card v-for="l in item.lessons" class="lesson" shadow="hover">
-
-          <el-progress class="lesson-progress" type="circle" :width="18" :show-text="false"
-                       :percentage="l.nowSize/l.maxSize*100"
+        <el-card v-for="l in item.List" class="lesson" shadow="hover">
+          <i class="el-icon-check check" v-if="l.selected"></i>
+          <el-progress v-else class="lesson-progress" type="circle" :width="18" :show-text="false"
+                       :percentage="selectPercent(l.now,l.max)"
                        :stroke-width="2"></el-progress>
           <span class="lesson-info">
-          <span class="space">{{ l.time }}</span>
-          <span class="space">{{ l.teacher }}</span>
-          <el-tag effect="dark" size="mini" color="#79baca" class="space">{{ l.classroom }}</el-tag>
-          <el-tag effect="dark" size="mini" type="warning" class="space">本周</el-tag>
+          <span class="space">{{ l.desc|formatDesc }}</span>
+          <span class="space">{{ l.teacher_name }}</span>
+          <el-tag effect="light" size="mini" class="space">{{ l.class_room }}</el-tag>
+          <el-tag effect="dark" size="mini" type="info" class="space" :color="(colors.time[0])">本周</el-tag>
           </span>
           <span class="lesson-op">
-            <span class="progress">{{ l.nowSize }}/{{ l.maxSize }}</span>
-          <el-button type="primary" v-if="l.selected===0">选课</el-button>
-          <el-button type="danger" v-else>退选</el-button>
+            <span class="progress">{{ l.now }}/{{ l.max }}</span>
+          <el-button type="primary" v-if="l.selected===false" @click="selectCourse(l.id)">选课</el-button>
+          <el-button type="danger" v-else @click="deleteCourse(l.id)">退选</el-button>
           </span>
         </el-card>
       </el-collapse-item>
@@ -31,107 +33,29 @@
 </template>
 
 <script>
-// import {
-//   getClassList
-// } from "@/api/boats.js";  //  此处请自行替换地址
+import {
+  GetClassListWithPerson,
+  SelectClass,
+  DeleteSelect
+} from "@/api/course.js";  //  此处请自行替换地址
 import {formatTimeToStr} from "@/utils/date";
 import infoList from "@/mixins/infoList";
-// import {store} from '@/store'
+import {store} from '@/store'
+
+const userInfo = store.getters['user/userInfo']
+const formatDayOfWeek = ['一', '二', '三', '四', '五', '六', '日']
 
 export default {
-  name: "Boats",
+  name: "Elective",
   mixins: [infoList],
   data() {
     return {
-      // listApi: getClassList,
       activeNames: [1],
-      courseList: [
-        {
-          id: 1,
-          name: "椭圆偏振光法测定介质薄膜的厚度和折射率",
-          hours: 2,
-          lessons: [
-            {
-              id: 2,
-              teacher: "栾玉国",
-              time: "12周 周四 34节",
-              classroom: "A205",
-              maxSize: 40,
-              nowSize: 26,
-              startTime: "2021-11-1",
-              endTime: "2021-11-15"
-            }, {
-              id: 2,
-              type: "lesson",
-              teacher: "栾玉国",
-              time: "12周 周四 34节",
-              classroom: "A205",
-              maxSize: 50,
-              nowSize: 34,
-              startTime: "2021-11-1",
-              endTime: "2021-11-15"
-            }, {
-              id: 2,
-              type: "lesson",
-              teacher: "栾玉国",
-              time: "12周 周四 34节",
-              classroom: "A205",
-              maxSize: 20,
-              nowSize: 16,
-              startTime: "2021-11-1",
-              endTime: "2021-11-15"
-            }, {
-              id: 2,
-              type: "lesson",
-              teacher: "栾玉国",
-              time: "12周 周四 34节",
-              classroom: "A205",
-              maxSize: 40,
-              nowSize: 26,
-              startTime: "2021-11-1",
-              endTime: "2021-11-15"
-            }, {
-              id: 2,
-              type: "lesson",
-              teacher: "王老师",
-              time: "12周 周四 34节",
-              classroom: "A205",
-              maxSize: 40,
-              nowSize: 1,
-              startTime: "2021-11-1",
-              endTime: "2021-11-15"
-            }
-          ]
-        }, {
-          id: 1,
-          type: "course",
-          name: "分光计",
-          hours: 4,
-          lessons: [
-            {
-              id: 2,
-              type: "lesson",
-              teacher: "栾玉国",
-              time: "12周 周四 34节",
-              classroom: "A205",
-              maxSize: 40,
-              nowSize: 26,
-              startTime: "2021-11-1",
-              endTime: "2021-11-15"
-            }, {
-              id: 2,
-              type: "lesson",
-              teacher: "王老师",
-              time: "12周 周四 34节",
-              classroom: "A205",
-              maxSize: 40,
-              nowSize: 26,
-              startTime: "2021-11-1",
-              endTime: "2021-11-15"
-            }
-          ]
-        }
-      ]
+      courseList: [],
+      colors: {
+        duration: ["#99CC66", "#67C23A", "#409EFF", "#009999"],
+        time: ["#6699CC", "#e6a23c", "#FF6666", "#CC0033"]
+      }
     };
   },
   filters: {
@@ -149,39 +73,55 @@ export default {
       } else {
         return "";
       }
+    }, formatDesc: function (d) {
+      if (d) {
+        let descList = d.split('-')
+        return "第" + descList[0] + "周 周" + formatDayOfWeek[descList[1] - 1] + " 第" + descList[2] + "节";
+      }
     }
   },
+  computed: {},
   methods: {
-    // filterHandler(value, row, column) {
-    //   const property = column['property'];
-    //   return row[property] === value;
-    // },
-    // selectClass(id) {
-    //   console.log(id)
-    //   console.log(store.state.user.userInfo.username)
-    // },
-    // async deleteBoats(row) {
-    //   const res = await deleteBoats({ID: row.ID});
-    //   if (res.code == 0) {
-    //     this.$message({
-    //       type: "success",
-    //       message: "删除成功"
-    //     });
-    //     if (this.tableData.length == 1) {
-    //       this.page--;
-    //     }
-    //     this.getTableData();
-    //   }
-    // },
+    selectPercent: function (now, max) {
+      if (now < 0) return 0
+      if (max <= 0) return 0
+      return now / max * 100;
+    },
+    async selectCourse(cid) {
+      const d = {
+        cid: cid,
+        username: userInfo.username
+      }
+      const res = await SelectClass(d)
+      if (res.code === 0) {
+        this.$message({type: "success", message: "选课成功"})
+      }
+      await this.getList()
+    },
+    async deleteCourse(cid) {
+      DeleteSelect({"username": userInfo.username, "cid": cid})
+      await this.getList()
+    },
+    async getList() {
+      const list = await GetClassListWithPerson();
+      if (list.code === 0) {
+        this.courseList = list.data.courses
+      }
+    }
   },
   async created() {
-    // await this.getTableData();
+    await this.getList()
   }
 
 }
 </script>
 
 <style>
+
+.el-tag {
+  border-color: transparent !important;
+}
+
 .hours-tag {
   margin-left: 10px;
 }
@@ -251,4 +191,8 @@ export default {
   margin: 5px;
 }
 
+.check {
+  font-size: 18px;
+  vertical-align: middle;
+}
 </style>
