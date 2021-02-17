@@ -14,6 +14,6 @@ func InitGlobalRouter(Router *gin.RouterGroup) {
 		GlobalRouter.PUT("updateRecord", v1.UpdateBoard) // 更新Boats
 		//GlobalRouter.GET("findBoats", v1.FindBoats)                  // 根据ID获取Boats
 		GlobalRouter.GET("getRecord", v1.GetRecord)   // 获取记录
-		GlobalRouter.GET("delRecord", v1.DeleteBoard) // 删除留言
+		GlobalRouter.DELETE("delRecord", v1.DeleteBoard) // 删除留言
 	}
 }
