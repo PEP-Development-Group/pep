@@ -25,7 +25,7 @@
       <el-table-column label="选课人数" min-width="150" prop="selected"></el-table-column>
       <el-table-column label="操作" width="300" align="center">
         <template slot-scope="scope">
-          <el-button type="primary" icon="el-icon-s-order" plain size="small" slot="reference" @click="modifyUser"
+          <el-button type="primary" icon="el-icon-s-order" plain size="small" slot="reference" @click="viewLesson(scope.row.cid)"
                      class="option-btn">查看
           </el-button>
         </template>
@@ -56,7 +56,6 @@ export default {
       let currTime = new Date()
       return list[0].filter((item) => {
         let o = new Date(item.time) < currTime
-        console.log(o)
         return ((list[1] === 1) && o) || ((list[1] === 2) && !o)
       })
     }, formatDesc: function (d) {
@@ -75,6 +74,14 @@ export default {
       if (list.code === 0) {
         this.courseList = list.data.courses.classes
       }
+    },
+    viewLesson(cid) {
+      this.$router.push({
+        path: 'lesson',
+        query: {
+          cid: cid
+        }
+      })
     }
   },
   async created() {
