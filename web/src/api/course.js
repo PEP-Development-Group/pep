@@ -158,7 +158,7 @@ export const DeleteSelect = (data) => {
 
 export const GetPersonalClasses = (params) => {
     return service({
-        url: "/class/GetPersonalClasses",
+        url: "/class/getPersonalClasses",
         method: 'get',
         params
     })
@@ -181,10 +181,10 @@ export const getTeacherAClassStuList = (params) => {
     })
 }
 
-export const setStuGrade = (params) => {
+export const setStuGrade = (data) => {
     return service({
         url: "/class/setStuGrade",
         method: 'patch',
-        params
+        data: data
     })
 }

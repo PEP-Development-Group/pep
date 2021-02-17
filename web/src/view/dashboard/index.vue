@@ -1,153 +1,133 @@
 <template>
   <div class="big">
-    <el-row :gutter="10">
-      <el-col :xs="24" :sm="12">
-        <el-card style="height: 160px">
+    <el-row>
+      <el-col :span="24">
+        <el-card>
           <!-- 这个name应该在userInfo里面 -->
-          欢迎您，
-          <p>{{ name }}</p>
-        </el-card>
-      </el-col>
-      <el-col :xs="24" :sm="12">
-        <el-card style="height: 160px">
-          <span>管理员公告</span>
-          <el-button type="primary" round>修改公告</el-button>
-          <el-divider></el-divider>
-          <p>{{ adminAnnouncement }}</p>
+          <p class="welcome">欢迎您，</p>
+          <p class="name">{{ name }}</p>
         </el-card>
       </el-col>
     </el-row>
 
-    <el-row :gutter="10" style="margin-top: 30px">
-      <el-col :xs="24" :sm="12">
-        <el-card style="height: 360px">
+    <el-row :gutter="10" style="margin-top: 10px">
+      <el-col :xs="24" :sm="14">
+        <el-card style="height: 160px">
+          <b>管理员公告</b>
+          <el-button
+              v-if="adminAnnouncementModification"
+              @click="dialogVisible = true"
+              type="text"
+              icon="el-icon-edit"
+              plain
+          ></el-button>
+          <p>{{ adminAnnouncement }}</p>
+        </el-card>
+
+        <el-card style="height: 360px; margin-top: 18px">
           <el-table
               :data="tableData"
               border
               size="medium"
               max-height="320px"
               class="classtable"
-              :show-header="false"
           >
-            <el-table-column prop="date" label="时间" width="100%">
-            </el-table-column>
-            <el-table-column prop="place" label="地点" width="50%">
-            </el-table-column>
-            <el-table-column prop="classname" label="课程名"></el-table-column>
-            <el-table-column prop="results" label="成绩" width="100%">
+            <el-table-column prop="desc" label="时间" width="130px">
               <template slot-scope="scope">
-                <el-tag v-if="scope.row.results === 102">未上成绩</el-tag>
-                <el-tag type="info" v-else-if="scope.row.results === 101"
+                {{ scope.row.desc|formatDesc }}
+              </template>
+            </el-table-column>
+            <el-table-column prop="classroom" label="地点" width="90px">
+            </el-table-column>
+            <el-table-column prop="tname" label="教师" width="80px"></el-table-column>
+            <el-table-column prop="cname" label="课程名"></el-table-column>
+
+            <el-table-column prop="grade" label="成绩" align="center" width="100%">
+              <template slot-scope="scope">
+                <el-tag v-if="scope.row.grade === 102">未上成绩</el-tag>
+                <el-tag type="info" v-else-if="scope.row.grade === 101"
                 >旷课
-                </el-tag
-                >
-                <el-tag type="success" v-else-if="scope.row.results >= 60">{{
-                    scope.row.results
-                  }}
                 </el-tag>
-                <el-tag type="warning" v-else>{{ scope.row.results }}</el-tag>
+                <el-tag type="success" v-else-if="scope.row.grade >= 60"
+                >{{ scope.row.grade }}
+                </el-tag>
+                <el-tag type="warning" v-else>{{ scope.row.grade }}</el-tag>
               </template>
             </el-table-column>
           </el-table>
         </el-card>
       </el-col>
-      <el-col :xs="24" :sm="12">
-        <el-card style="height: 360px">
-          <el-collapse v-model="activeName" accordion>
-            <el-collapse-item title="二课时" name="1">
-              <el-table :data="tableData2" size="mini">
-                <el-table-column prop="class" label="课程"></el-table-column>
-                <el-table-column prop="date" label="时间"></el-table-column>
-              </el-table>
-            </el-collapse-item>
-            <el-collapse-item title="四课时" name="2">
-              <el-table :data="tableData4" size="mini">
-                <el-table-column prop="class" label="课程"></el-table-column>
-                <el-table-column prop="date" label="时间"></el-table-column>
-              </el-table>
-            </el-collapse-item>
-          </el-collapse>
+
+      <el-col :xs="24" :sm="10">
+        <el-card>
+          <h3 class="courseTitle2">2学时课节</h3>
+
+          <el-table
+              :data="tableData2"
+              size="medium"
+              :show-header="false"
+              border
+          >
+            <el-table-column prop="class" label="课程"></el-table-column>
+            <el-table-column prop="date" label="时间"></el-table-column>
+          </el-table>
+
+          <h3 class="courseTitle4">4学时课节</h3>
+          <el-table
+              :data="tableData4"
+              size="medium"
+              :show-header="false"
+              border
+          >
+            <el-table-column prop="class" label="课程"></el-table-column>
+            <el-table-column prop="date" label="时间"></el-table-column>
+          </el-table>
         </el-card>
       </el-col>
     </el-row>
+
+    <el-row :gutter="10" style="margin-top: 30px">
+      <el-col :xs="24" :sm="12"></el-col>
+    </el-row>
+
+    <el-dialog
+        title="修改公告"
+        :visible.sync="dialogVisible"
+        width="30%"
+        @close="adminClosed"
+    >
+      <el-form :model="adminFixContent" ref="contentRef" label-width="90px">
+        <el-form-item label="请输入内容" prop="content">
+          <el-input v-model="adminFixContent.msg"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="adminFix">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-// import musicPlayer from "./component/musicPlayer";
-// import TodoList from "./component/todoList";
-// import { mapGetters } from "vuex";
 import {store} from "@/store";
+import {GetPersonalClasses} from "@/api/course";
+import {getRecord, updateRecord} from "@/api/globle";
 
+const formatDayOfWeek = ['一', '二', '三', '四', '五', '六', '日']
 export default {
   name: "Dashboard",
   data() {
     return {
+      dialogVisible: false,
+      adminAnnouncementModification: true,
       activeName: "1",
       name: store.state.user.userInfo.name,
-      adminAnnouncement: "测试公告demo",
-      tableData: [
-        {
-          date: "2021-08-07",
-          place: "208",
-          classname: "分光计分光计分光计分光计分光计分光计分光计分光计",
-          results: 101,
-        },
-        {
-          date: "2021-08-07",
-          place: "208",
-          classname: "分光计",
-          results: 102,
-        },
-        {
-          date: "2021-08-07",
-          place: "208",
-          classname: "分光计",
-          results: 0,
-        },
-        {
-          date: "2021-08-07",
-          place: "208",
-          classname: "分光计",
-          results: 60,
-        },
-        {
-          date: "2021-08-07",
-          place: "208",
-          classname: "分光计",
-          results: 70,
-        },
-        {
-          date: "2021-08-07",
-          place: "208",
-          classname: "分光计",
-          results: 80,
-        },
-        {
-          date: "2021-08-07",
-          place: "208",
-          classname: "分光计",
-          results: 1,
-        },
-        {
-          date: "2021-08-07",
-          place: "208",
-          classname: "分光计",
-          results: 2,
-        },
-        {
-          date: "2021-08-07",
-          place: "208",
-          classname: "分光计",
-          results: 3,
-        },
-        {
-          date: "2021-08-07",
-          place: "208",
-          classname: "分光计",
-          results: 4,
-        },
-      ],
+      adminAnnouncement: "",
+      adminFixContent: {
+        msg: "",
+      },
+      tableData: [],
       tableData2: [
         {
           class: "第一节课",
@@ -186,72 +166,71 @@ export default {
       ],
     };
   },
-  computed: {
-    // ...mapGetters("user", ["userInfo"]),
-  },
-  components: {
-    // musicPlayer, //音乐播放器
-    // TodoList, //TodoList
-    // RaddarChart, //雷达图
-    // stackMap, //堆叠图
-    // Sunburst, //旭日图
+  filters: {
+    formatDesc: function (d) {
+      if (d) {
+        let descList = d.split('-')
+        return "第" + descList[0] + "周 周" + formatDayOfWeek[descList[1] - 1] + " 第" + descList[2] + "节";
+      }
+    }
   },
   methods: {
-    // toTarget(name) {
-    //   this.$router.push({ name });
-    // },
+    adminFix() {
+      this.$refs.contentRef.validate(async (valid) => {
+        if (!valid) return;
+        // 可以发起添加用户的网络请求
+        const res = await updateRecord(this.adminFixContent)
+
+        if (res.code !== 0) {
+          this.$message.error("修改公告失败！");
+        } else
+          this.$message.success("修改公告成功！");
+        this.adminAnnouncement = (await getRecord()).data
+        this.dialogVisible = false;
+      });
+    },
+    adminClosed() {
+      this.$refs.contentRef.resetFields();
+    },
   },
+  async created() {
+    this.tableData = (await GetPersonalClasses()).data.list.crs
+    this.adminAnnouncement = (await getRecord()).data
+  }
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
+b {
+  color: rgb(64, 158, 255);
+  padding-right: 10px;
+}
+
 .big {
-  margin: 100px 0 0 0;
+  margin: 60px 0 0 0;
   padding-top: 0;
   background-color: rgb(243, 243, 243);
   padding-top: 15px;
+}
 
-  .top {
-    width: 100%;
-    height: 360px;
-    margin-top: 20px;
-    overflow: hidden;
+.courseTitle2 {
+  color: rgb(64, 158, 255);
+  text-align: center;
+  margin-bottom: 20px;
+}
 
-    .chart-container {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      padding: 20px;
-      background-color: #fff;
-    }
-  }
+.courseTitle4 {
+  color: rgb(64, 158, 255);
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
 
-  .mid {
-    width: 100%;
-    height: 380px;
+.welcome {
+  font-size: 20px;
+}
 
-    .chart-wrapper {
-      height: 340px;
-      background: #fff;
-      padding: 16px 16px 0;
-      margin-bottom: 32px;
-    }
-  }
-
-  .bottom {
-    width: 100%;
-    height: 300px;
-    // margin: 20px 0;
-    .el-row {
-      margin-right: 4px !important;
-    }
-
-    .chart-player {
-      width: 100%;
-      height: 270px;
-      padding: 10px;
-      background-color: #fff;
-    }
-  }
+.name {
+  font-size: 30px;
 }
 </style>
