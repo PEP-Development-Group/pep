@@ -39,16 +39,14 @@ func GetTeacherClassList(c *gin.Context) {
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
 // @Router /class/GetTeacherAClassStuList [get]
 func GetTeacherAClassStuList(c *gin.Context) {
-	var class request.SelectClass
 	si := c.Query("cid")
 	i, err  := strconv.Atoi(si)
 	if err != nil || i <= 0 {
 		response.FailWithMessage("课程id不合法", c)
 		return
 	}
-	class.Cid = uint(i)
 
-	if err, list, total := service.GetTeacherAClassStuList(class); err != nil {
+	if err, list, total := service.GetTeacherAClassStuList(uint(i)); err != nil {
 		global.GVA_LOG.Error("获取失败", zap.Any("err", err))
 		response.FailWithMessage("获取失败", c)
 	} else {
