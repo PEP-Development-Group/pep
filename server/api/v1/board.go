@@ -33,16 +33,11 @@ func CreateRecord(c *gin.Context) {
 // @Security ApiKeyAuth
 // @accept application/json
 // @Produce application/json
-// @Param data body request.BoatsSearch true "获取留言列表"
+// @Param data body request.BoatsSearch true "获取留言"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
-// @Router /board/GetRecordsList [get]
-func GetRecordsList(c *gin.Context) {
-	if records, err := service.GetBoardRecords(); err != nil {
-		global.GVA_LOG.Error("新增留言失败!", zap.Any("err", err))
-		response.FailWithMessage("新增留言失败", c)
-	} else {
-		response.OkWithData(records, c)
-	}
+// @Router /board/GetRecord [get]
+func GetRecord(c *gin.Context) {
+	response.OkWithData(service.GetBoardRecords(), c)
 }
 
 // @Tags Boats
@@ -52,17 +47,35 @@ func GetRecordsList(c *gin.Context) {
 // @Produce application/json
 // @Param data body model.Boats true "删除Boats"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"删除成功"}"
-// @Router /boats/deleteBoats [delete]
-//func DeleteBoats(c *gin.Context) {
-//	var boats model.Boats
-//	_ = c.ShouldBindJSON(&boats)
-//	if err := service.DeleteBoats(boats); err != nil {
-//		global.GVA_LOG.Error("删除失败!", zap.Any("err", err))
-//		response.FailWithMessage("删除失败", c)
-//	} else {
-//		response.OkWithMessage("删除成功", c)
-//	}
-//}
+// @Router /board/deleteBoard [delete]
+func DeleteBoard(c *gin.Context) {
+	err := service.DeleteBoats()
+	if err != nil {
+		global.GVA_LOG.Error("删除失败!", zap.Any("err", err))
+		response.FailWithMessage("删除失败", c)
+	} else {
+		response.OkWithMessage("删除成功", c)
+	}
+}
+
+// @Tags Boats
+// @Summary 更新Boats
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body model.Boats true "更新Boats"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"更新成功"}"
+// @Router /boats/updateBoats [put]
+func UpdateBoard(c *gin.Context) {
+	var board model.Board
+	_ = c.ShouldBindJSON(&board)
+	if err := service.UpdateBoats(board); err != nil {
+		global.GVA_LOG.Error("更新失败!", zap.Any("err", err))
+		response.FailWithMessage("更新失败", c)
+	} else {
+		response.OkWithMessage("更新成功", c)
+	}
+}
 
 // @Tags Boats
 // @Summary 批量删除Boats
@@ -84,25 +97,6 @@ func GetRecordsList(c *gin.Context) {
 //}
 
 // @Tags Boats
-// @Summary 更新Boats
-// @Security ApiKeyAuth
-// @accept application/json
-// @Produce application/json
-// @Param data body model.Boats true "更新Boats"
-// @Success 200 {string} string "{"success":true,"data":{},"msg":"更新成功"}"
-// @Router /boats/updateBoats [put]
-//func UpdateBoats(c *gin.Context) {
-//	var boats model.Boats
-//	_ = c.ShouldBindJSON(&boats)
-//	if err := service.UpdateBoats(boats); err != nil {
-//		global.GVA_LOG.Error("更新失败!", zap.Any("err", err))
-//		response.FailWithMessage("更新失败", c)
-//	} else {
-//		response.OkWithMessage("更新成功", c)
-//	}
-//}
-
-// @Tags Boats
 // @Summary 用id查询Boats
 // @Security ApiKeyAuth
 // @accept application/json
@@ -120,4 +114,3 @@ func GetRecordsList(c *gin.Context) {
 //		response.OkWithData(gin.H{"reboats": reboats}, c)
 //	}
 //}
-

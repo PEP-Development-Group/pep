@@ -1,37 +1,71 @@
 package service
 
 import (
+	"errors"
 	"gin-vue-admin/global"
 	"gin-vue-admin/model"
 	"gin-vue-admin/model/request"
-	"github.com/go-redis/redis"
-	"time"
 )
 
-//@author: [piexlmax](https://github.com/piexlmax)
+//@author: [sh1luo](https://github.com/sh1luo)
 //@function: CreateBoard
-//@description: 创建Boats记录
+//@description: 创建留言记录
 //@param: boats model.Boats
 //@return: err error
 
 func CreateBoard(board model.Board) (err error) {
-	err = global.GVA_DB.Create(&board).Error
-	if err != nil {
+	//err = global.GVA_DB.Create(&board).Error
+	//if err != nil {
+	//	return err
+	//}
+	//future, _ := time.ParseInLocation("2006-01-02 15:04:05", "2040-07-07 09:00:00", time.Local)
+	//return global.GVA_REDIS.ZAdd("board", redis.Z{Score: float64(future.Unix() - time.Now().Unix()), Member: board.Msg}).Err()
+	global.GVA_REDIS.Set("board", board.Msg, 0)
+	result, err := global.GVA_REDIS.Get("board").Result()
+	if err != nil || result != board.Msg {
 		return err
 	}
-	future, _ := time.ParseInLocation("2006-01-02 15:04:05", "2040-07-07 09:00:00", time.Local)
-	return global.GVA_REDIS.ZAdd("board", redis.Z{Score: float64(future.Unix() - time.Now().Unix()), Member: board.Msg}).Err()
+	return nil
+}
+
+//@author: [sh1luo](https://github.com/sh1luo)
+//@function: GetBoardRecords
+//@description: 获取留言
+//@param: ""
+//@return: string
+
+func GetBoardRecords() string {
+	msg, _ := global.GVA_REDIS.Get("board").Result()
+	return msg
 }
 
 //@author: [piexlmax](https://github.com/piexlmax)
-//@function: GetBoardRecords
-//@description: 获取留言列表
-//@param: ""
-//@return: err error, boats model.Boats
+//@function: DeleteBoats
+//@description: 删除Boats记录
+//@param: boats model.Boats
+//@return: err error
 
-func GetBoardRecords() (resp []string, err error) {
-	resp, err = global.GVA_REDIS.ZRange("board", 0,-1).Result()
-	return
+func DeleteBoats() error {
+	global.GVA_REDIS.Del("board")
+	if global.GVA_REDIS.Get("board").String() != "" {
+		return errors.New("删除失败")
+	}
+	return nil
+}
+
+//@author: [piexlmax](https://github.com/piexlmax)
+//@function: UpdateBoats
+//@description: 更新Boats记录
+//@param: boats *model.Boats
+//@return: err error
+
+func UpdateBoats(board model.Board) (err error) {
+	global.GVA_REDIS.Set("board", board.Msg, 0)
+	result, err := global.GVA_REDIS.Get("board").Result()
+	if err != nil || result != board.Msg {
+		return errors.New("更新失败")
+	}
+	return nil
 }
 
 //@author: [piexlmax](https://github.com/piexlmax)
@@ -53,17 +87,6 @@ func GetBoardRecords() (resp []string, err error) {
 //}
 
 //@author: [piexlmax](https://github.com/piexlmax)
-//@function: DeleteBoats
-//@description: 删除Boats记录
-//@param: boats model.Boats
-//@return: err error
-
-func DeleteBoats(boats model.Board) (err error) {
-	err = global.GVA_DB.Delete(&boats).Error
-	return err
-}
-
-//@author: [piexlmax](https://github.com/piexlmax)
 //@function: DeleteBoatsByIds
 //@description: 批量删除Boats记录
 //@param: ids request.IdsReq
@@ -71,16 +94,5 @@ func DeleteBoats(boats model.Board) (err error) {
 
 func DeleteBoatsByIds(ids request.IdsReq) (err error) {
 	err = global.GVA_DB.Delete(&[]model.Board{}, "id in ?", ids.Ids).Error
-	return err
-}
-
-//@author: [piexlmax](https://github.com/piexlmax)
-//@function: UpdateBoats
-//@description: 更新Boats记录
-//@param: boats *model.Boats
-//@return: err error
-
-func UpdateBoats(boats model.Board) (err error) {
-	err = global.GVA_DB.Save(&boats).Error
 	return err
 }
