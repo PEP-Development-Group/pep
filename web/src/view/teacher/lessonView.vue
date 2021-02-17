@@ -14,21 +14,7 @@
       <el-table-column label="姓名" prop="name"></el-table-column>
       <el-table-column label="成绩">
         <template slot-scope="scope">
-          <span v-if="scope.row.grade<=100">
-            <i class="el-icon-lock"></i>
-            {{ scope.row.grade }}
-          </span>
-          <span v-else-if="scope.row.grade===102">
-            <el-form inline rules="rules">
-              <span class="el-icon-unlock icon-middle"></span>
-              <el-form-item>
-                <el-input v-model="gradeForm.grade"></el-input>
-              </el-form-item>
-              <el-form-item>
-                <el-button @click="submitGrade(scope.row.cid)">提交</el-button>
-              </el-form-item>
-            </el-form>
-          </span>
+          <grade-form :username="scope.row.username" :grade="scope.row.grade" :cid="cid"></grade-form>
         </template>
       </el-table-column>
     </el-table>
@@ -36,29 +22,19 @@
 </template>
 
 <script>
-import {getTeacherAClassStuList, findClass, setStuGrade} from "@/api/course";
+import {getTeacherAClassStuList, findClass} from "@/api/course";
+import GradeForm from "@/view/teacher/gradeForm";
 
 const formatDayOfWeek = ['一', '二', '三', '四', '五', '六', '日']
 export default {
   name: "lessonView",
+  components: {GradeForm},
   data() {
     return {
       cid: 0,
       lesson: null,
       stuList: [],
-      gradeForm: {
-        cid: null,
-        grade: null
-      },
-      rules: {
-        grade: [
-          {
-            required: true, message: '请输入成绩', trigger: 'blur'
-          }, {
-            min: 0, max: 100, message: '成绩不合法', trigger: 'blur'
-          }
-        ]
-      }
+
     }
   },
   filters: {
@@ -73,9 +49,8 @@ export default {
     goBack() {
       this.$router.back()
     },
-    submitGrade(cid) {
-      this.gradeForm.cid = cid
-      setStuGrade(this.gradeForm)
+    fixedGrade(grade) {
+
     }
   },
   async created() {
@@ -100,13 +75,5 @@ export default {
   float: right;
 }
 
-.el-form-item {
-  margin-bottom: 0;
-}
 
-.icon-middle {
-  height: 0px;
-  vertical-align: middle;
-  margin-right: 5px;
-}
 </style>

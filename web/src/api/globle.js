@@ -4,7 +4,8 @@ export const updateRecord = (data) => {
     return service({
         url: "/board/updateRecord",
         method: 'put',
-        data: data
+        data: data,
+        donNotShowLoading: true
     })
 }
 
