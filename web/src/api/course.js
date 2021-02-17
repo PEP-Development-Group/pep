@@ -136,7 +136,8 @@ export const GetClassListWithPerson = (data) => {
     return service({
         url: "/class/getClassList",
         method: 'get',
-        data: data
+        data: data,
+        donNotShowLoading: true
     })
 }
 
@@ -152,24 +153,26 @@ export const DeleteSelect = (data) => {
     return service({
         url: "/class/deleteSelect",
         method: 'delete',
-        data: data
+        data: data,
+        donNotShowLoading: true
     })
 }
 
 export const GetPersonalClasses = (params) => {
     return service({
-        url: "/class/GetPersonalClasses",
+        url: "/class/getPersonalClasses",
         method: 'get',
+        donNotShowLoading: true,
         params
     })
 }
 
-export const getTeacherClassList = (data) => {
+export const getTeacherClassList = (params) => {
     return service({
         url: "/class/getTeacherClassList",
         method: 'get',
-
-
+        donNotShowLoading: true,
+        params
     })
 }
 
@@ -177,14 +180,16 @@ export const getTeacherAClassStuList = (params) => {
     return service({
         url: "/class/getTeacherAClassStuList",
         method: 'get',
+        donNotShowLoading: true,
         params
     })
 }
 
-export const setStuGrade = (params) => {
+export const setStuGrade = (data) => {
     return service({
         url: "/class/setStuGrade",
         method: 'patch',
-        params
+        data: data,
+        donNotShowLoading: true
     })
 }
