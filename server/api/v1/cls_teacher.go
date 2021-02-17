@@ -7,6 +7,7 @@ import (
 	"gin-vue-admin/service"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
+	"strconv"
 )
 
 // @Tags Class
@@ -39,10 +40,11 @@ func GetTeacherClassList(c *gin.Context) {
 // @Router /class/GetTeacherAClassStuList [get]
 func GetTeacherAClassStuList(c *gin.Context) {
 	var class request.SelectClass
-	i := c.GetInt("cid")
-	if i <= 0 {
+	si := c.Query("cid")
+	i, err  := strconv.Atoi(si)
+	if err != nil || i <= 0 {
 		response.FailWithMessage("课程id不合法", c)
-		c.Abort()
+		return
 	}
 	class.Cid = uint(i)
 
