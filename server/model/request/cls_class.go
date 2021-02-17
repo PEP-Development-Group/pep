@@ -14,7 +14,7 @@ type UsernameRequest struct {
 }
 
 type TeacherRequest struct {
-	UsernameRequest `json:"ur" form:"ur"`
+	UsernameRequest
 	Cid             uint `json:"cid"`
 	Grade           uint `json:"grade"`
 }
