@@ -67,7 +67,7 @@ func GetTeacherAClassStuList(c *gin.Context) {
 func SetStuGrade(c *gin.Context) {
 	var class request.TeacherRequest
 	_ = c.ShouldBindJSON(&class)
-	class.Username = getUsername(c)
+	// class.Username = getUsername(c)
 
 	if err := service.SetStuGrade(class); err != nil {
 		global.GVA_LOG.Error("提交失败", zap.Any("err", err))
