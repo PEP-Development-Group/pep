@@ -66,7 +66,7 @@ func GetUserInfoList(info request.PageInfo) (err error, list interface{}, total 
 	db := global.GVA_DB.Model(&model.SysUser{})
 	var userList []model.SysUser
 	err = db.Count(&total).Error
-	err = db.Limit(limit).Offset(offset).Preload("Authority").Select("username", "name", "cancel_nums", "class", "have_credits", "total_credits").Where("authority_id = ? ", info.Param).Find(&userList).Error
+	err = db.Limit(limit).Offset(offset).Preload("Authority").Select("id", "username", "name", "cancel_nums", "class", "have_credits", "total_credits").Where("authority_id = ? ", info.Param).Find(&userList).Error
 	return err, userList, total
 }
 
@@ -100,7 +100,7 @@ func DeleteUser(id float64) (err error) {
 //@return: err error, user model.SysUser
 
 func SetUserInfo(reqUser model.SysUser) (err error, user model.SysUser) {
-	err = global.GVA_DB.Updates(&reqUser).Error
+	err = global.GVA_DB.Where("id = ?", reqUser.ID).Updates(&reqUser).Error
 	return err, reqUser
 }
 
