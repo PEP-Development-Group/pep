@@ -17,7 +17,6 @@ type SysUser struct {
 
 	CancelNums int    `json:"cancel_nums" gorm:"default:3;comment:取消次数"`
 	Class      string `json:"class" gorm:"varchar(10);comment:班级"`
-	PID        string `json:"pid" gorm:"column:pid;type:char(18);comment:身份证号"`
 
 	HaveCredits  int `json:"have_credits" gorm:"comment:已修学时"`
 	TotalCredits int `json:"total_credits" gorm:"comment:应修学时"`

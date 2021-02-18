@@ -125,7 +125,6 @@ func Register(c *gin.Context) {
 		Password:     R.Password,
 		AuthorityId:  R.AuthorityId,
 		Class:        R.Class,
-		PID:          R.PID,
 		CancelNums:   R.CancelNums,
 		TotalCredits: R.TotalCredits,
 	}

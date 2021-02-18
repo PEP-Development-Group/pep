@@ -123,9 +123,8 @@ func ParseExcelFile(bs string) (*[]model.SysUser, error) {
 		s.Class = r.GetCell(0).String()
 		s.Username = r.GetCell(1).String()
 		s.Name = r.GetCell(2).String()
-		s.PID = r.GetCell(3).String()
 		s.TotalCredits, _ = r.GetCell(4).Int()
-		s.Password = utils.MD5V([]byte(s.PID)) // 密码身份证后8位
+		s.Password = utils.MD5V([]byte(r.GetCell(3).String())) // 密码身份证后8位
 		s.AuthorityId = "1"
 		s.UUID = uuid.NewV4()
 		st = append(st, s)
