@@ -76,10 +76,9 @@ func DeleteSelect(sc request.SelectClass) (err error) {
 			return err
 		}
 
-		// TODO:去掉orderby
+		// TODO:去掉order by
 		c := model.Class{}
-		tmptx2 := tx.Select("selected", "time").Where("id = ?", sc.Cid)
-		tmptx2.First(&c)
+		tmptx2 := tx.Select("selected", "time").First(&c, sc.Cid)
 
 		// 上课当天不允许退课
 		if time.Now().Day() == c.Time.Day() {
@@ -221,8 +220,15 @@ func GetClassInfoList(info request.ClassSearch) (err error, list interface{}, to
 
 func GetStuClassList(rq request.UsernameRequest) (err error, list interface{}, total int) {
 	// TODO:SQL调优
+	var clsAll []model.Class
+	global.GVA_DB.Select("id", "updated_at","ccredit", "cname", "tname", "desc", "classroom", "total", "selected").Find(&clsAll)
 	var cls []model.Class
-	global.GVA_DB.Find(&cls)
+	for _, class := range clsAll {
+		if class.UpdatedAt.After(time.Now()) {
+			continue
+		}
+		cls = append(cls, class)
+	}
 
 	l := len(cls)
 	m := make(map[uint]bool, l)
@@ -245,7 +251,6 @@ func GetStuClassList(rq request.UsernameRequest) (err error, list interface{}, t
 				classes.G[c.Cname].ID = gidx
 				gidx++
 				classes.G[c.Cname].Hours = c.Ccredit
-				//classes.G[c.Cname].ClassName = c.Cname
 			}
 			co := response.Course{
 				ID:          c.ID,
