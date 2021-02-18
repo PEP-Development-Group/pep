@@ -40,7 +40,7 @@ func GetTeacherClassList(c *gin.Context) {
 // @Router /class/GetTeacherAClassStuList [get]
 func GetTeacherAClassStuList(c *gin.Context) {
 	si := c.Query("cid")
-	i, err  := strconv.Atoi(si)
+	i, err := strconv.Atoi(si)
 	if err != nil || i <= 0 {
 		response.FailWithMessage("课程id不合法", c)
 		return

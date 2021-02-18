@@ -15,8 +15,8 @@ type UsernameRequest struct {
 
 type TeacherRequest struct {
 	UsernameRequest
-	Cid             uint `json:"cid"`
-	Grade           uint `json:"grade"`
+	Cid   uint `json:"cid"`
+	Grade uint `json:"grade"`
 }
 
 type SelectClass struct {

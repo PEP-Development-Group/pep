@@ -27,13 +27,14 @@ func Login(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
+
 	if store.Verify(L.CaptchaId, L.Captcha, true) {
 		U := &model.SysUser{Username: L.Username, Password: L.Password}
 		if err, user := service.Login(U); err != nil {
 			global.GVA_LOG.Error("登陆失败! 用户名不存在或者密码错误", zap.Any("err", err))
 			response.FailWithMessage("用户名不存在或者密码错误", c)
 		} else {
-			tokenNext(c, *user)
+			tokenNext(c, user)
 		}
 	} else {
 		response.FailWithMessage("验证码错误", c)
@@ -41,7 +42,7 @@ func Login(c *gin.Context) {
 }
 
 // 登录以后签发jwt
-func tokenNext(c *gin.Context, user model.SysUser) {
+func tokenNext(c *gin.Context, user *model.SysUser) {
 	j := &middleware.JWT{SigningKey: []byte(global.GVA_CONFIG.JWT.SigningKey)} // 唯一签名
 	claims := request.CustomClaims{
 		UUID:        user.UUID,
@@ -67,6 +68,7 @@ func tokenNext(c *gin.Context, user model.SysUser) {
 			User:      user,
 			Token:     token,
 			ExpiresAt: claims.StandardClaims.ExpiresAt * 1000,
+			FirstDay:  global.GVA_CONFIG.System.FirstDay,
 		}, "登录成功", c)
 		return
 	}
