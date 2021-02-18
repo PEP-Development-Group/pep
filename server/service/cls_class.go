@@ -76,6 +76,7 @@ func DeleteSelect(sc request.SelectClass) (err error) {
 			return err
 		}
 
+		// TODO:去掉orderby
 		c := model.Class{}
 		tmptx2 := tx.Select("selected", "time").Where("id = ?", sc.Cid)
 		tmptx2.First(&c)
@@ -219,6 +220,7 @@ func GetClassInfoList(info request.ClassSearch) (err error, list interface{}, to
 }
 
 func GetStuClassList(rq request.UsernameRequest) (err error, list interface{}, total int) {
+	// TODO:SQL调优
 	var cls []model.Class
 	global.GVA_DB.Find(&cls)
 
