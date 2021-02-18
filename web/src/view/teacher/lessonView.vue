@@ -48,9 +48,6 @@ export default {
   methods: {
     goBack() {
       this.$router.back()
-    },
-    fixedGrade(grade) {
-
     }
   },
   async created() {
