@@ -10,7 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-//@author: [piexlmax](https://github.com/piexlmax)
+//@author: [sh1luo](https://github.com/sh1luo)
 //@function: Register
 //@description: 用户注册
 //@param: u model.SysUser
@@ -21,14 +21,13 @@ func Register(u model.SysUser) (err error, userInter model.SysUser) {
 	if !errors.Is(global.GVA_DB.Where("username = ?", u.Username).First(&user).Error, gorm.ErrRecordNotFound) { // 判断用户名是否注册
 		return errors.New("用户名已注册"), userInter
 	}
-	// 否则 附加uuid 密码md5简单加密 注册
 	u.Password = utils.MD5V([]byte(u.Password))
 	u.UUID = uuid.NewV4()
 	err = global.GVA_DB.Create(&u).Error
 	return err, u
 }
 
-//@author: [piexlmax](https://github.com/piexlmax)
+//@author: [sh1luo](https://github.com/sh1luo)
 //@function: Login
 //@description: 用户登录
 //@param: u *model.SysUser
@@ -42,7 +41,7 @@ func Login(u *model.SysUser) (err error, userInter *model.SysUser) {
 	return err, &user
 }
 
-//@author: [piexlmax](https://github.com/piexlmax)
+//@author: [sh1luo](https://github.com/sh1luo)
 //@function: ChangePassword
 //@description: 修改用户密码
 //@param: u *model.SysUser, newPassword string
@@ -55,7 +54,7 @@ func ChangePassword(u *model.SysUser, newPassword string) (err error, userInter 
 	return err, u
 }
 
-//@author: [piexlmax](https://github.com/piexlmax)
+//@author: [sh1luo](https://github.com/sh1luo)
 //@function: GetUserInfoList
 //@description: 分页获取数据
 //@param: info request.PageInfo
@@ -67,7 +66,7 @@ func GetUserInfoList(info request.PageInfo) (err error, list interface{}, total 
 	db := global.GVA_DB.Model(&model.SysUser{})
 	var userList []model.SysUser
 	err = db.Count(&total).Error
-	err = db.Limit(limit).Offset(offset).Preload("Authority").Select("username", "name", "cancel_nums", "class", "have_credits", "total_credits").Where("authorityId = ? ", info.Param).Find(&userList).Error
+	err = db.Limit(limit).Offset(offset).Preload("Authority").Select("username", "name", "cancel_nums", "class", "have_credits", "total_credits").Where("authority_id = ? ", info.Param).Find(&userList).Error
 	return err, userList, total
 }
 
@@ -82,7 +81,7 @@ func SetUserAuthority(uuid uuid.UUID, authorityId string) (err error) {
 	return err
 }
 
-//@author: [piexlmax](https://github.com/piexlmax)
+//@author: [sh1luo](https://github.com/sh1luo)
 //@function: DeleteUser
 //@description: 删除用户
 //@param: id float64
@@ -94,7 +93,7 @@ func DeleteUser(id float64) (err error) {
 	return err
 }
 
-//@author: [piexlmax](https://github.com/piexlmax)
+//@author: [sh1luo](https://github.com/sh1luo)
 //@function: SetUserInfo
 //@description: 设置用户信息
 //@param: reqUser model.SysUser
@@ -123,10 +122,10 @@ func FindUserById(id int) (err error, user *model.SysUser) {
 //@param: uuid string
 //@return: err error, user *model.SysUser
 
-func FindUserByUuid(uuid string) (err error, user *model.SysUser) {
-	var u model.SysUser
-	if err = global.GVA_DB.Where("`uuid` = ?", uuid).First(&u).Error; err != nil {
-		return errors.New("用户不存在"), &u
-	}
-	return nil, &u
-}
+//func FindUserByUuid(uuid string) (err error, user *model.SysUser) {
+//	var u model.SysUser
+//	if err = global.GVA_DB.Where("`uuid` = ?", uuid).First(&u).Error; err != nil {
+//		return errors.New("用户不存在"), &u
+//	}
+//	return nil, &u
+//}
