@@ -1,10 +1,10 @@
 <template>
-
+  <div>全局配置信息TODO</div>
 </template>
 
 <script>
 export default {
-name: "courseConfig"
+  name: "courseConfig"
 }
 </script>
 

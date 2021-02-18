@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-collapse v-model="activeNames">
-      <el-collapse-item v-for="(item,i) in courseList" class="class-con">
+      <el-collapse-item v-for="(item,i) in courseList" :key="item.id" class="class-con">
         <template slot="title">
           <div class="class-title-con">
             <span class="class-title">{{ i }}</span>
@@ -10,7 +10,7 @@
             </el-tag>
           </div>
         </template>
-        <el-card v-for="l in item.List" class="lesson" shadow="hover">
+        <el-card v-for="l in item.List" class="lesson" :key="l.id" shadow="hover">
           <i class="el-icon-check check" v-if="l.selected"></i>
           <el-progress v-else class="lesson-progress" type="circle" :width="18" :show-text="false"
                        :percentage="selectPercent(l.now,l.max)"
