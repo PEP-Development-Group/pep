@@ -67,7 +67,7 @@ func GetUserInfoList(info request.PageInfo) (err error, list interface{}, total 
 	db := global.GVA_DB.Model(&model.SysUser{})
 	var userList []model.SysUser
 	err = db.Count(&total).Error
-	err = db.Limit(limit).Offset(offset).Preload("Authority").Select("username", "name", "cancel_nums", "class", "have_credits", "total_credits").Where("AuthorityId = ? ", info.Param).Find(&userList).Error
+	err = db.Limit(limit).Offset(offset).Preload("Authority").Select("username", "name", "cancel_nums", "class", "have_credits", "total_credits").Where("authorityId = ? ", info.Param).Find(&userList).Error
 	return err, userList, total
 }
 
