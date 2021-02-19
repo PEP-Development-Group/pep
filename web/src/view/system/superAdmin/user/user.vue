@@ -5,14 +5,18 @@
         <el-radio-button :label="1">学生</el-radio-button>
         <el-radio-button :label="2">教师</el-radio-button>
       </el-radio-group>
-      <el-button @click="addUser" type="primary">添加用户</el-button>
+      <el-button @click="addUser" type="success">添加用户</el-button>
     </div>
 
     <el-table ref="userTable" :data="tableData" border stripe>
       <el-table-column :label="getIdType" min-width="150" prop="username"></el-table-column>
       <el-table-column label="姓名" min-width="150" prop="name"></el-table-column>
       <el-table-column label="取消次数" min-width="150" prop="cancel_nums" v-if="userType===1"></el-table-column>
-      <el-table-column label="应修学分" min-width="150" prop="total_credits" v-if="userType===1"></el-table-column>
+      <el-table-column label="已修 / 应修学时" min-width="150" prop="total_credits" v-if="userType===1">
+        <template slot-scope="scope">
+          {{ scope.row.have_credits }} / {{ scope.row.total_credits }}
+        </template>
+      </el-table-column>
       <el-table-column label="操作" width="300" align="center">
         <template slot-scope="scope">
           <el-button type="warning" icon="el-icon-edit" size="small" slot="reference" @click="modifyUser(scope.row)"
