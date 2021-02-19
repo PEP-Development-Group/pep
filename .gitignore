@@ -3,6 +3,7 @@
 /web/dist
 
 .DS_Store
+/server/*.exe
 
 # local env files
 .env.local
