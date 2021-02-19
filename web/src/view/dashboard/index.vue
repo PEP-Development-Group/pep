@@ -5,7 +5,7 @@
         <el-card>
           <!-- 这个name应该在userInfo里面 -->
           <p class="welcome">欢迎您，</p>
-          <p class="name">{{ name }}</p>
+          <p class="name">{{ name }}{{ appellation }}</p>
         </el-card>
       </el-col>
     </el-row>
@@ -40,7 +40,14 @@
             <el-table-column prop="classroom" label="地点" width="90px">
             </el-table-column>
             <el-table-column prop="tname" label="教师" width="80px"></el-table-column>
-            <el-table-column prop="cname" label="课程名"></el-table-column>
+            <el-table-column prop="cname" label="课程名">
+              <template slot-scope="scope">
+                {{ scope.row.cname }}
+                <el-tag effect="light" type="info" size="mini">
+                  {{ scope.row.hours }}学时
+                </el-tag>
+              </template>
+            </el-table-column>
 
             <el-table-column prop="grade" label="成绩" align="center" width="100%">
               <template slot-scope="scope">
@@ -127,6 +134,7 @@ export default {
       adminFixContent: {
         msg: "",
       },
+      appellation: store.state.user.userInfo.authorityId === 1 ? '同学' : '老师',
       tableData: [],
       tableData2: [
         {
