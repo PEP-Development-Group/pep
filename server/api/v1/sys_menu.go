@@ -19,11 +19,20 @@ import (
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
 // @Router /menu/getMenu [post]
 func GetMenu(c *gin.Context) {
-	if err, menus := service.GetMenuTree(getUserAuthorityId(c)); err != nil {
+	// 如果缓存存在就不需要查询db了
+	auID := getUserAuthorityId(c)
+	if menus, ok := service.CheckUserAuthorityExist(auID); ok {
+		response.OkWithDetailed(response.SysMenusResponse{Menus: *menus}, "获取成功", c)
+		return
+	}
+
+	if err, menus := service.GetMenuTree(auID); err != nil {
 		global.GVA_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", c)
 	} else {
+		// 从db里获取后缓存起来
 		response.OkWithDetailed(response.SysMenusResponse{Menus: menus}, "获取成功", c)
+		service.CacheMenus(auID, &menus)
 	}
 }
 
@@ -35,11 +44,17 @@ func GetMenu(c *gin.Context) {
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
 // @Router /menu/getBaseMenuTree [post]
 func GetBaseMenuTree(c *gin.Context) {
+	if menus, ok := service.CheckBase("baseMenus"); ok {
+		response.OkWithDetailed(response.SysBaseMenusResponse{Menus: *menus}, "获取成功", c)
+		c.Abort()
+	}
+
 	if err, menus := service.GetBaseMenuTree(); err != nil {
 		global.GVA_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", c)
 	} else {
 		response.OkWithDetailed(response.SysBaseMenusResponse{Menus: menus}, "获取成功", c)
+		service.CacheMenus("baseMenus", &menus)
 	}
 }
 

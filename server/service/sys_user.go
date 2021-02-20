@@ -16,6 +16,26 @@ import (
 //@param: u model.SysUser
 //@return: err error, userInter model.SysUser
 
+var authority map[string]model.SysAuthority
+func init() {
+	authority = make(map[string]model.SysAuthority,3)
+	authority["888"] = model.SysAuthority{
+		AuthorityId: "888",
+		AuthorityName: "管理员",
+		ParentId: "0",
+	}
+	authority["888"] = model.SysAuthority{
+		AuthorityId: "1",
+		AuthorityName: "同学",
+		ParentId: "0",
+	}
+	authority["888"] = model.SysAuthority{
+		AuthorityId: "2",
+		AuthorityName: "老师",
+		ParentId: "0",
+	}
+}
+
 func Register(u model.SysUser) (err error, userInter model.SysUser) {
 	var user model.SysUser
 	if !errors.Is(global.GVA_DB.Where("username = ?", u.Username).First(&user).Error, gorm.ErrRecordNotFound) { // 判断用户名是否注册
@@ -36,8 +56,10 @@ func Register(u model.SysUser) (err error, userInter model.SysUser) {
 func Login(u *model.SysUser) (err error, userInter *model.SysUser) {
 	var user model.SysUser
 	u.Password = utils.MD5V([]byte(u.Password))
-	err = global.GVA_DB.Select("id", "uuid", "AuthorityId", "name", "class", "have_credits", "total_credits").Where("username = ? AND password = ?", u.Username, u.Password).Preload("Authority").First(&user).Error
+	err = global.GVA_DB.Select("id", "uuid", "AuthorityId", "name", "class", "have_credits", "total_credits").Where("username = ? AND password = ?", u.Username, u.Password).First(&user).Error
 	user.Username = u.Username
+	user.Authority = authority[user.AuthorityId]
+
 	return err, &user
 }
 

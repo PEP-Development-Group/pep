@@ -1,12 +1,14 @@
 package service
 
 import (
+	"encoding/json"
 	"errors"
 	"gin-vue-admin/global"
 	"gin-vue-admin/model"
 	"gin-vue-admin/model/request"
 	"gorm.io/gorm"
 	"strconv"
+	"time"
 )
 
 //@author: [piexlmax](https://github.com/piexlmax)
@@ -38,6 +40,32 @@ func GetMenuTree(authorityId string) (err error, menus []model.SysMenu) {
 		err = getChildrenList(&menus[i], menuTree)
 	}
 	return err, menus
+}
+
+func CheckUserAuthorityExist(authorityId string) (*[]model.SysMenu, bool) {
+	var menus []model.SysMenu
+	res, _ := global.GVA_REDIS.Get(authorityId).Result()
+	if res != "" {
+		_ = json.Unmarshal([]byte(res), &menus)
+		return &menus, true
+	}
+
+	return nil, false
+}
+
+func CheckBase(baseMenus string) (*[]model.SysBaseMenu, bool) {
+	var menus []model.SysBaseMenu
+	if res, _ := global.GVA_REDIS.Get(baseMenus).Result(); res != "" {
+		_ = json.Unmarshal([]byte(res), &menus)
+		return &menus, true
+	}
+
+	return nil, false
+}
+
+func CacheMenus(auID string, value interface{}) {
+	bs, _ := json.Marshal(value)
+	global.GVA_REDIS.Set(auID, bs, time.Hour*24)
 }
 
 //@author: [piexlmax](https://github.com/piexlmax)
