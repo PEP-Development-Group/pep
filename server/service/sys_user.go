@@ -24,16 +24,19 @@ func init() {
 		AuthorityId:   "888",
 		AuthorityName: "管理员",
 		ParentId:      "0",
+		DefaultRouter: "dashboard",
 	}
-	authority["888"] = model.SysAuthority{
+	authority["1"] = model.SysAuthority{
 		AuthorityId:   "1",
 		AuthorityName: "同学",
 		ParentId:      "0",
+		DefaultRouter: "dashboard",
 	}
-	authority["888"] = model.SysAuthority{
+	authority["2"] = model.SysAuthority{
 		AuthorityId:   "2",
 		AuthorityName: "老师",
 		ParentId:      "0",
+		DefaultRouter: "dashboard",
 	}
 }
 
@@ -57,6 +60,7 @@ func Register(u model.SysUser) (err error, userInter model.SysUser) {
 func Login(u *model.SysUser) (err error, userInter *model.SysUser) {
 	var user model.SysUser
 	u.Password = utils.MD5V([]byte(u.Password))
+	// err = global.GVA_DB.Select("id", "uuid", "AuthorityId", "name", "class", "have_credits", "total_credits").Where("username = ? AND password = ?", u.Username, u.Password).Preload("Authority").First(&user).Error
 	err = global.GVA_DB.Select("id", "uuid", "AuthorityId", "name", "class", "have_credits", "total_credits").Where("username = ? AND password = ?", u.Username, u.Password).First(&user).Error
 	user.Username = u.Username
 	user.Authority = authority[user.AuthorityId]
