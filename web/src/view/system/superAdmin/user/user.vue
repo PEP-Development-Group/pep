@@ -1,23 +1,25 @@
 <template>
   <div>
     <div class="button-box clearflex">
-      <el-radio-group v-model="userType" size="small">
+      <el-radio-group v-model="userType" size="small" @change="typeChanged">
         <el-radio-button :label="1">学生</el-radio-button>
         <el-radio-button :label="2">教师</el-radio-button>
       </el-radio-group>
-      <el-button @click="addUser" type="primary">添加用户</el-button>
+      <el-button @click="addUser" type="success">添加用户</el-button>
     </div>
 
-    <el-table ref="userTable" :data="[tableData,userType]|userFilter" border stripe>
+    <el-table ref="userTable" :data="tableData" border stripe>
       <el-table-column :label="getIdType" min-width="150" prop="username"></el-table-column>
       <el-table-column label="姓名" min-width="150" prop="name"></el-table-column>
-      <el-table-column label="学院" min-width="150" prop="college" v-if="userType===1"></el-table-column>
-      <el-table-column label="专业" min-width="150" prop="major" v-if="userType===1"></el-table-column>
       <el-table-column label="取消次数" min-width="150" prop="cancel_nums" v-if="userType===1"></el-table-column>
-      <el-table-column label="应修学分" min-width="150" prop="total_credits" v-if="userType===1"></el-table-column>
+      <el-table-column label="已修 / 应修学时" min-width="150" prop="total_credits" v-if="userType===1">
+        <template slot-scope="scope">
+          {{ scope.row.have_credits }} / {{ scope.row.total_credits }}
+        </template>
+      </el-table-column>
       <el-table-column label="操作" width="300" align="center">
         <template slot-scope="scope">
-          <el-button type="warning" icon="el-icon-edit" size="small" slot="reference" @click="modifyUser"
+          <el-button type="warning" icon="el-icon-edit" size="small" slot="reference" @click="modifyUser(scope.row)"
                      class="option-btn">修改
           </el-button>
           <el-popover placement="top" width="160" v-model="scope.row.visible">
@@ -55,19 +57,10 @@
           <el-input v-model="userInfo.name"></el-input>
         </el-form-item>
         <el-form-item :label="getIdType" label-width="80px" prop="userName">
-          <el-input v-model="userInfo.userName"></el-input>
+          <el-input v-model="userInfo.username"></el-input>
         </el-form-item>
-        <el-form-item label="应修学分" min-width="150" label-width="80px" v-show="userType===1">
+        <el-form-item label="应修学时" min-width="150" label-width="80px" v-show="userType===1">
           <el-input v-model="userInfo.total_credits" type="number"></el-input>
-        </el-form-item>
-        <el-form-item label="学院" label-width="80px" prop="college" v-show="userType===1">
-          <el-input v-model="userInfo.college"></el-input>
-        </el-form-item>
-        <el-form-item label="专业" label-width="80px" prop="major" v-show="userType===1">
-          <el-input v-model="userInfo.major"></el-input>
-        </el-form-item>
-        <el-form-item label="身份证号" label-width="80px" prop="pid" v-show="userType===1">
-          <el-input v-model="userInfo.pid"></el-input>
         </el-form-item>
         <el-form-item label="密码" label-width="80px" prop="password">
           <el-input v-model="userInfo.password" type="password"></el-input>
@@ -79,25 +72,15 @@
       </div>
     </el-dialog>
     <el-dialog :visible.sync="modifyUserDialog" custom-class="user-dialog" title="修改信息">
-      <!--      TODO-->
-      <el-form :rules="rules" ref="userForm" :model="userInfo">
+      <el-form :rules="rulesModify" ref="userForm" :model="userInfo">
         <el-form-item label="姓名" label-width="80px" prop="name">
           <el-input v-model="userInfo.name"></el-input>
         </el-form-item>
-        <el-form-item label="学号" label-width="80px" prop="userName">
-          <el-input v-model="userInfo.userName"></el-input>
-        </el-form-item>
-        <el-form-item label="学院" label-width="80px" prop="college">
-          <el-input v-model="userInfo.college"></el-input>
-        </el-form-item>
-        <el-form-item label="专业" label-width="80px" prop="major">
-          <el-input v-model="userInfo.major"></el-input>
-        </el-form-item>
-        <el-form-item label="身份证号" label-width="80px" prop="pid">
-          <el-input v-model="userInfo.pid"></el-input>
+        <el-form-item :label="getIdType" label-width="80px" prop="username">
+          <el-input v-model="userInfo.username"></el-input>
         </el-form-item>
         <el-form-item label="密码" label-width="80px" prop="password">
-          <el-input v-model="userInfo.password"></el-input>
+          <el-input placeholder="未修改" v-model="userInfo.password" type="password"></el-input>
         </el-form-item>
       </el-form>
       <div class="dialog-footer" slot="footer">
@@ -114,19 +97,17 @@
 const path = process.env.VUE_APP_BASE_API;
 import {
   getUserList,
-  setUserAuthority,
   register,
-  deleteUser
+  deleteUser,
+  setUserInfo
 } from "@/api/user";
 import {getAuthorityList} from "@/api/authority";
 import infoList from "@/mixins/infoList";
 import {mapGetters} from "vuex";
-// import CustomPic from "@/components/customPic";
-// import ChooseImg from "@/components/chooseImg";
+
 export default {
   name: "Api",
   mixins: [infoList],
-  // components: { CustomPic,ChooseImg },
   data() {
     return {
       listApi: getUserList,
@@ -136,45 +117,36 @@ export default {
       modifyUserDialog: false,
       userType: 1,
       userInfo: {
-        userName: "",
+        username: "",
         password: "",
         name: "",
-        college: "",
-        major: "",
-        pid: "",
         authorityId: "",
         total_credits: 48
       },
       rules: {
-        userName: [
+        username: [
           {required: true, message: "请输入学号/工号", trigger: "blur"}
         ],
         password: [
           {required: true, message: "请输入密码", trigger: "blur"},
           {min: 6, message: "最低6位字符", trigger: "blur"}
         ],
-        pid: [
-          // {required: true, message: "请输入身份证号", trigger: "blur"},
-          {min: 18, max: 18, message: "请输入正确的身份证号", trigger: "blur"}
+        name: [
+          {required: true, message: "请输入姓名", trigger: "blur"}
+        ],
+      },
+      rulesModify: {
+        username: [
+          {required: true, message: "请输入学号/工号", trigger: "blur"}
+        ],
+        password: [
+          {min: 6, message: "最低6位字符", trigger: "blur"}
         ],
         name: [
           {required: true, message: "请输入姓名", trigger: "blur"}
         ],
-        // college: [
-        //   {required: true, message: "请输入学院", trigger: "blur"}
-        // ],
-        // major: [
-        //   {required: true, message: "请输入专业", trigger: "blur"}
-        // ]
       }
     };
-  },
-  filters: {
-    userFilter(list) {
-      return list[0].filter((item) => {
-        return item.authorityId === list[1].toString()
-      })
-    }
   },
   computed: {
     ...mapGetters("user", ["token"]),
@@ -183,32 +155,29 @@ export default {
     }
   },
   methods: {
-    openHeaderChange() {
-      this.$refs.chooseImg.open()
+
+    async getTableData(page = this.page, pageSize = this.pageSize, param = this.userType) {
+      const table = await this.listApi({page, pageSize, param})
+      if (table.code == 0) {
+        this.tableData = table.data.list
+        this.total = table.data.total
+        this.page = table.data.page
+        this.pageSize = table.data.pageSize
+      }
     },
-    setOptions(authData) {
-      this.authOptions = [];
-      this.setAuthorityOptions(authData, this.authOptions);
+    typeChanged() {
+      this.tableData = null
+      this.getTableData()
     },
-    setAuthorityOptions(AuthorityData, optionsData) {
-      AuthorityData &&
-      AuthorityData.map(item => {
-        if (item.children && item.children.length) {
-          const option = {
-            authorityId: item.authorityId,
-            authorityName: item.authorityName,
-            children: []
-          };
-          this.setAuthorityOptions(item.children, option.children);
-          optionsData.push(option);
-        } else {
-          const option = {
-            authorityId: item.authorityId,
-            authorityName: item.authorityName
-          };
-          optionsData.push(option);
-        }
-      });
+    resetForm() {
+      this.userInfo = {
+        username: "",
+        password: "",
+        name: "",
+        pid: "",
+        authorityId: "",
+        total_credits: 48
+      }
     },
     async deleteUser(row) {
       const res = await deleteUser({id: row.ID});
@@ -237,7 +206,7 @@ export default {
     async enterModifyUserDialog() {
       this.$refs.userForm.validate(async valid => {
         if (valid) {
-          const res = await register(this.userInfo);
+          const res = await setUserInfo(this.userInfo);
           if (res.code == 0) {
             this.$message({type: "success", message: "修改成功"});
           }
@@ -253,18 +222,10 @@ export default {
     addUser() {
       this.addUserDialog = true;
     },
-    modifyUser() {
+    modifyUser(row) {
+      this.userInfo = row
       this.modifyUserDialog = true;
     },
-    async changeAuthority(row) {
-      const res = await setUserAuthority({
-        uuid: row.uuid,
-        authorityId: row.authority.authorityId
-      });
-      if (res.code == 0) {
-        this.$message({type: "success", message: "角色设置成功"});
-      }
-    }
   },
   async created() {
     this.getTableData();

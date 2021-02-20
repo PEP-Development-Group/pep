@@ -37,27 +37,6 @@
           <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane label="账号信息" name="second">
               <ul>
-                <!-- <li>
-                  <p class="title">密保手机</p>
-                  <p class="desc">
-                    已绑定手机:1245678910
-                    <a href="#">立即修改</a>
-                  </p>
-                </li>
-                <li>
-                  <p class="title">密保邮箱</p>
-                  <p class="desc">
-                    已绑定邮箱：gin-vue-admin@google.com.cn
-                    <a href="#">立即修改</a>
-                  </p>
-                </li>
-                <li>
-                  <p class="title">密保问题</p>
-                  <p class="desc">
-                    未设置密保问题
-                    <a href="#">去设置</a>
-                  </p>
-                </li> -->
                 <li>
                   <p class="title">姓名</p>
                   <p class="desc">
@@ -152,7 +131,7 @@ export default {
       this.$refs.modifyPwdForm.validate(valid => {
         if (valid) {
           changePassword({
-            username: this.userInfo.userName,
+            username: this.userInfo.username,
             password: this.pwdModify.password,
             newPassword: this.pwdModify.newPassword
           }).then((res) => {

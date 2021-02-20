@@ -17,7 +17,7 @@
                        :stroke-width="2"></el-progress>
           <span class="lesson-info">
           <span class="space">{{ l.desc|formatDesc }}</span>
-          <span class="space">{{ l.teacher_name }}</span>
+          <span class="space nowarp">{{ l.teacher_name }}</span>
           <el-tag effect="light" size="mini" class="space">{{ l.class_room }}</el-tag>
           <el-tag effect="dark" size="mini" type="info" class="space" :color="(colors.time[0])">本周</el-tag>
           </span>
@@ -99,7 +99,10 @@ export default {
       await this.getList()
     },
     async deleteCourse(cid) {
-      DeleteSelect({"username": userInfo.username, "cid": cid})
+      const res = await DeleteSelect({"username": userInfo.username, "cid": cid})
+      if (res.code === 0) {
+        this.$message({type: "success", message: "退课成功"})
+      }
       await this.getList()
     },
     async getList() {
@@ -194,5 +197,10 @@ export default {
 .check {
   font-size: 18px;
   vertical-align: middle;
+  margin-left: -7px;
+}
+
+.nowarp {
+  white-space: nowrap;
 }
 </style>

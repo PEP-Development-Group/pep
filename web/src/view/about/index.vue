@@ -1,72 +1,46 @@
 <template>
   <div>
     <el-row :gutter="10">
-      <el-col :xs="{span:24,offset:0}" :sm="{span:8}">
-        <el-card style="margin-top:20px;">
+      <el-col
+          :xs="{ span: 24, offset: 0 }"
+          :sm="{ span: 24, offset: 0 }"
+          :md="{ span: 12, offset: 0 }"
+      >
+        <el-card style="margin-top: 20px">
           <div slot="header">前端</div>
           <div>
             <el-row>
-              <el-col>
-
+              <el-col :span="6">
                 <a href="https://shuangxunian.gitee.io/">
-                  <el-avatar :src="imgwyl" class="org-img" shape="square"></el-avatar>
+                  <el-avatar
+                      :src="imgwyl"
+                      class="org-img"
+                      shape="square"
+                  ></el-avatar>
                 </a>
               </el-col>
-            </el-row>
-
-            <el-row :gutter="10">
-              <el-col>
+              <el-col :span="18" style="margin-top: 16px">
                 <b>霜序廿</b>
-              </el-col>
-            </el-row>
-
-            <el-row :gutter="10" style="margin-top: -15px">
-
-              <el-col style="margin-top: 2px">
                 <p>shuangxunian@gmail.com</p>
+                <p>公者千古，私者一时</p>
               </el-col>
             </el-row>
 
-            <el-row :gutter="10" style="margin-top: -10px">
+            <el-divider></el-divider>
 
-              <el-col style="margin-top: -1px">
-                <p>wls来写一段废话</p>
-              </el-col>
-            </el-row>
-          </div>
-        </el-card>
-
-
-      </el-col>
-
-      <el-col :xs="{span:24,offset:0}" :sm="{span:8}">
-        <el-card style="margin-top:20px;">
-          <div slot="header">前端</div>
-          <div>
             <el-row>
-              <el-col>
-                <!-- 你的博客 -->
+              <el-col :span="6">
                 <a href="">
-                  <el-avatar :src="imgdjh" class="org-img" shape="square"></el-avatar>
+                  <el-avatar
+                      :src="imgdjh"
+                      class="org-img"
+                      shape="square"
+                  ></el-avatar>
                 </a>
               </el-col>
-            </el-row>
-
-            <el-row :gutter="10">
-              <el-col>
+              <el-col :span="18" style="margin-top: 16px">
                 <b>BladeHiker</b>
-              </el-col>
-            </el-row>
-
-            <el-row :gutter="10" style="margin-top: -15px">
-
-              <el-col style="margin-top: 2px">
                 <p>bladehiker@outlook.com</p>
-              </el-col>
-            </el-row>
-
-            <el-row :gutter="10" style="margin-top: -10px">
-              <el-col style="margin-top: -1px">
                 <p>这里写一段废话</p>
               </el-col>
             </el-row>
@@ -74,42 +48,33 @@
         </el-card>
       </el-col>
 
-      <el-col :xs="{span:24,offset:0}" :sm="{span:8}">
-        <el-card style="margin-top:20px;">
+      <el-col
+          :xs="{ span: 24, offset: 0 }"
+          :sm="{ span: 24, offset: 0 }"
+          :md="{ span: 12, offset: 0 }"
+      >
+        <el-card style="margin-top: 20px">
           <div slot="header">后端</div>
           <div>
             <el-row>
-              <el-col>
-                <!-- 你的博客 -->
+              <el-col :span="6">
                 <a href="">
-                  <el-avatar :src="imgljk" class="org-img" shape="square"></el-avatar>
+                  <el-avatar
+                      :src="imgljk"
+                      class="org-img"
+                      shape="square"
+                  ></el-avatar>
                 </a>
               </el-col>
-            </el-row>
-
-            <el-row :gutter="10">
-              <el-col>
+              <el-col :span="18" style="margin-top: 16px">
                 <b>sh1luo</b>
-              </el-col>
-            </el-row>
-
-            <el-row :gutter="10" style="margin-top: -15px">
-
-              <el-col style="margin-top: 2px">
                 <p>silo1999@163.com</p>
-              </el-col>
-            </el-row>
-
-            <el-row :gutter="10" style="margin-top: -10px">
-
-              <el-col style="margin-top: -1px">
                 <p>这里也写一段废话</p>
               </el-col>
             </el-row>
           </div>
         </el-card>
       </el-col>
-
     </el-row>
   </div>
 </template>
@@ -119,12 +84,12 @@ export default {
   name: "About",
   data() {
     return {
-      imgwyl: require('@/assets/imgwyl.jpg'),
-      imgdjh: require('@/assets/imgdjh.jpg'),
-      imgljk: require('@/assets/imgljk.jpg'),
+      imgwyl: require("@/assets/imgwyl.jpg"),
+      imgdjh: require("@/assets/imgdjh.jpg"),
+      imgljk: require("@/assets/imgljk.jpg"),
     };
   },
-  methods: {}
+  methods: {},
 };
 </script>
 
@@ -140,6 +105,7 @@ export default {
 
 .el-card p {
   font-size: small;
+  line-height: normal;
 }
 
 .avatar-img {
@@ -153,8 +119,8 @@ export default {
 }
 
 .org-img {
-  height: 150px;
-  width: 150px;
+  height: 100px;
+  width: 100px;
 }
 
 .dom-center {
