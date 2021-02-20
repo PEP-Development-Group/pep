@@ -127,6 +127,8 @@ func ParseExcelFile(bs string) (*[]model.SysUser, error) {
 		s.Password = utils.MD5V([]byte(r.GetCell(3).String())) // 密码身份证后8位
 		s.AuthorityId = "1"
 		s.UUID = uuid.NewV4()
+
+		s.CancelNums = global.GVA_CONFIG.System.CancelNums
 		st = append(st, s)
 		return nil
 	})
