@@ -3,6 +3,7 @@ package service
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"gin-vue-admin/global"
 	"gin-vue-admin/model"
 	"gin-vue-admin/model/request"
@@ -45,6 +46,9 @@ func GetMenuTree(authorityId string) (err error, menus []model.SysMenu) {
 func CheckUserAuthorityExist(authorityId string) (*[]model.SysMenu, bool) {
 	var menus []model.SysMenu
 	res, _ := global.GVA_REDIS.Get(authorityId).Result()
+
+	fmt.Println("redis.Get(authorityId).Result:",res)
+
 	if res != "" {
 		_ = json.Unmarshal([]byte(res), &menus)
 		return &menus, true
@@ -65,7 +69,11 @@ func CheckBase(baseMenus string) (*[]model.SysBaseMenu, bool) {
 
 func CacheMenus(auID string, value interface{}) {
 	bs, _ := json.Marshal(value)
-	global.GVA_REDIS.Set(auID, bs, time.Hour*24)
+	res, err := global.GVA_REDIS.Set(auID, bs, time.Hour*24).Result()
+	if err != nil {
+		fmt.Println("cache menus err:", err)
+	}
+	fmt.Println("cache menus:", res)
 }
 
 //@author: [piexlmax](https://github.com/piexlmax)

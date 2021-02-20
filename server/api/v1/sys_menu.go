@@ -46,7 +46,7 @@ func GetMenu(c *gin.Context) {
 func GetBaseMenuTree(c *gin.Context) {
 	if menus, ok := service.CheckBase("baseMenus"); ok {
 		response.OkWithDetailed(response.SysBaseMenusResponse{Menus: *menus}, "获取成功", c)
-		c.Abort()
+		return
 	}
 
 	if err, menus := service.GetBaseMenuTree(); err != nil {
