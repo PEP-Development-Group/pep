@@ -60,9 +60,11 @@
       </el-table-column>
       <el-table-column label="上课时间" prop="time" min-width="120" sortable>
         <template slot-scope="scope">
-          <div class="text-wrapper">
-            {{ scope.row.desc | formatDesc }}
-          </div>
+          <el-popover trigger="hover" :content="scope.row.time|formatDateDay" placement="right">
+            <div slot="reference" class="text-wrapper">
+              {{ scope.row.desc | formatDesc }}
+            </div>
+          </el-popover>
         </template>
       </el-table-column>
       <el-table-column label="教室" prop="classroom" min-width="120" sortable></el-table-column>
@@ -143,6 +145,8 @@
           <span>{{ formData.tname }}</span>
           <el-tag effect="light" size="mini">{{ formData.classroom }}</el-tag>
           <br>
+          <span>{{ realTime |formatDateDay }}</span>
+          <br>
           <span>最大选课人数 : {{ formData.total }}</span>
           <br>
           <span>选课开放时间 : {{ timespan[0]|formatDate }} ~ {{ timespan[1]|formatDate }}</span>
@@ -165,8 +169,9 @@ import {
   findClass,
   getClass
 } from "@/api/course";  //  此处请自行替换地址
-import {formatTimeToStr} from "@/utils/date";
+import {formatTimeToStr, schoolTimeToRealTime} from "@/utils/date";
 import infoList from "@/mixins/infoList";
+import {store} from "@/store";
 
 const formatDayOfWeek = ['一', '二', '三', '四', '五', '六', '日']
 export default {
@@ -217,8 +222,7 @@ export default {
         }
       ],
       timespan: [],
-      week: 1
-
+      week: 1,
     };
   },
   filters: {
@@ -226,6 +230,14 @@ export default {
       if (time != null && time != "") {
         var date = new Date(time);
         return formatTimeToStr(date, "yyyy年MM月dd日 \n hh:mm:ss");
+      } else {
+        return "";
+      }
+    },
+    formatDateDay: function (time) {
+      if (time != null && time != "") {
+        var date = new Date(time);
+        return formatTimeToStr(date, "yyyy年MM月dd日");
       } else {
         return "";
       }
@@ -249,8 +261,12 @@ export default {
       if (this.week && this.dayOfWeek && this.classTime)
         return this.week + "-" + this.dayOfWeek + "-" + this.classTime
       return null
+    },
+    realTime() {
+      return schoolTimeToRealTime(this.description, store.state.user.firstDay)
     }
   },
+  watch: {},
   methods: {
     filterHandler(value, row, column) {
       const property = column['property'];
@@ -318,9 +334,9 @@ export default {
       this.formData = {
         ccredit: 0,
         cname: "",
-        etime: new Date(),
-        stime: new Date(),
-        time: new Date(),
+        etime: null,
+        stime: null,
+        time: null,
         tname: "",
 
       };
@@ -342,7 +358,7 @@ export default {
       this.formData.stime = new Date(this.timespan[0])
       this.formData.etime = new Date(this.timespan[1])
       this.formData.desc = this.description
-      this.formData.time = new Date()//TODO
+      this.formData.time = this.realTime
     },
     async enterDialog() {
       let res;
@@ -374,7 +390,6 @@ export default {
   },
   async created() {
     await this.getTableData();
-
   }
 };
 </script>
