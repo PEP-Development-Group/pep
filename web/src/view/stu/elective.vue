@@ -19,16 +19,48 @@
           <span class="space">{{ l.desc|formatDesc }}</span>
           <span class="space nowarp">{{ l.teacher_name }}</span>
           <el-tag effect="light" size="mini" class="space">{{ l.class_room }}</el-tag>
-          <el-tag effect="dark" size="mini" type="info" class="space" :color="(colors.time[0])">本周</el-tag>
+          <el-tag effect="dark" size="mini" type="info" class="space" v-if="countDown(l.time)!==-1"
+                  :color="(colors.time[countDown(l.time)])">{{ timeTag[countDown(l.time)] }}</el-tag>
           </span>
           <span class="lesson-op">
             <span class="progress">{{ l.now }}/{{ l.max }}</span>
-          <el-button type="primary" v-if="l.selected===false" @click="selectCourse(l.id)">选课</el-button>
+          <el-button type="primary" v-if="l.selected===false" @click="selectCourse(i,item,l)">选课</el-button>
           <el-button type="danger" v-else @click="deleteCourse(l.id)">退选</el-button>
           </span>
         </el-card>
       </el-collapse-item>
     </el-collapse>
+    <el-dialog :show-close="false" :visible.sync="confirmVisible" center class="check-dialog">
+      <template slot="title">
+        <i class="el-icon-success"></i>
+        选课成功
+      </template>
+      <div class="confirm-con">
+        <el-row>
+          <el-col :span="12">课程名称</el-col>
+          <el-col :span="12">{{ confirmData.name }}</el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">教师</el-col>
+          <el-col :span="12">{{ confirmData.teacher }}</el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">教室</el-col>
+          <el-col :span="12">{{ confirmData.classRoom }}</el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">学时</el-col>
+          <el-col :span="12">{{ confirmData.hours }}</el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">时间</el-col>
+          <el-col :span="12">{{ confirmData.desc|formatDesc }}</el-col>
+        </el-row>
+      </div>
+      <template slot="footer">
+        <el-button class="confirm-btn" type="primary" @click="confirmVisible = false">确认</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -55,6 +87,15 @@ export default {
       colors: {
         duration: ["#99CC66", "#67C23A", "#409EFF", "#009999"],
         time: ["#6699CC", "#e6a23c", "#FF6666", "#CC0033"]
+      },
+      timeTag: ['下周', '本周', '明日', '今日'],
+      confirmVisible: true,
+      confirmData: {
+        name: "null",
+        classRoom: "null",
+        desc: "null",
+        teacher: "null",
+        hours: "null"
       }
     };
   },
@@ -73,7 +114,8 @@ export default {
       } else {
         return "";
       }
-    }, formatDesc: function (d) {
+    },
+    formatDesc: function (d) {
       if (d) {
         let descList = d.split('-')
         return "第" + descList[0] + "周 周" + formatDayOfWeek[descList[1] - 1] + " 第" + descList[2] + "节";
@@ -87,14 +129,21 @@ export default {
       if (max <= 0) return 0
       return now / max * 100;
     },
-    async selectCourse(cid) {
+    async selectCourse(i, item, l) {
       const d = {
-        cid: cid,
+        cid: l.id,
         username: userInfo.username
       }
       const res = await SelectClass(d)
       if (res.code === 0) {
-        this.$message({type: "success", message: "选课成功"})
+        this.confirmData = {
+          name: i,
+          classRoom: l.class_room,
+          desc: l.desc,
+          teacher: l.teacher_name,
+          hours: item.hours
+        }
+        this.confirmVisible = true
       }
       await this.getList()
     },
@@ -110,6 +159,19 @@ export default {
       if (list.code === 0) {
         this.courseList = list.data.courses
       }
+    },
+    countDown(time) {
+      let d = new Date().setHours(0, 0, 0, 0)
+      let t = new Date(time).setHours(0, 0, 0, 0)
+      if (d === t)
+        return 3
+      else if (parseInt(t / 60 / 60 / 24 / 1000) - parseInt(d / 60 / 60 / 24 / 1000) === 1)
+        return 2
+      else if (parseInt((parseInt(d / 60 / 60 / 24 / 1000) + 4) / 7) === parseInt((parseInt(t / 60 / 60 / 24 / 1000) + 4) / 7))
+        return 1
+      else if (parseInt((parseInt(t / 60 / 60 / 24 / 1000) + 4) / 7) - parseInt((parseInt(d / 60 / 60 / 24 / 1000) + 4) / 7) === 1)
+        return 0
+      return -1
     }
   },
   async created() {
@@ -202,5 +264,27 @@ export default {
 
 .nowarp {
   white-space: nowrap;
+}
+
+.check-dialog .el-dialog {
+  width: min(500px, 95%);
+}
+
+.check-dialog .el-icon-success {
+  display: block;
+  font-size: 80px;
+  color: #67C23A;
+}
+
+.confirm-con {
+  text-align: center;
+}
+
+.confirm-btn {
+  width: 50%;
+}
+
+.confirm-con .el-row:nth-child(odd) {
+  background-color: #f0f0f0;
 }
 </style>

@@ -3,7 +3,8 @@
 // 年(y)可以用 1-4 个占位符，毫秒(S)只能用 1 个占位符(是 1-3 位的数字)
 // (new Date()).Format("yyyy-MM-dd hh:mm:ss.S") ==> 2006-07-02 08:09:04.423
 // (new Date()).Format("yyyy-M-d h:m:s.S")      ==> 2006-7-2 8:9:4.18
-Date.prototype.Format = function(fmt) {
+
+Date.prototype.Format = function (fmt) {
     var o = {
         "M+": this.getMonth() + 1, //月份
         "d+": this.getDate(), //日
@@ -27,4 +28,28 @@ export function formatTimeToStr(times, pattern) {
         d = new Date(times).Format(pattern);
     }
     return d.toLocaleString();
+}
+
+export function realTimeToSchoolTime(date, firstDay) {
+    var start = new Date(firstDay);
+    var end = new Date(date);
+    var diff = (end.getTime() - start.getTime()) / 1000 / 60 / 60 / 24
+    if (diff < 0) return null;//学期未开始
+    else {
+        var week = diff / 7 + 1
+        var day = diff % 7 + 1
+        return {
+            week: week,
+            day: day
+        }
+    }
+}
+
+export function schoolTimeToRealTime(timeStr, firstDay) {
+    var start = new Date(firstDay);
+    var end = new Date();
+    var t = timeStr.split('-')
+    end.setTime(start.getTime() + ((parseInt(t[0]) - 1) * 7 + parseInt(t[1]) - 1) * 24 * 60 * 60 * 1000)
+    console.log(end)
+    return end
 }
