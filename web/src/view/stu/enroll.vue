@@ -8,6 +8,7 @@
             <el-tag effect="dark" size="small" class="hours-tag" type="info"
                     :color="(colors.duration[item.hours-1])">{{ item.hours }}学时
             </el-tag>
+            <span class="class-title-right">{{ item.List.length }}</span>
           </div>
         </template>
         <el-card v-for="l in item.List" class="lesson" :key="l.id" shadow="hover">
@@ -23,8 +24,9 @@
                   :color="(colors.time[countDown(l.time)])">{{ timeTag[countDown(l.time)] }}</el-tag>
           </span>
           <span class="lesson-op">
-            <span class="progress">{{ l.now }}/{{ l.max }}</span>
-          <el-button type="primary" v-if="l.selected===false" @click="selectCourse(i,item,l)">选课</el-button>
+            <span class="progress" :class="{red:l.max-l.now<=3}">{{ l.now }}/{{ l.max }}</span>
+          <el-button type="primary" v-if="l.selected===false" :disabled="l.now===l.max"
+                     @click="selectCourse(i,item,l)">选课</el-button>
           <el-button type="danger" v-else @click="deleteCourse(l.id)">退选</el-button>
           </span>
         </el-card>
@@ -78,7 +80,7 @@ const userInfo = store.getters['user/userInfo']
 const formatDayOfWeek = ['一', '二', '三', '四', '五', '六', '日']
 
 export default {
-  name: "Elective",
+  name: "Enroll",
   mixins: [infoList],
   data() {
     return {
@@ -88,14 +90,14 @@ export default {
         duration: ["#99CC66", "#67C23A", "#409EFF", "#009999"],
         time: ["#6699CC", "#e6a23c", "#FF6666", "#CC0033"]
       },
-      timeTag: ['下周', '本周', '明日', '今日'],
-      confirmVisible: true,
+      timeTag: ['下周', '本周', '明天', '今天'],
+      confirmVisible: false,
       confirmData: {
-        name: "null",
-        classRoom: "null",
-        desc: "null",
-        teacher: "null",
-        hours: "null"
+        name: null,
+        classRoom: null,
+        desc: null,
+        teacher: null,
+        hours: null
       }
     };
   },
@@ -148,11 +150,24 @@ export default {
       await this.getList()
     },
     async deleteCourse(cid) {
-      const res = await DeleteSelect({"username": userInfo.username, "cid": cid})
-      if (res.code === 0) {
-        this.$message({type: "success", message: "退课成功"})
-      }
-      await this.getList()
+      this.$confirm('你确定要退课吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        showClose: false,
+      }).then(async () => {
+        const res = await DeleteSelect({"username": userInfo.username, "cid": cid})
+        if (res.code === 0) {
+          this.$message({type: "success", message: "退课成功"})
+        }
+        await this.getList()
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消'
+        });
+      });
+
     },
     async getList() {
       const list = await GetClassListWithPerson();
@@ -182,6 +197,9 @@ export default {
 </script>
 
 <style>
+.el-message-box {
+  width: min(80%, 420px);
+}
 
 .el-tag {
   border-color: transparent !important;
@@ -198,6 +216,10 @@ export default {
   line-height: normal;
   vertical-align: middle;
   max-width: calc(100% - 80px);
+}
+
+.class-title-right {
+  float: right;
 }
 
 .class-title-con {
@@ -267,7 +289,8 @@ export default {
 }
 
 .check-dialog .el-dialog {
-  width: min(500px, 95%);
+  border-radius: 4px;
+  width: min(450px, 95%);
 }
 
 .check-dialog .el-icon-success {
@@ -286,5 +309,9 @@ export default {
 
 .confirm-con .el-row:nth-child(odd) {
   background-color: #f0f0f0;
+}
+
+.red {
+  color: #FF6666;
 }
 </style>

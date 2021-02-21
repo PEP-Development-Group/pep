@@ -50,6 +50,5 @@ export function schoolTimeToRealTime(timeStr, firstDay) {
     var end = new Date();
     var t = timeStr.split('-')
     end.setTime(start.getTime() + ((parseInt(t[0]) - 1) * 7 + parseInt(t[1]) - 1) * 24 * 60 * 60 * 1000)
-    console.log(end)
     return end
 }

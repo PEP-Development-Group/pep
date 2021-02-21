@@ -8,13 +8,14 @@
       <el-tag type="danger" effect="dark" size="mini">旷课</el-tag>
     </span>
     <span v-else-if="grade===102">
-    <el-form inline :model="gradeForm">
+    <el-form inline :model="gradeForm" @submit.native.prevent>
       <span class="icon-middle">
         <i :class="{'el-icon-unlock':!isLoading,'el-icon-loading':isLoading}"></i>
       </span>
       <!--TODO 旷课选项-->
       <el-form-item prop="grade">
-        <el-input v-model.number="gradeForm.grade" type="tel" @keyup.enter.native="submitGrade"></el-input>
+        <el-input v-model.number="gradeForm.grade" :autofocus="true" type="tel"
+                  @keyup.enter.native="submitGrade"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button :disabled="gradeValid" @click="submitGrade">提交</el-button>
