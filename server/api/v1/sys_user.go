@@ -181,7 +181,7 @@ func GetUserList(c *gin.Context) {
 	} else {
 		response.OkWithDetailed(response.PageResult{
 			List:     list,
-			Total:    total,
+			Total:    int64(total),
 			Page:     pageInfo.Page,
 			PageSize: pageInfo.PageSize,
 		}, "获取成功", c)
