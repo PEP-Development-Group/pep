@@ -30,7 +30,7 @@ func Routers() *gin.Engine {
 		router.InitUserBoard(PublicGroup)
 	}
 	PrivateGroup := Router.Group("")
-	PrivateGroup.Use(middleware.JWTAuth()).Use(middleware.CasbinHandler()).Use(middleware.RateLimitByIP())
+	PrivateGroup.Use(middleware.RateLimitByIP()).Use(middleware.JWTAuth()).Use(middleware.CasbinHandler())
 	{
 		router.InitApiRouter(PrivateGroup)  // 注册功能api路由
 		router.InitJwtRouter(PrivateGroup)  // jwt相关路由
