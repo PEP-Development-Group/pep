@@ -13,6 +13,7 @@ func InitClassRouter(Router *gin.RouterGroup) {
 		ClassRouter.DELETE("deleteClassByIds", v1.DeleteClassByIds) // 批量删除Class
 		ClassRouter.PUT("updateClass", v1.UpdateClass)              // 更新Class
 		ClassRouter.GET("findClass", v1.FindClass)                  // 根据ID获取Class
+		ClassRouter.PATCH("addUserCancelNums", v1.AddUserCancelNums)             // 增加某人取消次数
 
 		ClassRouter.GET("getClassList", v1.GetStuClassList)          // 学生选课Class列表（树状api）
 		ClassRouter.GET("getClass", v1.GetClassList)                 // Class管理列表

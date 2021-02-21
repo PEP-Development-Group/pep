@@ -67,6 +67,17 @@ func Login(u *model.SysUser) (err error, userInter *model.SysUser) {
 }
 
 //@author: [sh1luo](https://github.com/sh1luo)
+//@function: AddCancelNums
+//@description: 增加一个用户的取消次数
+//@param: ac request.AddCancelNums
+//@return: err error
+
+func AddCancelNums(ac request.AddCancelNums) (err error) {
+	var u model.SysUser
+	return global.GVA_DB.Select("cancel_nums").Where("username = ?", ac.Username).First(&u).Update("cancel_nums", u.CancelNums+ac.Cnt).Error
+}
+
+//@author: [sh1luo](https://github.com/sh1luo)
 //@function: ChangePassword
 //@description: 修改用户密码
 //@param: u *model.SysUser, newPassword string

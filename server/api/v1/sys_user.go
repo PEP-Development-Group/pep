@@ -138,6 +138,25 @@ func Register(c *gin.Context) {
 }
 
 // @Tags SysUser
+// @Summary 增加某用户退课次数
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body request.SetUserAuth true "待修改用户username string, 次数 int"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"修改成功"}"
+// @Router /user/addUserCancelNums [patch]
+func AddUserCancelNums(c *gin.Context) {
+	var ac request.AddCancelNums
+	_ = c.ShouldBindJSON(&ac)
+	if err := service.AddCancelNums(ac); err != nil {
+		global.GVA_LOG.Error("修改失败", zap.Any("err", err))
+		response.FailWithMessage("修改失败", c)
+	} else {
+		response.OkWithMessage("修改成功", c)
+	}
+}
+
+// @Tags SysUser
 // @Summary 用户修改密码
 // @Security ApiKeyAuth
 // @Produce  application/json

@@ -37,3 +37,8 @@ type SetUserAuth struct {
 	UUID        uuid.UUID `json:"uuid"`
 	AuthorityId string    `json:"authorityId"`
 }
+
+type AddCancelNums struct {
+	Username string `json:"username"`
+	Cnt int `json:"cnt"`
+}
