@@ -79,6 +79,7 @@ func AddMenuAuthority(c *gin.Context) {
 	} else {
 		response.OkWithMessage("添加成功", c)
 	}
+	service.DelMenu(authorityMenu.AuthorityId)
 }
 
 // @Tags AuthorityMenu

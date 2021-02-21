@@ -72,6 +72,13 @@ func CacheMenus(auID string, value interface{}) {
 	}
 }
 
+func DelMenu(auID string) {
+	err := global.GVA_REDIS.Del(auID).Err()
+	if err != nil {
+		fmt.Println("del menus err:", err)
+	}
+}
+
 //@author: [piexlmax](https://github.com/piexlmax)
 //@function: getChildrenList
 //@description: 获取子菜单
