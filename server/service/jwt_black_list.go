@@ -13,7 +13,7 @@ import (
 
 func CreateJsonBlackListRecord(jwt string) (err error) {
 	timer := time.Duration(global.GVA_CONFIG.JWT.ExpiresTime) * time.Second
-	return global.GVA_REDIS.Set(jwt, "", timer).Err()
+	return global.GVA_REDIS.Set(jwt, "exist", timer).Err()
 }
 
 //@author: [piexlmax](https://github.com/piexlmax)

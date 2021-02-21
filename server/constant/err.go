@@ -4,6 +4,7 @@ import "errors"
 
 var (
 	InternalErr = errors.New("操作失败")
+	TooMany = errors.New("操作过于频繁，稍后再试")
 
 	ErrClassNotExist = errors.New("课程不存在")
 
@@ -15,5 +16,5 @@ var (
 	ErrDelClassOnDayOfClass = errors.New("上课当天无法退课")
 	ErrDelClass             = errors.New("退课失败")
 
-	ErrSetGradeTooMany = errors.New("成绩只能修改一次")
+	// ErrSetGradeTooMany = errors.New("成绩只能修改一次")
 )
