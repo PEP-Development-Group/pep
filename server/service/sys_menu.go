@@ -46,9 +46,6 @@ func GetMenuTree(authorityId string) (err error, menus []model.SysMenu) {
 func CheckUserAuthorityExist(authorityId string) (*[]model.SysMenu, bool) {
 	var menus []model.SysMenu
 	res, _ := global.GVA_REDIS.Get(authorityId).Result()
-
-	fmt.Println("redis.Get(authorityId).Result:",res)
-
 	if res != "" {
 		_ = json.Unmarshal([]byte(res), &menus)
 		return &menus, true
