@@ -85,14 +85,14 @@ func ChangePassword(u *model.SysUser, newPassword string) (err error, userInter 
 //@param: info request.PageInfo
 //@return: err error, list interface{}, total int64
 
-func GetUserInfoList(info request.PageInfo) (err error, list interface{}, total int) {
+func GetUserInfoList(info request.PageInfo) (err error, list interface{}, total int64) {
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	db := global.GVA_DB.Model(&model.SysUser{})
 	var userList []model.SysUser
-	// err = db.Count(&total).Error
+	db.Count(&total)
 	err = db.Limit(limit).Offset(offset).Preload("Authority").Select("id", "username", "name", "cancel_nums", "class", "have_credits", "total_credits").Where("authority_id = ? ", info.Param).Find(&userList).Error
-	return err, userList, len(userList)
+	return err, userList, total
 }
 
 //@author: [piexlmax](https://github.com/piexlmax)
