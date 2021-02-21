@@ -8,6 +8,7 @@
             <el-tag effect="dark" size="small" class="hours-tag" type="info"
                     :color="(colors.duration[item.hours-1])">{{ item.hours }}学时
             </el-tag>
+            <span class="class-title-right">{{ item.List.length }}</span>
           </div>
         </template>
         <el-card v-for="l in item.List" class="lesson" :key="l.id" shadow="hover">
@@ -149,11 +150,24 @@ export default {
       await this.getList()
     },
     async deleteCourse(cid) {
-      const res = await DeleteSelect({"username": userInfo.username, "cid": cid})
-      if (res.code === 0) {
-        this.$message({type: "success", message: "退课成功"})
-      }
-      await this.getList()
+      this.$confirm('你确定要退课吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        showClose: false,
+      }).then(async () => {
+        const res = await DeleteSelect({"username": userInfo.username, "cid": cid})
+        if (res.code === 0) {
+          this.$message({type: "success", message: "退课成功"})
+        }
+        await this.getList()
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消'
+        });
+      });
+
     },
     async getList() {
       const list = await GetClassListWithPerson();
@@ -183,6 +197,9 @@ export default {
 </script>
 
 <style>
+.el-message-box {
+  width: min(80%, 420px);
+}
 
 .el-tag {
   border-color: transparent !important;
@@ -199,6 +216,10 @@ export default {
   line-height: normal;
   vertical-align: middle;
   max-width: calc(100% - 80px);
+}
+
+.class-title-right {
+  float: right;
 }
 
 .class-title-con {
@@ -268,7 +289,8 @@ export default {
 }
 
 .check-dialog .el-dialog {
-  width: min(500px, 95%);
+  border-radius: 4px;
+  width: min(450px, 95%);
 }
 
 .check-dialog .el-icon-success {

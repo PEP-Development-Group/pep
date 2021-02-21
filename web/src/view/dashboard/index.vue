@@ -134,7 +134,7 @@ export default {
       adminFixContent: {
         msg: "",
       },
-      appellation: store.state.user.userInfo.authorityId === 1 ? '同学' : '老师',
+      appellation: store.state.user.userInfo.authorityId == 1 ? '同学' : '老师',
       tableData: [],
       tableData2: [
         {
