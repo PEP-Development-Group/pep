@@ -69,11 +69,10 @@ func CheckBase(baseMenus string) (*[]model.SysBaseMenu, bool) {
 
 func CacheMenus(auID string, value interface{}) {
 	bs, _ := json.Marshal(value)
-	res, err := global.GVA_REDIS.Set(auID, bs, time.Hour*24).Result()
+	_, err := global.GVA_REDIS.Set(auID, bs, time.Hour*24).Result()
 	if err != nil {
 		fmt.Println("cache menus err:", err)
 	}
-	fmt.Println("cache menus:", res)
 }
 
 //@author: [piexlmax](https://github.com/piexlmax)
