@@ -16,11 +16,11 @@ func RateLimitByIP() gin.HandlerFunc {
 			return
 		}
 
-		if cnt, _ := global.GVA_REDIS.Get(ip).Int(); cnt >= 30 {
+		if cnt, _ := global.GVA_REDIS.Get(ip).Int(); cnt >= 10 {
 			c.AbortWithStatusJSON(403, constant.TooMany)
 			global.GVA_REDIS.Set("black-"+ip, "exist", 3*time.Second)
 		} else if cnt == 0 {
-			global.GVA_REDIS.Set(ip, 0, 10*time.Second)
+			global.GVA_REDIS.Set(ip + c.Request.URL.String(), 0, 10*time.Second)
 		}
 
 		global.GVA_REDIS.Incr(ip)
