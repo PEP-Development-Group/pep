@@ -18,6 +18,7 @@ func main() {
 	// TODO:optimize: 建立索引
 	// TODO:修改数据时的一致性问题
 
+	global.GVA_BUCKET = initialize.InitTokenBucket()
 	global.GVA_VP = core.Viper()          // 初始化Viper
 	global.GVA_LOG = core.Zap()           // 初始化zap日志库
 	global.GVA_DB = initialize.Gorm()     // gorm连接数据库

@@ -2,7 +2,7 @@ package global
 
 import (
 	"go.uber.org/zap"
-
+	"github.com/juju/ratelimit"
 	"gin-vue-admin/config"
 	"github.com/go-redis/redis"
 	"github.com/spf13/viper"
@@ -16,4 +16,6 @@ var (
 	GVA_VP     *viper.Viper
 	//GVA_LOG    *oplogging.Logger
 	GVA_LOG *zap.Logger
+
+	GVA_BUCKET *ratelimit.Bucket
 )
