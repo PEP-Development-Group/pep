@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-//@author: [piexlmax](https://github.com/piexlmax)
+//@author: [sh1luo](https://github.com/sh1luo)
 //@function: getMenuTreeMap
 //@description: 获取路由总树map
 //@param: authorityId string
@@ -21,7 +21,18 @@ import (
 func getMenuTreeMap(authorityId string) (err error, treeMap map[string][]model.SysMenu) {
 	var allMenus []model.SysMenu
 	treeMap = make(map[string][]model.SysMenu)
-	err = global.GVA_DB.Where("authority_id = ?", authorityId).Order("sort").Preload("Parameters").Find(&allMenus).Error
+	if res, _ := global.GVA_REDIS.Get(authorityId).Result(); res != "" {
+		bs := []byte(res)
+		_ = json.Unmarshal(bs, &allMenus)
+	}
+
+	if len(allMenus) == 0 {
+		err = global.GVA_DB.Where("authority_id = ?", authorityId).Order("sort").Preload("Parameters").Find(&allMenus).Error
+		bs, _ := json.Marshal(&allMenus)
+		// 缓存30天，中途如果有变动就删除掉重新缓存
+		global.GVA_REDIS.Set(authorityId, bs, time.Hour*24*30)
+	}
+
 	for _, v := range allMenus {
 		treeMap[v.ParentId] = append(treeMap[v.ParentId], v)
 	}

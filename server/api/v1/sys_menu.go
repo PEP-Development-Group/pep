@@ -21,10 +21,10 @@ import (
 func GetMenu(c *gin.Context) {
 	// 如果缓存存在就不需要查询db了
 	auID := getUserAuthorityId(c)
-	if menus, ok := service.CheckUserAuthorityExist(auID); ok {
-		response.OkWithDetailed(response.SysMenusResponse{Menus: *menus}, "获取成功", c)
-		return
-	}
+	//if menus, ok := service.CheckUserAuthorityExist(auID); ok {
+	//	response.OkWithDetailed(response.SysMenusResponse{Menus: *menus}, "获取成功", c)
+	//	return
+	//}
 
 	if err, menus := service.GetMenuTree(auID); err != nil {
 		global.GVA_LOG.Error("获取失败!", zap.Any("err", err))
@@ -32,7 +32,7 @@ func GetMenu(c *gin.Context) {
 	} else {
 		// 从db里获取后缓存起来
 		response.OkWithDetailed(response.SysMenusResponse{Menus: menus}, "获取成功", c)
-		service.CacheMenus(auID, &menus)
+		// service.CacheMenus(auID, &menus)
 	}
 }
 
