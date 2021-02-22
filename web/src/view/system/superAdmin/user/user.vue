@@ -11,7 +11,7 @@
     <el-table ref="userTable" :data="tableData" border stripe>
       <el-table-column :label="getIdType" min-width="150" prop="username"></el-table-column>
       <el-table-column label="姓名" min-width="150" prop="name"></el-table-column>
-      <el-table-column label="取消次数" min-width="150" prop="cancel_nums" v-if="userType===1"></el-table-column>
+      <el-table-column label="剩余取消次数" min-width="150" prop="cancel_nums" v-if="userType===1"></el-table-column>
       <el-table-column label="已修 / 应修学时" min-width="150" prop="total_credits" v-if="userType===1">
         <template slot-scope="scope">
           {{ scope.row.have_credits }} / {{ scope.row.total_credits }}

@@ -2,8 +2,8 @@
   <div>
     <div class="button-box clearflex">
       <el-radio-group v-model="classType" size="small">
-        <el-radio-button :label="1">已上</el-radio-button>
-        <el-radio-button :label="2">未上</el-radio-button>
+        <el-radio-button :label="1">已上课程</el-radio-button>
+        <el-radio-button :label="2">未来课程</el-radio-button>
       </el-radio-group>
       <!--      <el-button @click="addUser" type="primary">添加用户</el-button>-->
     </div>
@@ -19,13 +19,18 @@
       </el-table-column>
       <el-table-column label="时间" min-width="150">
         <template slot-scope="scope">
-          {{ scope.row.desc|formatDesc }}
+          <el-popover trigger="hover" :content="scope.row.time|formatDateDay" placement="right">
+            <div slot="reference" class="text-wrapper">
+              {{ scope.row.desc | formatDesc }}
+            </div>
+          </el-popover>
         </template>
       </el-table-column>
       <el-table-column label="选课人数" min-width="150" prop="selected"></el-table-column>
       <el-table-column label="操作" width="300" align="center">
         <template slot-scope="scope">
-          <el-button type="primary" icon="el-icon-s-order" plain size="small" slot="reference" @click="viewLesson(scope.row.cid)"
+          <el-button type="primary" icon="el-icon-s-order" plain size="small" slot="reference"
+                     @click="viewLesson(scope.row.cid)"
                      class="option-btn">查看
           </el-button>
         </template>
@@ -41,6 +46,7 @@
 import {getTeacherClassList} from "@/api/course";
 
 import {mapGetters} from "vuex";
+import {formatTimeToStr} from "@/utils/date";
 
 const formatDayOfWeek = ['一', '二', '三', '四', '五', '六', '日']
 export default {
@@ -62,6 +68,13 @@ export default {
       if (d) {
         let descList = d.split('-')
         return "第" + descList[0] + "周 周" + formatDayOfWeek[descList[1] - 1] + " 第" + descList[2] + "节";
+      }
+    }, formatDateDay: function (time) {
+      if (time != null && time != "") {
+        var date = new Date(time);
+        return formatTimeToStr(date, "yyyy年MM月dd日");
+      } else {
+        return "";
       }
     }
   },
