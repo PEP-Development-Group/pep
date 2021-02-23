@@ -53,7 +53,7 @@
             </div>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitForm" style="width: 100%"
+            <el-button type="primary" @click="submitForm" style="width: 100%" :loading="loading"
             >登 录
             </el-button
             >
@@ -104,6 +104,7 @@ export default {
       },
       logVerify: "",
       picPath: "",
+      loading: false
     };
   },
   created() {
@@ -116,6 +117,7 @@ export default {
       return await this.LoginIn(this.loginForm);
     },
     async submitForm() {
+      this.loading = true
       this.$refs.loginForm.validate(async (v) => {
         if (v) {
           const flag = await this.login();
@@ -131,7 +133,9 @@ export default {
           this.loginVefify();
           return false;
         }
+        this.loading = false
       });
+
     },
     changeLock() {
       this.lock === "lock" ? (this.lock = "unlock") : (this.lock = "lock");
