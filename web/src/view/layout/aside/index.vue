@@ -7,9 +7,8 @@
           :collapse-transition="true"
           :default-active="active"
           @select="selectMenuItem"
-          active-text-color="#fff"
           class="el-menu-vertical"
-          text-color="rgb(191, 203, 217)"
+          text-color="#748496"
           unique-opened
         >
           <template v-for="item in asyncRouters[0].children">

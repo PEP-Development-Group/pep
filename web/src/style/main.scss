@@ -13,6 +13,7 @@ html {
   /* 1 */
   -webkit-text-size-adjust: 100%;
   /* 2 */
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
 }
 
 
@@ -580,8 +581,8 @@ li {
 
       .tit-text {
         display: inline-block;
-        color: #fff;
-        font-weight: 600;
+        color: #000000;
+        font-weight: 400;
         font-size: 20px;
         vertical-align: middle;
         padding-left: 10px;
@@ -593,6 +594,16 @@ li {
   .aside {
     .el-menu-vertical {
       background-color: $bg-aside;
+      font-weight: 600;
+    }
+
+    .el-menu-item.is-active {
+      border-left: 5px solid #409EFF;
+      padding-left: 15px !important;
+    }
+
+    .el-menu-item.is-active .el-tooltip {
+      left: -5px !important;
     }
 
     .el-submenu {
@@ -600,13 +611,16 @@ li {
 
       .el-menu {
         .el-menu-item {
-          background-color: #000408;
+          background-color: #fff;
           height: 44px;
           line-height: 44px;
         }
-
+        .el-menu-item.is-active {
+          border-left: 5px solid #409EFF;
+          padding-left: 35px!important;
+        }
         .is-active {
-          background-color: #1890ff;
+          background-color: #f8fafb;
           // 关闭三级菜单二级菜单样式
           ul {
             border: none;
@@ -615,7 +629,7 @@ li {
 
         // 关闭三级菜单二级菜单样式
         .is-active.is-opened {
-          background-color: #191a23;
+          background-color: #f8fafb;
 
           ul {
             border: none;
@@ -625,25 +639,25 @@ li {
     }
 
     .el-menu-item:focus, .el-menu-item:hover {
-      background-color: transparent;
+      background-color: #f8fafb;
     }
 
     .el-menu-item:hover i,
     .el-menu-item:hover span {
-      color: #fff;
+      //color: #1890ff;
     }
 
     .el-submenu__title:hover {
-      background-color: $bg-aside;
+      background-color: #f8fafb;
     }
 
     .el-submenu__title:hover i,
     .el-submenu__title:hover span {
-      color: #fff;
+      //color: #fff;
     }
 
     .el-menu--inline {
-      border-left: 5px solid #2c3b41;
+      //border-left: 5px solid #748496;
     }
   }
 
@@ -1074,7 +1088,7 @@ li {
       margin-top: 16px;
     }
 
-    .menu-total:hover{
+    .menu-total:hover {
       color: #2d79a0;
     }
 
@@ -1320,6 +1334,7 @@ $mainHight: 100vh;
 
     &.main-left {
       width: auto !important;
+      box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)
     }
 
     &.main-right {
