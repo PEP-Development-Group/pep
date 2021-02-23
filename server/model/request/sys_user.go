@@ -40,5 +40,5 @@ type SetUserAuth struct {
 
 type AddCancelNums struct {
 	Username string `json:"username"`
-	Cnt int `json:"cnt"`
+	Cnt      int    `json:"cnt"`
 }

@@ -11,7 +11,7 @@ import (
 func RateLimitByIP() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ip := c.ClientIP() + c.Request.URL.String()
-		if in, _ := global.GVA_REDIS.Get("black-"+ip).Result(); in != "" {
+		if in, _ := global.GVA_REDIS.Get("black-" + ip).Result(); in != "" {
 			c.AbortWithStatusJSON(403, constant.TooMany)
 			return
 		}
