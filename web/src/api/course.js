@@ -193,3 +193,14 @@ export const setStuGrade = (data) => {
         donNotShowLoading: true
     })
 }
+
+
+export const addUserCancelNums = (data) => {
+    return service({
+        url: "/class/addUserCancelNums",
+        method: 'patch',
+        data: data,
+        donNotShowLoading: true
+    })
+}
+
