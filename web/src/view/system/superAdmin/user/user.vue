@@ -17,19 +17,23 @@
           {{ scope.row.have_credits }} / {{ scope.row.total_credits }}
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="300" align="center">
+      <el-table-column label="操作" width="350" align="center">
         <template slot-scope="scope">
+          <el-button type="primary" icon="el-icon-plus" size="small" slot="reference"
+                     @click="modifyUserCancel(scope.row)"
+                     class="option-btn" v-if="userType===1">增加取消次数
+          </el-button>
           <el-button type="warning" icon="el-icon-edit" size="small" slot="reference" @click="modifyUser(scope.row)"
-                     class="option-btn">修改
+                     class="option-btn">修改信息
           </el-button>
           <el-popover placement="top" width="160" v-model="scope.row.visible">
-            <p>确定要删除此学生吗</p>
+            <p>确定要删除此用户吗</p>
             <div style="text-align: right; margin: 0">
               <el-button size="mini" type="text" @click="scope.row.visible = false">取消</el-button>
               <el-button type="primary" size="mini" @click="deleteUser(scope.row)">确定</el-button>
             </div>
 
-            <el-button type="danger" icon="el-icon-delete" size="small" slot="reference" class="option-btn">删除
+            <el-button type="danger" icon="el-icon-delete" size="small" slot="reference">删除
             </el-button>
           </el-popover>
         </template>
@@ -99,8 +103,9 @@ import {
   getUserList,
   register,
   deleteUser,
-  setUserInfo
+  setUserInfo,
 } from "@/api/user";
+import {addUserCancelNums} from "@/api/course";
 import {getAuthorityList} from "@/api/authority";
 import infoList from "@/mixins/infoList";
 import {mapGetters} from "vuex";
@@ -226,6 +231,28 @@ export default {
       this.userInfo = row
       this.modifyUserDialog = true;
     },
+    modifyUserCancel(row) {
+      this.$prompt("输入要增加的次数", '修改 ' + row.name + " 的取消选课次数", {
+        confirmButtonText: '修改',
+        cancelButtonText: '取消',
+      }).then(async ({value}) => {
+        let res = await addUserCancelNums({username: row.username, cnt: parseInt(value)})
+        if (res.code === 0) {
+          this.$message({
+            type: 'success',
+            message: '修改成功'
+          });
+          this.getTableData()
+        } else {
+          this.$message.error('修改失败');
+        }
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消修改'
+        });
+      });
+    }
   },
   async created() {
     this.getTableData();
@@ -279,6 +306,10 @@ export default {
 
 .option-btn {
   margin-right: 5px;
+}
+
+.el-button + .el-button {
+  margin-left: 0;
 }
 
 .user-type-radio {
