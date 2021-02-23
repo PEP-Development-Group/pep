@@ -26,7 +26,7 @@ func Routers() *gin.Engine {
 	PublicGroup := Router.Group("")
 	PublicGroup.Use(middleware.RateLimitByIP()).Use(middleware.RateLimitByTokenBucket())
 	{
-		router.InitBaseRouter(PublicGroup) // 注册基础功能路由 不做鉴权
+		router.InitBaseRouter(PublicGroup) // 登录注册获取留言
 		router.InitUserBoard(PublicGroup)
 	}
 	PrivateGroup := Router.Group("")
