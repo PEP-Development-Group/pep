@@ -11,6 +11,8 @@ func InitGlobalRouter(Router *gin.RouterGroup) {
 		GlobalRouter.POST("createRecord", v1.CreateRecord) // 新建留言板记录
 		GlobalRouter.PUT("updateRecord", v1.UpdateBoard)   // 更新Boats
 		GlobalRouter.DELETE("delRecord", v1.DeleteBoard)   // 删除留言
+
+		GlobalRouter.DELETE("delAll", v1.InitDB)   // 初始化数据库到学期初
 	}
 }
 
