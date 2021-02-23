@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = {
-    title: 'sau-pep',
+    title: '沈航物理实验中心',
     baseCdnUrl: '//cdn.staticfile.org',
     cdns: [
         /**
