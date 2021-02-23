@@ -5,7 +5,6 @@
         <el-radio-button :label="1">已上课程</el-radio-button>
         <el-radio-button :label="2">未来课程</el-radio-button>
       </el-radio-group>
-      <!--      <el-button @click="addUser" type="primary">添加用户</el-button>-->
     </div>
 
     <el-table ref="userTable" :data="[courseList,classType]|classFilter" border stripe>
@@ -60,10 +59,12 @@ export default {
   filters: {
     classFilter(list) {
       let currTime = new Date()
-      return list[0].filter((item) => {
-        let o = new Date(item.time) < currTime
-        return ((list[1] === 1) && o) || ((list[1] === 2) && !o)
-      })
+      if (list[0])
+        return list[0].filter((item) => {
+          let o = new Date(item.time) < currTime
+          return ((list[1] === 1) && o) || ((list[1] === 2) && !o)
+        })
+      return []
     }, formatDesc: function (d) {
       if (d) {
         let descList = d.split('-')
