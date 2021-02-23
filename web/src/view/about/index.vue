@@ -22,7 +22,7 @@
                     Discriptor: &nbsp; &nbsp; &nbsp; He is SAU
                     <i>Physics Lab Enrollment System</i> 's Maker, from the
                     software engineering major 2018th,responsible for the
-                    backend development of the entire system.And he is a Gopher!
+                    backend development of the entire system.
                 </span>
             </div>
         </el-card>
