@@ -5,6 +5,7 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 // 全局配置elementui的dialog不能通过点击遮罩层关闭
 ElementUI.Dialog.props.closeOnClickModal.default = false
+
 Vue.use(ElementUI);
 // 引入封装的router
 import router from '@/router/index'
@@ -13,11 +14,13 @@ import router from '@/router/index'
 import '../node_modules/timeline-vuejs/dist/timeline-vuejs.css'
 
 import '@/permission'
-import { store } from '@/store/index'
+import {store} from '@/store/index'
+
 Vue.config.productionTip = false
 
 // 路由守卫
 import Bus from '@/utils/bus.js'
+
 Vue.use(Bus)
 
 // import APlayer from '@moefe/vue-aplayer';
@@ -28,7 +31,7 @@ Vue.use(Bus)
 // });
 
 
-import { auth } from '@/directive/auth'
+import {auth} from '@/directive/auth'
 // 按钮权限指令
 auth(Vue)
 
