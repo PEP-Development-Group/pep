@@ -6,11 +6,16 @@
           <!-- 这个name应该在userInfo里面 -->
           <el-row style="margin:-10px 0">
             <el-col :span="12">
-              <p class="welcome">欢迎您，</p>
+              <p class="welcome">欢迎<span v-auth.not="1">您</span>，</p>
               <p class="name">{{ name }}{{ appellation }}</p>
+              <p v-auth.not="1">{{ today }}</p>
             </el-col>
             <el-col :span="12">
-              <p>今天为第周周</p>
+              <div class="stu-tips" v-auth="1">
+                <p>已修/总学时</p>
+                <p>{{ haveCredits }} / {{ totalCredits }}</p>
+                <div>{{ today }}</div>
+              </div>
             </el-col>
           </el-row>
         </el-card>
@@ -31,42 +36,35 @@
           <p class="announce-con">{{ adminAnnouncement }}</p>
         </el-card>
 
-        <el-card style="height: 300px; margin-top: 18px">
+        <el-card style="height: 300px; margin-top: 18px; margin-bottom: 18px">
           <el-table
               :data="tableData"
-              border
+              max-height="260px"
               size="medium"
-              max-height="320px"
               :show-header="false"
-              class="classtable"
+              class="classTable"
           >
-            <el-table-column prop="desc" label="时间" width="130px">
+            <el-table-column>
               <template slot-scope="scope">
-                {{ scope.row.desc|formatDesc }}
-              </template>
-            </el-table-column>
-            <el-table-column prop="classroom" label="地点" width="90px">
-            </el-table-column>
-            <el-table-column prop="tname" label="教师" width="80px"></el-table-column>
-            <el-table-column prop="cname" label="课程名">
-              <template slot-scope="scope">
-                {{ scope.row.cname }}
-                <el-tag effect="light" type="info" size="mini">
-                  {{ scope.row.hours }}学时
-                </el-tag>
-              </template>
-            </el-table-column>
-
-            <el-table-column prop="grade" label="成绩" align="center" width="100%">
-              <template slot-scope="scope">
-                <el-tag v-if="scope.row.grade === 102">未上成绩</el-tag>
-                <el-tag type="info" v-else-if="scope.row.grade === 101"
-                >旷课
-                </el-tag>
-                <el-tag type="success" v-else-if="scope.row.grade >= 60"
-                >{{ scope.row.grade }}
-                </el-tag>
-                <el-tag type="warning" v-else>{{ scope.row.grade }}</el-tag>
+                <div>
+                <span class="nowarp"><span style="font-weight: bold">{{ scope.row.cname }}</span>
+                <el-divider direction="vertical"></el-divider>
+                {{ scope.row.hours }}学时</span>
+                  <span class="grade fail" v-if="scope.row.grade===101">旷课</span>
+                  <span class="grade" v-else-if="isFinished(scope.row.desc)"
+                        :class="{fail:scope.row.grade<60,pass:scope.row.grade>=60}">{{
+                      scope.row.grade === 102 ? "成绩未出" : scope.row.grade
+                    }}</span>
+                  <el-divider direction="vertical"></el-divider>
+                  <span class="nowarp">{{ scope.row.desc|formatDesc }}
+                    <el-divider direction="vertical"></el-divider>
+                </span>
+                  <span class="nowarp">
+                  {{ scope.row.tname }}
+                  <el-divider direction="vertical"></el-divider>
+                  {{ scope.row.classroom }}
+                </span>
+                </div>
               </template>
             </el-table-column>
           </el-table>
@@ -124,6 +122,7 @@
 import {store} from "@/store";
 import {GetPersonalClasses} from "@/api/course";
 import {getRecord, updateRecord} from "@/api/globle";
+import {realTimeToSchoolTime, schoolTimeToRealTime} from "@/utils/date";
 
 const formatDayOfWeek = ['一', '二', '三', '四', '五', '六', '日']
 export default {
@@ -134,11 +133,10 @@ export default {
       dialogVisible: false,
       activeName: "1",
       name: store.state.user.userInfo.name,
+      today: "",
+      totalCredits: store.state.user.userInfo.total_credits,
+      haveCredits: store.state.user.userInfo.have_credits,
       adminAnnouncement: "",
-      // 第几周
-      nowWeek: 0,
-      // 周几
-      todayWeek: 0,
       adminFixContent: {
         msg: "",
       },
@@ -205,6 +203,10 @@ export default {
     }
   },
   methods: {
+    isFinished(desc) {
+      let now = new Date()
+      return schoolTimeToRealTime(desc, store.state.user.firstDay) < now
+    },
     adminFix() {
       this.$refs.contentRef.validate(async (valid) => {
         if (!valid) return;
@@ -222,24 +224,43 @@ export default {
     adminClosed() {
       this.$refs.contentRef.resetFields();
     },
-    // getToday() {
-    //   const currentYear = new Date().getFullYear().toString();
-    //   // 今天减今年的第一天（xxxx年01月01日）
-    //   const hasTimestamp0 = new Date() - new Date(currentYear);
-    //   const hasTimestamp1 = new Date() - new Date(store.state.user.firstDay);
-    //   // 86400000 = 24 * 60 * 60 * 1000
-    //   const hasDays0 = Math.ceil(hasTimestamp0 / 86400000) + 1;
-    //   const hasDays1 = Math.ceil(hasTimestamp1 / 86400000) + 1;
-    //   if(hasDays0>)
-    //   // console.log('今天是%s年中的第%s天', currentYear, hasDays);
-    //   // myDate.getMonth();
-    //   // store.state.user
-    // }
+    getToday() {
+      let d = new Date();
+      const t = realTimeToSchoolTime(d, store.state.user.firstDay);
+      if (t)
+        this.today = "今天是第" + t.week + "周星期" + formatDayOfWeek[t.day]
+      else return "未开学"
+    }
   }
 };
 </script>
 
 <style scoped>
+
+.fail {
+  color: #FF6666;
+}
+
+.pass {
+  color: #00c6ac;
+}
+
+.nowarp {
+  white-space: nowrap;
+}
+
+.grade {
+  float: right;
+}
+
+.grade::after{
+  content: '';
+  display: block;
+  height: 0;
+  visibility: hidden;
+  clear: both;
+}
+
 b {
   color: rgb(64, 158, 255);
   padding-right: 10px;
@@ -273,8 +294,23 @@ b {
   font-size: 30px;
 }
 
-.announce-con{
+.announce-con {
   height: 78px;
   overflow-y: auto;
+}
+
+.stu-tips {
+  height: 100%;
+  text-align: right;
+  vertical-align: bottom;
+}
+
+.stu-tips p {
+  font-size: 22px;
+}
+
+.stu-tips p:first-child {
+  font-size: 12px;
+  color: #aaa;
 }
 </style>

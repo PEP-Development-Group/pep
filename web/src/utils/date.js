@@ -33,10 +33,10 @@ export function formatTimeToStr(times, pattern) {
 export function realTimeToSchoolTime(date, firstDay) {
     var start = new Date(firstDay);
     var end = new Date(date);
-    var diff = (end.getTime() - start.getTime()) / 1000 / 60 / 60 / 24
+    var diff = parseInt((end.getTime() - start.getTime()) / 1000 / 60 / 60 / 24)
     if (diff < 0) return null;//学期未开始
     else {
-        var week = diff / 7 + 1
+        var week = parseInt(diff / 7) + 1
         var day = diff % 7 + 1
         return {
             week: week,
