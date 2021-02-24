@@ -2,20 +2,27 @@
   <div class="big">
     <el-row>
       <el-col :span="24">
-        <el-card>
+        <el-card style="margin-top:-1px">
           <!-- 这个name应该在userInfo里面 -->
-          <p class="welcome">欢迎您，</p>
-          <p class="name">{{ name }}{{ appellation }}</p>
+          <el-row style="margin:-10px 0">
+            <el-col :span="12">
+              <p class="welcome">欢迎您，</p>
+              <p class="name">{{ name }}{{ appellation }}</p>
+            </el-col>
+            <el-col :span="12">
+              <p>今天为第周周</p>
+            </el-col>
+          </el-row>
         </el-card>
       </el-col>
     </el-row>
 
-    <el-row :gutter="10" style="margin-top: 10px">
+    <el-row :gutter="10">
       <el-col :xs="24" :sm="14">
-        <el-card style="height: 160px">
+        <el-card style="height: 100px">
           <b>管理员公告</b>
           <el-button
-              v-if="adminAnnouncementModification"
+              v-auth="888"
               @click="dialogVisible = true"
               type="text"
               icon="el-icon-edit"
@@ -24,7 +31,7 @@
           <p>{{ adminAnnouncement }}</p>
         </el-card>
 
-        <el-card style="height: 360px; margin-top: 18px">
+        <el-card style="height: 341px; margin-top: 18px">
           <el-table
               :data="tableData"
               border
@@ -93,14 +100,10 @@
       </el-col>
     </el-row>
 
-    <el-row :gutter="10" style="margin-top: 30px">
-      <el-col :xs="24" :sm="12"></el-col>
-    </el-row>
-
     <el-dialog
         title="修改公告"
         :visible.sync="dialogVisible"
-        width="30%"
+        :width="dialogWidth"
         @close="adminClosed"
     >
       <el-form :model="adminFixContent" ref="contentRef" label-width="90px">
@@ -126,11 +129,15 @@ export default {
   name: "Dashboard",
   data() {
     return {
+      dialogWidth: "30",
       dialogVisible: false,
-      adminAnnouncementModification: true,
       activeName: "1",
       name: store.state.user.userInfo.name,
       adminAnnouncement: "",
+      // 第几周
+      nowWeek: 0,
+      // 周几
+      todayWeek: 0,
       adminFixContent: {
         msg: "",
       },
@@ -174,6 +181,15 @@ export default {
       ],
     };
   },
+  mounted() {
+    const that = this;
+    window.onresize = () => {
+      return (() => {
+        if(document.body.clientWidth<=750) that.dialogWidth = "90";
+        else that.dialogWidth = "30";
+      })()
+    }
+  },
   filters: {
     formatDesc: function (d) {
       if (d) {
@@ -200,10 +216,24 @@ export default {
     adminClosed() {
       this.$refs.contentRef.resetFields();
     },
+    // getToday() {
+    //   const currentYear = new Date().getFullYear().toString();
+    //   // 今天减今年的第一天（xxxx年01月01日）
+    //   const hasTimestamp0 = new Date() - new Date(currentYear);
+    //   const hasTimestamp1 = new Date() - new Date(store.state.user.firstDay);
+    //   // 86400000 = 24 * 60 * 60 * 1000
+    //   const hasDays0 = Math.ceil(hasTimestamp0 / 86400000) + 1;
+    //   const hasDays1 = Math.ceil(hasTimestamp1 / 86400000) + 1;
+    //   if(hasDays0>)
+    //   // console.log('今天是%s年中的第%s天', currentYear, hasDays);
+    //   // myDate.getMonth();
+    //   // store.state.user
+    // }
   },
   async created() {
-    this.tableData = (await GetPersonalClasses()).data.list.crs
-    this.adminAnnouncement = (await getRecord()).data
+    this.tableData = (await GetPersonalClasses()).data.list.crs;
+    this.adminAnnouncement = (await getRecord()).data;
+    this.getToday();
   }
 };
 </script>
@@ -216,9 +246,9 @@ b {
 
 .big {
   margin: 60px 0 0 0;
-  padding-top: 0;
   background-color: rgb(243, 243, 243);
   padding-top: 15px;
+  overflow-x: hidden;
 }
 
 .courseTitle2 {
@@ -241,4 +271,5 @@ b {
 .name {
   font-size: 30px;
 }
+
 </style>
