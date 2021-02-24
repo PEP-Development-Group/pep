@@ -48,7 +48,7 @@ export const router = {
                 name: "404",
                 hidden: true,
                 meta: {
-                    title: "迷路了*。*",
+                    title: "404",
                 },
                 component: 'view/error/index.vue'
             })
