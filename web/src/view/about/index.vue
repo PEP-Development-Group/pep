@@ -1,6 +1,7 @@
 <template>
     <div class="container">
         <h1 class="header">Designers and Developers.</h1>
+        <h2 class="hh2">Backend</h2>
         <el-card class="p">
             <el-avatar :src="imgljk" class="org-img" shape="square"></el-avatar>
             <div class="right">
@@ -13,11 +14,20 @@
                 <br />
 
                 <span class="desc">
-                    Discriptor: &nbsp; &nbsp; &nbsp; He is a gopher!
+                    Email: &nbsp;&nbsp;&nbsp; silo1999@163.com
+                </span>
+                <br />
+
+                <span class="desc">
+                    Discriptor: &nbsp; &nbsp; &nbsp; He is SAU
+                    <i>Physics Lab Enrollment System</i> 's Maker, from the
+                    software engineering major 2018th,responsible for the
+                    backend development of the entire system.
                 </span>
             </div>
         </el-card>
 
+        <h2 class="hh2">Frontend</h2>
         <el-card class="p"
             ><el-avatar
                 :src="imgdjh"
@@ -30,6 +40,11 @@
 
                 <span class="desc">
                     Blog: &nbsp;&nbsp;&nbsp; https://kcode.icu/
+                </span>
+                <br />
+
+                <span class="desc">
+                    Email: &nbsp;&nbsp;&nbsp; silo1999@163.com
                 </span>
                 <br />
 
@@ -51,6 +66,11 @@
 
                 <span class="desc">
                     Blog: &nbsp;&nbsp;&nbsp; https://kcode.icu/
+                </span>
+                <br />
+
+                <span class="desc">
+                    Email: &nbsp;&nbsp;&nbsp; silo1999@163.com
                 </span>
                 <br />
 
@@ -77,9 +97,15 @@ export default {
 </script>
 
 <style scoped>
+.hh2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
 .p {
     padding-bottom: 15px;
     margin-bottom: 15px;
+    margin-left: 10px;
 }
 
 .container {
