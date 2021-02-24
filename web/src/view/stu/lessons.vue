@@ -6,7 +6,12 @@
         <el-tag size="mini">{{ item.hours }}学时</el-tag>
         <span class="grade fail" v-if="item.grade===101">旷课</span>
         <span class="grade" v-else-if="isFinished(item.desc)"
-              :class="{fail:item.grade<60,pass:item.grade>=60}">{{ item.grade === 102 ? "成绩未出" : item.grade }}</span>
+              :class="{fail:item.grade<60,pass:item.grade>=60}">{{
+            item.grade === 102 ? "成绩未出" : item.grade
+          }}</span>
+        <span class="grade" v-else>
+          <el-button type="danger" plain @click="deleteCourse(item.id)">退课</el-button>
+        </span>
       </div>
       <div>
         {{ item.desc|formatDesc }}
@@ -20,10 +25,11 @@
 </template>
 
 <script>
-import {GetPersonalClasses} from "@/api/course";
+import {DeleteSelect, GetPersonalClasses} from "@/api/course";
 import {store} from "@/store";
 import {schoolTimeToRealTime} from "@/utils/date";
 
+const userInfo = store.getters['user/userInfo']
 const formatDayOfWeek = ['一', '二', '三', '四', '五', '六', '日']
 export default {
   name: "lessons",
@@ -39,6 +45,27 @@ export default {
     isFinished(desc) {
       let now = new Date()
       return schoolTimeToRealTime(desc, store.state.user.firstDay) < now
+    }, async deleteCourse(cid) {
+      this.$confirm('你确定要退课吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        showClose: false,
+      }).then(async () => {
+        const res = await DeleteSelect({"username": userInfo.username, "cid": cid})
+        if (res.code === 0) {
+          this.$message({type: "success", message: "退课成功"})
+        }
+        await this.getList()
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '未退课'
+        });
+      });
+
+    }, async getList() {
+      this.tableData = (await GetPersonalClasses()).data.list.crs
     }
   },
   computed: {
@@ -58,7 +85,7 @@ export default {
     }
   },
   async created() {
-    this.tableData = (await GetPersonalClasses()).data.list.crs
+    await this.getList()
   }
 }
 </script>

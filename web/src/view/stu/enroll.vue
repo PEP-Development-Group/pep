@@ -164,7 +164,7 @@ export default {
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: '已取消'
+          message: '未退课'
         });
       });
 
@@ -178,13 +178,14 @@ export default {
     countDown(time) {
       let d = new Date().setHours(0, 0, 0, 0)
       let t = new Date(time).setHours(0, 0, 0, 0)
+      const c = 60 * 60 * 24 * 1000
       if (d === t)
         return 3
-      else if (parseInt(t / 60 / 60 / 24 / 1000) - parseInt(d / 60 / 60 / 24 / 1000) === 1)
+      else if (parseInt(t / c) - parseInt(d / c) === 1)
         return 2
-      else if (parseInt((parseInt(d / 60 / 60 / 24 / 1000) + 4) / 7) === parseInt((parseInt(t / 60 / 60 / 24 / 1000) + 4) / 7))
+      else if (parseInt((parseInt(d / c) + 4) / 7) === parseInt((parseInt(t / c) + 4) / 7))
         return 1
-      else if (parseInt((parseInt(t / 60 / 60 / 24 / 1000) + 4) / 7) - parseInt((parseInt(d / 60 / 60 / 24 / 1000) + 4) / 7) === 1)
+      else if (parseInt((parseInt(t / c) + 4) / 7) - parseInt((parseInt(d / c) + 4) / 7) === 1)
         return 0
       return -1
     }
@@ -196,7 +197,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .el-message-box {
   width: min(80%, 420px);
 }
