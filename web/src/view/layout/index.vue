@@ -85,8 +85,8 @@ export default {
     return {
       show: false,
       isCollapse: false,
-      isSider: true,
-      isMobile: false,
+      isSider: false,
+      isMobile: true,
       isShadowBg: false,
       loadingFlag: false,
       reloadFlag: true,
