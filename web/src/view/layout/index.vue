@@ -78,6 +78,7 @@
 import Aside from '@/view/layout/aside'
 import BottomInfo from '@/view/layout/bottomInfo/bottomInfo'
 import {mapGetters, mapActions} from 'vuex'
+import {Message} from "element-ui";
 
 export default {
   name: 'Layout',
@@ -110,6 +111,7 @@ export default {
       this.isSider = !this.isCollapse
       this.isShadowBg = !this.isCollapse
       this.$bus.emit('collapse', this.isCollapse)
+      Message.closeAll()
     },
     toPerson() {
       this.$router.push({name: 'person'})
