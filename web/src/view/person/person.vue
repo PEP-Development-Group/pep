@@ -1,37 +1,6 @@
 <template>
   <div>
     <el-row>
-      <!-- <el-col :span="6">
-        <div class="fl-left avatar-box">
-          <div class="user-card">
-              <div class="user-headpic-update" :style="{ 'background-image': 'url(' + userInfo.headerImg + ')','background-repeat':'no-repeat','background-size':'cover' }" >
-              <span class="update" @click="openChooseImg">
-                <i class="el-icon-edit"></i>
-                重新上传</span>
-              </div>
-            <div class="user-personality">
-              <p class="nickname">{{userInfo.nickName}}</p>
-              <p class="person-info">这个家伙很懒，什么都没有留下</p>
-            </div>
-            <div class="user-information">
-              <ul>
-                <li>
-                   <i class="el-icon-user"></i>{{userInfo.nickName}}
-                </li>
-                <li>
-                  <i class="el-icon-data-analysis"></i>北京反转极光科技有限公司-技术部-前端事业群
-                </li>
-                <li>
-                  <i class="el-icon-video-camera-solid"></i>中国·北京市·朝阳区
-                </li>
-                <li>
-                  <i class="el-icon-medal-1"></i>goLang/JavaScript/Vue/Gorm
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </el-col> -->
       <el-col :span="24">
         <div class="user-addcount">
           <el-tabs v-model="activeName" @tab-click="handleClick">

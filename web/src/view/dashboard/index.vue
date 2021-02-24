@@ -2,63 +2,69 @@
   <div class="big">
     <el-row>
       <el-col :span="24">
-        <el-card>
+        <el-card style="margin-top:-1px">
           <!-- 这个name应该在userInfo里面 -->
-          <p class="welcome">欢迎您，</p>
-          <p class="name">{{ name }}{{ appellation }}</p>
+          <el-row style="margin:-10px 0">
+            <el-col :span="12">
+              <p class="welcome">欢迎<span v-auth.not="1">您</span>，</p>
+              <p class="name">{{ name }}{{ appellation }}</p>
+              <p v-auth.not="1">{{ today }}</p>
+            </el-col>
+            <el-col :span="12">
+              <div class="stu-tips" v-auth="1">
+                <p>已修/总学时</p>
+                <p>{{ haveCredits }} / {{ totalCredits }}</p>
+                <div>{{ today }}</div>
+              </div>
+            </el-col>
+          </el-row>
         </el-card>
       </el-col>
     </el-row>
 
-    <el-row :gutter="10" style="margin-top: 10px">
+    <el-row :gutter="10">
       <el-col :xs="24" :sm="14">
-        <el-card style="height: 160px">
+        <el-card style="height: 149px">
           <b>管理员公告</b>
           <el-button
-              v-if="adminAnnouncementModification"
+              v-auth="888"
               @click="dialogVisible = true"
               type="text"
               icon="el-icon-edit"
               plain
           ></el-button>
-          <p>{{ adminAnnouncement }}</p>
+          <p class="announce-con">{{ adminAnnouncement }}</p>
         </el-card>
 
-        <el-card style="height: 360px; margin-top: 18px">
+        <el-card style="height: 300px; margin-top: 18px; margin-bottom: 18px">
           <el-table
               :data="tableData"
-              border
+              max-height="260px"
               size="medium"
-              max-height="320px"
-              class="classtable"
+              :show-header="false"
+              class="classTable"
           >
-            <el-table-column prop="desc" label="时间" width="130px">
+            <el-table-column>
               <template slot-scope="scope">
-                {{ scope.row.desc|formatDesc }}
-              </template>
-            </el-table-column>
-            <el-table-column prop="classroom" label="地点" width="90px">
-            </el-table-column>
-            <el-table-column prop="tname" label="教师" width="80px"></el-table-column>
-            <el-table-column prop="cname" label="课程名">
-              <template slot-scope="scope">
-                {{ scope.row.cname }}
-                <el-tag effect="light" type="info" size="mini">
-                  {{ scope.row.hours }}学时
-                </el-tag>
-              </template>
-            </el-table-column>
-
-            <el-table-column prop="grade" label="成绩" align="center" width="100%">
-              <template slot-scope="scope">
-                <el-tag v-if="scope.row.grade === 102">未上成绩</el-tag>
-                <el-tag type="info" v-else-if="scope.row.grade === 101"
-                >旷课
-                </el-tag>
-                <el-tag type="success" v-else-if="scope.row.grade >= 60"
-                >{{ scope.row.grade }}
-                </el-tag>
-                <el-tag type="warning" v-else>{{ scope.row.grade }}</el-tag>
+                <div class="lessonCon">
+                <span class="nowarp"><span style="font-weight: bold">{{ scope.row.cname }}</span>
+                <el-divider direction="vertical"></el-divider>
+                {{ scope.row.hours }}学时</span>
+                  <span class="grade fail" v-if="scope.row.grade===101">旷课</span>
+                  <span class="grade" v-else-if="isFinished(scope.row.desc)"
+                        :class="{fail:scope.row.grade<60,pass:scope.row.grade>=60}">{{
+                      scope.row.grade === 102 ? "成绩未出" : scope.row.grade
+                    }}</span>
+                  <el-divider direction="vertical"></el-divider>
+                  <span class="nowarp">{{ scope.row.desc|formatDesc }}
+                    <el-divider direction="vertical"></el-divider>
+                </span>
+                  <span class="nowarp">
+                  {{ scope.row.tname }}
+                  <el-divider direction="vertical"></el-divider>
+                  {{ scope.row.classroom }}
+                </span>
+                </div>
               </template>
             </el-table-column>
           </el-table>
@@ -93,14 +99,10 @@
       </el-col>
     </el-row>
 
-    <el-row :gutter="10" style="margin-top: 30px">
-      <el-col :xs="24" :sm="12"></el-col>
-    </el-row>
-
     <el-dialog
         title="修改公告"
         :visible.sync="dialogVisible"
-        width="30%"
+        :width="dialogWidth"
         @close="adminClosed"
     >
       <el-form :model="adminFixContent" ref="contentRef" label-width="90px">
@@ -120,16 +122,20 @@
 import {store} from "@/store";
 import {GetPersonalClasses} from "@/api/course";
 import {getRecord, updateRecord} from "@/api/globle";
+import {realTimeToSchoolTime, schoolTimeToRealTime} from "@/utils/date";
 
 const formatDayOfWeek = ['一', '二', '三', '四', '五', '六', '日']
 export default {
   name: "Dashboard",
   data() {
     return {
+      dialogWidth: "30",
       dialogVisible: false,
-      adminAnnouncementModification: true,
       activeName: "1",
       name: store.state.user.userInfo.name,
+      today: "",
+      totalCredits: store.state.user.userInfo.total_credits,
+      haveCredits: store.state.user.userInfo.have_credits,
       adminAnnouncement: "",
       adminFixContent: {
         msg: "",
@@ -174,6 +180,20 @@ export default {
       ],
     };
   },
+  async created() {
+    this.tableData = (await GetPersonalClasses()).data.list.crs;
+    this.adminAnnouncement = (await getRecord()).data;
+    this.getToday();
+  },
+  mounted() {
+    const that = this;
+    window.onresize = () => {
+      return (() => {
+        if (document.body.clientWidth <= 750) that.dialogWidth = "90";
+        else that.dialogWidth = "30";
+      })()
+    }
+  },
   filters: {
     formatDesc: function (d) {
       if (d) {
@@ -183,6 +203,10 @@ export default {
     }
   },
   methods: {
+    isFinished(desc) {
+      let now = new Date()
+      return schoolTimeToRealTime(desc, store.state.user.firstDay) < now
+    },
     adminFix() {
       this.$refs.contentRef.validate(async (valid) => {
         if (!valid) return;
@@ -200,15 +224,40 @@ export default {
     adminClosed() {
       this.$refs.contentRef.resetFields();
     },
-  },
-  async created() {
-    this.tableData = (await GetPersonalClasses()).data.list.crs
-    this.adminAnnouncement = (await getRecord()).data
+    getToday() {
+      let d = new Date();
+      const t = realTimeToSchoolTime(d, store.state.user.firstDay);
+      if (t)
+        this.today = "今天是第" + t.week + "周星期" + formatDayOfWeek[t.day]
+      else return "未开学"
+    }
   }
 };
 </script>
 
 <style scoped>
+@media screen and (min-width: 320px) and (max-width: 750px) {
+  .lessonCon{
+    overflow-x: auto;
+    width: 320px;
+  }
+}
+.fail {
+  color: #FF6666;
+}
+
+.pass {
+  color: #00c6ac;
+}
+
+.nowarp {
+  white-space: nowrap;
+}
+
+.grade {
+  float: right;
+}
+
 b {
   color: rgb(64, 158, 255);
   padding-right: 10px;
@@ -216,9 +265,9 @@ b {
 
 .big {
   margin: 60px 0 0 0;
-  padding-top: 0;
   background-color: rgb(243, 243, 243);
   padding-top: 15px;
+  overflow-x: hidden;
 }
 
 .courseTitle2 {
@@ -240,5 +289,25 @@ b {
 
 .name {
   font-size: 30px;
+}
+
+.announce-con {
+  height: 78px;
+  overflow-y: auto;
+}
+
+.stu-tips {
+  height: 100%;
+  text-align: right;
+  vertical-align: bottom;
+}
+
+.stu-tips p {
+  font-size: 22px;
+}
+
+.stu-tips p:first-child {
+  font-size: 12px;
+  color: #aaa;
 }
 </style>

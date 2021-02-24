@@ -5,22 +5,22 @@
     <meta charset="utf-8">
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <link rel="apple-touch-icon" href="<%= BASE_URL %>favicon.ico"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="沈航物理实验中心">
     <title><%=htmlWebpackPlugin.options.title%></title>
-    <% if(process.env.NODE_ENV!=='development'){ %>
-      <% htmlWebpackPlugin.options.cdns.forEach(function(item){ if(item.js){ %>
-        <script type="text/javascript" src="<%= item.js %>"></script>
-      <% } }) %>
-    <% } %>  
 </head>
 
 <body>
-    <noscript>
-      <strong>We're sorry but system doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
+<noscript>
+    <strong>需要启用Javascript才能使用本系统,推荐使用Chrome等现代浏览器.</strong>
+</noscript>
+<div id="app"></div>
+<!-- built files will be auto injected -->
 </body>
 
 </html>

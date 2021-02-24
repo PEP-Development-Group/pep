@@ -17,10 +17,10 @@
                        :percentage="selectPercent(l.now,l.max)"
                        :stroke-width="2"></el-progress>
           <span class="lesson-info">
-          <span class="space">{{ l.desc|formatDesc }}</span>
-          <span class="space nowarp">{{ l.teacher_name }}</span>
-          <el-tag effect="light" size="mini" class="space">{{ l.class_room }}</el-tag>
-          <el-tag effect="dark" size="mini" type="info" class="space" v-if="countDown(l.time)!==-1"
+          <span class="whitespace">{{ l.desc|formatDesc }}</span>
+          <span class="whitespace nowarp">{{ l.teacher_name }}</span>
+          <el-tag effect="light" size="mini" class="whitespace">{{ l.class_room }}</el-tag>
+          <el-tag effect="dark" size="mini" type="info" class="whitespace" v-if="countDown(l.time)!==-1"
                   :color="(colors.time[countDown(l.time)])">{{ timeTag[countDown(l.time)] }}</el-tag>
           </span>
           <span class="lesson-op">
@@ -164,7 +164,7 @@ export default {
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: '已取消'
+          message: '未退课'
         });
       });
 
@@ -178,13 +178,14 @@ export default {
     countDown(time) {
       let d = new Date().setHours(0, 0, 0, 0)
       let t = new Date(time).setHours(0, 0, 0, 0)
+      const c = 60 * 60 * 24 * 1000
       if (d === t)
         return 3
-      else if (parseInt(t / 60 / 60 / 24 / 1000) - parseInt(d / 60 / 60 / 24 / 1000) === 1)
+      else if (parseInt(t / c) - parseInt(d / c) === 1)
         return 2
-      else if (parseInt((parseInt(d / 60 / 60 / 24 / 1000) + 4) / 7) === parseInt((parseInt(t / 60 / 60 / 24 / 1000) + 4) / 7))
+      else if (parseInt((parseInt(d / c) + 4) / 7) === parseInt((parseInt(t / c) + 4) / 7))
         return 1
-      else if (parseInt((parseInt(t / 60 / 60 / 24 / 1000) + 4) / 7) - parseInt((parseInt(d / 60 / 60 / 24 / 1000) + 4) / 7) === 1)
+      else if (parseInt((parseInt(t / c) + 4) / 7) - parseInt((parseInt(d / c) + 4) / 7) === 1)
         return 0
       return -1
     }
@@ -266,7 +267,7 @@ export default {
   float: right;
 }
 
-.space {
+.whitespace {
   vertical-align: middle;
   margin: 6px;
 }

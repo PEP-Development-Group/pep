@@ -55,16 +55,18 @@ export default {
   methods: {
     submitGrade() {
       this.isLoading = true
-      setStuGrade(this.gradeForm).then(() => {
-        this.grade = this.gradeForm.grade
+      setStuGrade(this.gradeForm).then((res) => {
+        if (res.code === 0)
+          this.grade = this.gradeForm.grade
         this.isLoading = false
       })
     },
     submitFailGrade() {
       this.isLoading = true
       this.gradeForm.grade = 101
-      setStuGrade(this.gradeForm).then(() => {
-        this.grade = this.gradeForm.grade
+      setStuGrade(this.gradeForm).then((res) => {
+        if (res.code === 0)
+          this.grade = this.gradeForm.grade
         this.isLoading = false
       })
     }

@@ -188,7 +188,7 @@ export const getTeacherAClassStuList = (params) => {
 export const setStuGrade = (data) => {
     return service({
         url: "/class/setStuGrade",
-        method: 'patch',
+        method: 'put',
         data: data,
         donNotShowLoading: true
     })
@@ -198,7 +198,7 @@ export const setStuGrade = (data) => {
 export const addUserCancelNums = (data) => {
     return service({
         url: "/class/addUserCancelNums",
-        method: 'patch',
+        method: 'put',
         data: data,
         donNotShowLoading: true
     })

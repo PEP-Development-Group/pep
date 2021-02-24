@@ -1,12 +1,21 @@
 <template>
   <div>
+    <div class="grade-tips">本学期需要修满<strong>{{ totalCredits }}</strong>学时,当前已修<strong>{{
+        haveCredits
+      }}</strong>学时,平均分为<strong>{{ ave }}</strong>
+    </div>
     <el-card v-for="(item,i) in sortedList" v-bind:key="i" class="lesson-card">
       <div class="lesson-title">
         <span class="cname">{{ item.cname }}</span>
         <el-tag size="mini">{{ item.hours }}学时</el-tag>
         <span class="grade fail" v-if="item.grade===101">旷课</span>
         <span class="grade" v-else-if="isFinished(item.desc)"
-              :class="{fail:item.grade<60,pass:item.grade>=60}">{{ item.grade === 102 ? "成绩未出" : item.grade }}</span>
+              :class="{fail:item.grade<60,pass:item.grade>=60}">{{
+            item.grade === 102 ? "成绩未出" : item.grade
+          }}</span>
+        <span class="grade" v-else>
+          <el-button type="danger" size="mini" plain @click="deleteCourse(item.id)">退课</el-button>
+        </span>
       </div>
       <div>
         {{ item.desc|formatDesc }}
@@ -20,13 +29,18 @@
 </template>
 
 <script>
-import {GetPersonalClasses} from "@/api/course";
+import {DeleteSelect, GetPersonalClasses} from "@/api/course";
 import {store} from "@/store";
 import {schoolTimeToRealTime} from "@/utils/date";
 
+const userInfo = store.getters['user/userInfo']
 const formatDayOfWeek = ['一', '二', '三', '四', '五', '六', '日']
 export default {
   name: "lessons",
+  async created() {
+    await this.getList()
+    this.getAve()
+  },
   filters: {
     formatDesc: function (d) {
       if (d) {
@@ -36,13 +50,51 @@ export default {
     }
   },
   methods: {
+    //TODO 需要根据课程情况调整算法
+    getAve() {
+      if (this.tableData == null) {
+        this.ave = 0
+        return
+      }
+      let a = 0.0
+      let cnt = 0
+      for (let i = 0; i < this.tableData.length; ++i) {
+        if (this.tableData[i].grade <= 100) {
+          a += this.tableData[i].grade
+          cnt++
+        }
+      }
+      this.ave = (a / cnt).toFixed(2)
+    },
     isFinished(desc) {
       let now = new Date()
       return schoolTimeToRealTime(desc, store.state.user.firstDay) < now
+    }, async deleteCourse(cid) {
+      this.$confirm('你确定要退课吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        showClose: false,
+      }).then(async () => {
+        const res = await DeleteSelect({"username": userInfo.username, "cid": cid})
+        if (res.code === 0) {
+          this.$message({type: "success", message: "退课成功"})
+        }
+        await this.getList()
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '未退课'
+        });
+      });
+
+    }, async getList() {
+      this.tableData = (await GetPersonalClasses()).data.list.crs
     }
   },
   computed: {
     sortedList: function () {
+      if (this.tableData == null) return
       let orderList = this.tableData
       orderList.sort(function (a, b) {
         let x = schoolTimeToRealTime(a.desc, store.state.user.firstDay)
@@ -54,16 +106,26 @@ export default {
   },
   data() {
     return {
-      tableData: []
+      tableData: [],
+      totalCredits: userInfo.total_credits,
+      haveCredits: userInfo.have_credits,
+      ave: null
     }
-  },
-  async created() {
-    this.tableData = (await GetPersonalClasses()).data.list.crs
   }
 }
 </script>
 
 <style scoped>
+
+.grade-tips {
+  margin: 10px;
+}
+
+.grade-tips strong {
+  font-weight: bold;
+  margin: 0 2px;
+}
+
 .fail {
   color: #FF6666;
 }

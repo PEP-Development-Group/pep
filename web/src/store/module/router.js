@@ -33,7 +33,7 @@ export const router = {
         // 从后台获取动态路由
         async SetAsyncRouter({ commit }) {
             const baseRouter = [{
-                path: '/layout',
+                path: '/',
                 name: 'layout',
                 component: "view/layout/index.vue",
                 meta: {
@@ -48,7 +48,7 @@ export const router = {
                 name: "404",
                 hidden: true,
                 meta: {
-                    title: "迷路了*。*",
+                    title: "404",
                 },
                 component: 'view/error/index.vue'
             })

@@ -58,16 +58,16 @@
       </el-radio-group>
       <el-form :rules="rules" ref="userForm" :model="userInfo">
         <el-form-item label="姓名" label-width="80px" prop="name">
-          <el-input v-model="userInfo.name"></el-input>
+          <el-input v-model="userInfo.name" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item :label="getIdType" label-width="80px" prop="userName">
-          <el-input v-model="userInfo.username"></el-input>
+          <el-input v-model="userInfo.username" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="应修学时" min-width="150" label-width="80px" v-show="userType===1">
-          <el-input v-model="userInfo.total_credits" type="number"></el-input>
+          <el-input v-model="userInfo.total_credits" type="number" ></el-input>
         </el-form-item>
         <el-form-item label="密码" label-width="80px" prop="password">
-          <el-input v-model="userInfo.password" type="password"></el-input>
+          <el-input v-model="userInfo.password" type="password" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
       <div class="dialog-footer" slot="footer">
@@ -106,7 +106,6 @@ import {
   setUserInfo,
 } from "@/api/user";
 import {addUserCancelNums} from "@/api/course";
-import {getAuthorityList} from "@/api/authority";
 import infoList from "@/mixins/infoList";
 import {mapGetters} from "vuex";
 
@@ -206,6 +205,7 @@ export default {
     },
     closeAddUserDialog() {
       this.$refs.userForm.resetFields();
+      this.resetForm()
       this.addUserDialog = false;
     },
     async enterModifyUserDialog() {
@@ -225,9 +225,11 @@ export default {
       this.modifyUserDialog = false;
     },
     addUser() {
+      this.resetForm()
       this.addUserDialog = true;
     },
     modifyUser(row) {
+      this.resetForm()
       this.userInfo = row
       this.modifyUserDialog = true;
     },
@@ -256,8 +258,6 @@ export default {
   },
   async created() {
     this.getTableData();
-    const res = await getAuthorityList({page: 1, pageSize: 999});
-    this.setOptions(res.data.list);
   }
 };
 </script>
