@@ -19,7 +19,7 @@
 
     <el-row :gutter="10">
       <el-col :xs="24" :sm="14">
-        <el-card style="height: 100px">
+        <el-card style="height: 149px">
           <b>管理员公告</b>
           <el-button
               v-auth="888"
@@ -28,15 +28,16 @@
               icon="el-icon-edit"
               plain
           ></el-button>
-          <p>{{ adminAnnouncement }}</p>
+          <p class="announce-con">{{ adminAnnouncement }}</p>
         </el-card>
 
-        <el-card style="height: 341px; margin-top: 18px">
+        <el-card style="height: 300px; margin-top: 18px">
           <el-table
               :data="tableData"
               border
               size="medium"
               max-height="320px"
+              :show-header="false"
               class="classtable"
           >
             <el-table-column prop="desc" label="时间" width="130px">
@@ -181,11 +182,16 @@ export default {
       ],
     };
   },
+  async created() {
+    this.tableData = (await GetPersonalClasses()).data.list.crs;
+    this.adminAnnouncement = (await getRecord()).data;
+    this.getToday();
+  },
   mounted() {
     const that = this;
     window.onresize = () => {
       return (() => {
-        if(document.body.clientWidth<=750) that.dialogWidth = "90";
+        if (document.body.clientWidth <= 750) that.dialogWidth = "90";
         else that.dialogWidth = "30";
       })()
     }
@@ -229,11 +235,6 @@ export default {
     //   // myDate.getMonth();
     //   // store.state.user
     // }
-  },
-  async created() {
-    this.tableData = (await GetPersonalClasses()).data.list.crs;
-    this.adminAnnouncement = (await getRecord()).data;
-    this.getToday();
   }
 };
 </script>
@@ -272,4 +273,8 @@ b {
   font-size: 30px;
 }
 
+.announce-con{
+  height: 78px;
+  overflow-y: auto;
+}
 </style>
