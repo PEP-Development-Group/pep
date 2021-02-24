@@ -17,10 +17,10 @@
                        :percentage="selectPercent(l.now,l.max)"
                        :stroke-width="2"></el-progress>
           <span class="lesson-info">
-          <span class="space">{{ l.desc|formatDesc }}</span>
-          <span class="space nowarp">{{ l.teacher_name }}</span>
-          <el-tag effect="light" size="mini" class="space">{{ l.class_room }}</el-tag>
-          <el-tag effect="dark" size="mini" type="info" class="space" v-if="countDown(l.time)!==-1"
+          <span class="whitespace">{{ l.desc|formatDesc }}</span>
+          <span class="whitespace nowarp">{{ l.teacher_name }}</span>
+          <el-tag effect="light" size="mini" class="whitespace">{{ l.class_room }}</el-tag>
+          <el-tag effect="dark" size="mini" type="info" class="whitespace" v-if="countDown(l.time)!==-1"
                   :color="(colors.time[countDown(l.time)])">{{ timeTag[countDown(l.time)] }}</el-tag>
           </span>
           <span class="lesson-op">
@@ -266,7 +266,7 @@ export default {
   float: right;
 }
 
-.space {
+.whitespace {
   vertical-align: middle;
   margin: 6px;
 }
