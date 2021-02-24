@@ -131,6 +131,7 @@ export default {
             showClose: true,
           });
           this.loginVefify();
+          this.loading = false
           return false;
         }
         this.loading = false
