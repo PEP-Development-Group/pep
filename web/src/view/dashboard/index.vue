@@ -46,7 +46,7 @@
           >
             <el-table-column>
               <template slot-scope="scope">
-                <div>
+                <div class="lessonCon">
                 <span class="nowarp"><span style="font-weight: bold">{{ scope.row.cname }}</span>
                 <el-divider direction="vertical"></el-divider>
                 {{ scope.row.hours }}学时</span>
@@ -236,7 +236,12 @@ export default {
 </script>
 
 <style scoped>
-
+@media screen and (min-width: 320px) and (max-width: 750px) {
+  .lessonCon{
+    overflow-x: auto;
+    width: 320px;
+  }
+}
 .fail {
   color: #FF6666;
 }
@@ -251,14 +256,6 @@ export default {
 
 .grade {
   float: right;
-}
-
-.grade::after{
-  content: '';
-  display: block;
-  height: 0;
-  visibility: hidden;
-  clear: both;
 }
 
 b {
