@@ -239,7 +239,7 @@ export default {
 @media screen and (min-width: 320px) and (max-width: 750px) {
   .lessonCon{
     overflow-x: auto;
-    width: 320px;
+    width: 80vw;
   }
 }
 .fail {
