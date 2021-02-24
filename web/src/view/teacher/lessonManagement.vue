@@ -103,7 +103,7 @@ export default {
   }
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .space {
   float: right;
   margin-left: 10px;

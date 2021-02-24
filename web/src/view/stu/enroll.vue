@@ -196,7 +196,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .el-message-box {
   width: min(80%, 420px);
 }
