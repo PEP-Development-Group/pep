@@ -220,9 +220,14 @@ func GetClassInfoList(info request.ClassSearch) (err error, list interface{}, to
 
 func GetStuClassList(rq request.UsernameRequest) (err error, list interface{}, total int) {
 	// TODO:SQL调优
+	var clsAll []model.Class
+	global.GVA_DB.Select("id", "ccredit", "cname", "tname", "desc", "classroom", "total", "selected", "time", "etime", "stime").Find(&clsAll)
 	var cls []model.Class
-	global.GVA_DB.Select("id", "ccredit", "cname", "tname", "desc", "classroom", "total", "selected", "time").Find(&cls)
-
+	for _, class := range clsAll {
+		if class.Stime.Before(time.Now()) && class.Etime.After(time.Now()) {
+			cls = append(cls, class)
+		}
+	}
 	l := len(cls)
 	m := make(map[uint]bool, l)
 
