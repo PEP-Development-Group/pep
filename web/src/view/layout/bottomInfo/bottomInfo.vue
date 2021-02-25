@@ -12,7 +12,7 @@ export default {
   name: "BottomInfo",
   methods: {
     toTarget() {
-      this.$router.push('/layout/about')
+      this.$router.push('/about')
     },
   },
 }

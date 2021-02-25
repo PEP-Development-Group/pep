@@ -1,103 +1,276 @@
 <template>
   <div class="big">
-    <el-row>
-      <el-col :span="24">
-        <el-card style="margin-top:-1px">
-          <!-- 这个name应该在userInfo里面 -->
-          <el-row style="margin:-10px 0">
-            <el-col :span="12">
-              <p class="welcome">欢迎<span v-auth.not="1">您</span>，</p>
-              <p class="name">{{ name }}{{ appellation }}</p>
-              <p v-auth.not="1">{{ today }}</p>
-            </el-col>
-            <el-col :span="12">
-              <div class="stu-tips" v-auth="1">
-                <p>已修/总学时</p>
-                <p>{{ haveCredits }} / {{ totalCredits }}</p>
-                <div>{{ today }}</div>
-              </div>
-            </el-col>
-          </el-row>
-        </el-card>
-      </el-col>
-    </el-row>
-
-    <el-row :gutter="10">
-      <el-col :xs="24" :sm="14">
-        <el-card style="height: 149px">
-          <b>管理员公告</b>
-          <el-button
-              v-auth="888"
-              @click="dialogVisible = true"
-              type="text"
-              icon="el-icon-edit"
-              plain
-          ></el-button>
-          <p class="announce-con">{{ adminAnnouncement }}</p>
-        </el-card>
-
-        <el-card style="height: 300px; margin-top: 18px; margin-bottom: 18px">
-          <el-table
-              :data="tableData"
-              max-height="260px"
-              size="medium"
-              :show-header="false"
-              class="classTable"
-          >
-            <el-table-column>
-              <template slot-scope="scope">
-                <div class="lessonCon">
-                <span class="nowarp"><span style="font-weight: bold">{{ scope.row.cname }}</span>
-                <el-divider direction="vertical"></el-divider>
-                {{ scope.row.hours }}学时</span>
-                  <span class="grade fail" v-if="scope.row.grade===101">旷课</span>
-                  <span class="grade" v-else-if="isFinished(scope.row.desc)"
-                        :class="{fail:scope.row.grade<60,pass:scope.row.grade>=60}">{{
-                      scope.row.grade === 102 ? "成绩未出" : scope.row.grade
-                    }}</span>
-                  <el-divider direction="vertical"></el-divider>
-                  <span class="nowarp">{{ scope.row.desc|formatDesc }}
-                    <el-divider direction="vertical"></el-divider>
-                </span>
-                  <span class="nowarp">
-                  {{ scope.row.tname }}
-                  <el-divider direction="vertical"></el-divider>
-                  {{ scope.row.classroom }}
-                </span>
+    <!-- 教师，学生部分 -->
+    <div v-auth.not="888">
+      <el-row>
+        <el-col :span="24">
+          <el-card style="margin-top:-6px">
+            <el-row style="margin:-10px 0">
+              <el-col :span="12">
+                <p class="welcome">欢迎<span v-auth.not="1">您</span>，</p>
+                <p class="name">{{ name }}{{ appellation }}</p>
+                <p v-auth.not="1">{{ today }}</p>
+              </el-col>
+              <el-col :span="12">
+                <div class="stu-tips" v-auth="1">
+                  <p>已修/总学时</p>
+                  <p>{{ haveCredits }} / {{ totalCredits }}</p>
+                  <div>{{ today }}</div>
                 </div>
-              </template>
-            </el-table-column>
-          </el-table>
-        </el-card>
-      </el-col>
+              </el-col>
+            </el-row>
+          </el-card>
+        </el-col>
+      </el-row>
 
-      <el-col :xs="24" :sm="10">
-        <el-card>
-          <h3 class="courseTitle2">2学时课节</h3>
+      <el-row :gutter="10">
+        <el-col :xs="24" :sm="14">
+          <el-card style="height: 149px">
+            <b>管理员公告</b>
+            <!-- <el-button
+                v-auth="888"
+                @click="dialogVisible = true"
+                type="text"
+                icon="el-icon-edit"
+                plain
+            ></el-button> -->
+            <p class="announce-con">{{ adminAnnouncement }}</p>
+          </el-card>
+          <!-- 学生部分 -->
+          <el-card v-auth="1" style="height: 294px; margin-top: 18px; margin-bottom: 18px">
+            <el-table
+                :data="tableData"
+                max-height="260px"
+                size="medium"
+                :show-header="false"
+                class="classTable"
+            >
+              <el-table-column>
+                <template slot-scope="scope">
+                  <div class="lessonCon">
+                  <span class="nowarp"><span style="font-weight: bold">{{ scope.row.cname }}</span>
+                  <el-divider direction="vertical"></el-divider>
+                  {{ scope.row.hours }}学时</span>
+                    <span class="grade fail" v-if="scope.row.grade===101">旷课</span>
+                    <span class="grade" v-else-if="isFinished(scope.row.desc)"
+                          :class="{fail:scope.row.grade<60,pass:scope.row.grade>=60}">{{
+                        scope.row.grade === 102 ? "成绩未出" : scope.row.grade
+                      }}</span>
+                    <el-divider direction="vertical"></el-divider>
+                    <span class="nowarp">{{ scope.row.desc|formatDesc }}
+                      <el-divider direction="vertical"></el-divider>
+                  </span>
+                    <span class="nowarp">
+                    {{ scope.row.tname }}
+                    <el-divider direction="vertical"></el-divider>
+                    {{ scope.row.classroom }}
+                  </span>
+                  </div>
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-card>
 
-          <el-table
-              :data="tableData2"
-              size="medium"
-              :show-header="false"
-              border
-          >
-            <el-table-column prop="class" label="课程"></el-table-column>
-            <el-table-column prop="date" label="时间"></el-table-column>
-          </el-table>
 
-          <h3 class="courseTitle4">4学时课节</h3>
-          <el-table
-              :data="tableData4"
-              size="medium"
-              :show-header="false"
-              border
-          >
-            <el-table-column prop="class" label="课程"></el-table-column>
-            <el-table-column prop="date" label="时间"></el-table-column>
-          </el-table>
-        </el-card>
-      </el-col>
-    </el-row>
+
+          <!-- 老师部分 -->
+          <el-card v-auth="2" style="height: 294px; margin-top: 18px; margin-bottom: 18px">
+            <!-- <div class="button-box clearflex">
+              <el-radio-group v-model="classType" size="small">
+                <el-radio-button :label="1">已上课程</el-radio-button>
+                <el-radio-button :label="2">未来课程</el-radio-button>
+              </el-radio-group>
+            </div> -->
+
+            <div class="button-box clearflex">
+              <b>待上课程</b>
+              <b class="right">
+                <el-link type="primary" :underline="false" @click="goToLessonManagement">查看详情</el-link>
+              </b>
+            </div>
+            <el-table ref="userTable" :data="[courseList,classType]|classFilter"   max-height="260px" :show-header="false">
+              <el-table-column min-width="150">
+                <template slot-scope="scope">
+                  {{ scope.row.cname }}
+                  <el-tag effect="dark" size="mini" class="space" type="success">{{ scope.row.ccredit }}学时
+                  </el-tag>
+                  <el-tag effect="light" size="mini" class="space">{{ scope.row.classroom }}</el-tag>
+                </template>
+              </el-table-column>
+              <el-table-column min-width="150">
+                <template slot-scope="scope">
+                  <el-popover trigger="hover" :content="scope.row.time|formatDateDay" placement="right">
+                    <div slot="reference" class="text-wrapper">
+                      {{ scope.row.desc | formatDesc }}
+                    </div>
+                  </el-popover>
+                </template>
+              </el-table-column>
+
+            </el-table>
+
+          </el-card>
+
+
+        </el-col>
+
+        <el-col :xs="24" :sm="10">
+          <el-card>
+            <h3 class="courseTitle2">2学时课节</h3>
+
+            <el-table
+                :data="tableData2"
+                size="medium"
+                :show-header="false"
+                border
+            >
+              <el-table-column prop="class" label="课程"></el-table-column>
+              <el-table-column prop="date" label="时间"></el-table-column>
+            </el-table>
+
+            <h3 class="courseTitle4">4学时课节</h3>
+            <el-table
+                :data="tableData4"
+                size="medium"
+                :show-header="false"
+                border
+            >
+              <el-table-column prop="class" label="课程"></el-table-column>
+              <el-table-column prop="date" label="时间"></el-table-column>
+            </el-table>
+          </el-card>
+        </el-col>
+      </el-row>
+
+
+    </div>
+
+
+    <!-- 管理员 -->
+    <div v-auth="888">
+      <el-row :gutter="10">
+        <el-col :xs="24" :sm="12">
+          <el-card style="height: 100px;">
+            <p class="welcome">欢迎您，</p>
+            <p class="name">管理员</p>
+          </el-card>
+        </el-col>
+        <el-col :xs="24" :sm="12">
+          <el-card style="height: 100px;">
+            <b>管理员公告</b>
+            <el-button
+                @click="dialogVisible = true"
+                type="text"
+                icon="el-icon-edit"
+                plain
+            ></el-button>
+            <p class="announce-con">{{ adminAnnouncement }}</p>
+          </el-card>
+        </el-col>
+      </el-row>
+      <el-row :gutter="10">
+        <el-col :xs="24" :sm="12">
+          <el-card >
+            <div class="button-box clearflex">
+              <b>服务器状态</b>
+              <b class="right">
+                <el-link type="primary" :underline="false" @click="goToSystemState">查看详情</el-link>
+              </b>
+            </div>
+
+            <el-row :gutter="10" style="margin:60px 0px">
+              <el-col :xs="24" :sm="12">
+                <el-card v-if="state.disk" class="card_item">
+                  <div slot="header">Disk</div>
+                  <div>
+                    <el-row>
+                      <!-- <el-col :span="12">
+                        <el-row :gutter="10">
+                          <el-col :span="12">total (MB)</el-col>
+                          <el-col :span="12" v-text="state.disk.totalMb"></el-col>
+                        </el-row>
+                        <el-row :gutter="10">
+                          <el-col :span="12">used (MB)</el-col>
+                          <el-col :span="12" v-text="state.disk.usedMb"></el-col>
+                        </el-row>
+                        <el-row :gutter="10">
+                          <el-col :span="12">total (GB)</el-col>
+                          <el-col :span="12" v-text="state.disk.totalGb"></el-col>
+                        </el-row>
+                        <el-row :gutter="10">
+                          <el-col :span="12">used (GB)</el-col>
+                          <el-col :span="12" v-text="state.disk.usedGb"></el-col>
+                        </el-row>
+                      </el-col> -->
+                      <el-col :span="12"  :offset="6">
+                        <el-progress
+                            type="dashboard"
+                            :percentage="state.disk.usedPercent"
+                            :color="colors"
+                        ></el-progress>
+                      </el-col>
+                    </el-row>
+                  </div>
+                </el-card>
+              </el-col>
+              <el-col :xs="24" :sm="12">
+                <el-card v-if="state.ram" class="card_item">
+                  <div slot="header">Ram</div>
+                  <div>
+                    <el-row >
+                      <el-col :span="12"  :offset="6">
+                        <el-progress
+                            type="dashboard"
+                            :percentage="state.ram.usedPercent"
+                            :color="colors"
+                        ></el-progress>
+                      </el-col>
+                    </el-row>
+                  </div>
+                </el-card>
+              </el-col>
+            </el-row>
+
+
+
+
+
+
+          </el-card>
+        </el-col>
+        <el-col :xs="24" :sm="12">
+          <el-card style="height:462px">
+            <h3 class="courseTitle2">2学时课节</h3>
+
+            <el-table
+                :data="tableData2"
+                size="medium"
+                :show-header="false"
+                border
+            >
+              <el-table-column prop="class" label="课程"></el-table-column>
+              <el-table-column prop="date" label="时间"></el-table-column>
+            </el-table>
+
+            <h3 class="courseTitle4">4学时课节</h3>
+            <el-table
+                :data="tableData4"
+                size="medium"
+                :show-header="false"
+                border
+            >
+              <el-table-column prop="class" label="课程"></el-table-column>
+              <el-table-column prop="date" label="时间"></el-table-column>
+            </el-table>
+          </el-card>
+        </el-col>
+      </el-row>
+    </div>
+
+
+
+
+
 
     <el-dialog
         title="修改公告"
@@ -120,10 +293,11 @@
 
 <script>
 import {store} from "@/store";
-import {GetPersonalClasses} from "@/api/course";
+import {GetPersonalClasses, getTeacherClassList} from "@/api/course";
 import {getRecord, updateRecord} from "@/api/globle";
-import {realTimeToSchoolTime, schoolTimeToRealTime} from "@/utils/date";
-
+import {realTimeToSchoolTime, schoolTimeToRealTime, formatTimeToStr} from "@/utils/date";
+import {mapGetters} from "vuex";
+import { getSystemState } from "@/api/system.js";
 const formatDayOfWeek = ['一', '二', '三', '四', '五', '六', '日']
 export default {
   name: "Dashboard",
@@ -137,6 +311,15 @@ export default {
       totalCredits: store.state.user.userInfo.total_credits,
       haveCredits: store.state.user.userInfo.have_credits,
       adminAnnouncement: "",
+      courseList: [],
+      classType: 2,
+      timer:null,
+      state: {},
+      colors: [
+        { color: "#5cb87a", percentage: 20 },
+        { color: "#e6a23c", percentage: 40 },
+        { color: "#f56c6c", percentage: 80 },
+      ],
       adminFixContent: {
         msg: "",
       },
@@ -181,9 +364,20 @@ export default {
     };
   },
   async created() {
-    this.tableData = (await GetPersonalClasses()).data.list.crs;
+    if(this.$store.state.user.userInfo.authorityId === '1') this.tableData = (await GetPersonalClasses()).data.list.crs;
     this.adminAnnouncement = (await getRecord()).data;
     this.getToday();
+    if(this.$store.state.user.userInfo.authorityId === '2') await this.getList();
+    if(this.$store.state.user.userInfo.authorityId === '888') {
+      this.reload();
+      // this.timer = setInterval(() => {
+      //   this.reload();
+      // }, 1000*10);
+    }
+  },
+  beforeDestroy(){
+    clearInterval(this.timer)
+    this.timer = null
   },
   mounted() {
     const that = this;
@@ -195,14 +389,44 @@ export default {
     }
   },
   filters: {
+    classFilter(list) {
+      let currTime = new Date()
+      if (list[0])
+        return list[0].filter((item) => {
+          let o = new Date(item.time) < currTime
+          return ((list[1] === 1) && o) || ((list[1] === 2) && !o)
+        })
+      return []
+    },
     formatDesc: function (d) {
       if (d) {
         let descList = d.split('-')
         return "第" + descList[0] + "周 周" + formatDayOfWeek[descList[1] - 1] + " 第" + descList[2] + "节";
       }
+    },
+    formatDateDay: function (time) {
+      if (time != null && time != "") {
+        var date = new Date(time);
+        return formatTimeToStr(date, "yyyy年MM月dd日");
+      } else {
+        return "";
+      }
     }
   },
+  computed: {
+    ...mapGetters("user", ["token"]),
+  },
   methods: {
+    async reload() {
+      const { data } = await getSystemState();
+      this.state = data.server;
+    },
+    goToSystemState() {
+      this.$router.push('/system/state')
+    },
+    goToLessonManagement() {
+      this.$router.push('/lessonManagement')
+    },
     isFinished(desc) {
       let now = new Date()
       return schoolTimeToRealTime(desc, store.state.user.firstDay) < now
@@ -230,6 +454,20 @@ export default {
       if (t)
         this.today = "今天是第" + t.week + "周星期" + formatDayOfWeek[t.day]
       else return "未开学"
+    },
+    async getList() {
+      const list = await getTeacherClassList();
+      if (list.code === 0) {
+        this.courseList = list.data.courses.classes
+      }
+    },
+    viewLesson(cid) {
+      this.$router.push({
+        path: 'lesson',
+        query: {
+          cid: cid
+        }
+      })
     }
   }
 };
@@ -264,7 +502,7 @@ b {
 }
 
 .big {
-  margin: 60px 0 0 0;
+  margin: 60px 0 -16px 0;
   background-color: rgb(243, 243, 243);
   padding-top: 15px;
   overflow-x: hidden;
@@ -309,5 +547,63 @@ b {
 .stu-tips p:first-child {
   font-size: 12px;
   color: #aaa;
+}
+
+.space {
+  float: right;
+  margin-left: 10px;
+}
+
+.button-box {
+  position: relative;
+  padding: 10px 0px;
+}
+.button-box .right {
+  position: absolute;
+  right: 0;
+}
+
+.button-box .el-button {
+  float: right;
+}
+
+.user-dialog .header-img-box {
+  width: 200px;
+  height: 200px;
+  border: 1px dashed #ccc;
+  border-radius: 20px;
+  text-align: center;
+  line-height: 200px;
+  cursor: pointer;
+}
+
+.user-dialog .avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+
+.user-dialog .avatar-uploader-icon {
+  border: 1px dashed #d9d9d9 !important;
+  border-radius: 6px;
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+
+.user-dialog .avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
+
+.option-btn {
+  margin-right: 5px;
+}
+
+.user-type-radio {
+  margin-bottom: 20px;
+  margin-left: 80px;
 }
 </style>

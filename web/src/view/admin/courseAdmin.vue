@@ -394,7 +394,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .el-input {
   width: auto;
 }
