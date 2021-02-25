@@ -64,7 +64,7 @@ export default {
           cnt++
         }
       }
-      this.ave = (a / cnt).toFixed(2)
+      this.ave = cnt ? (a / cnt).toFixed(2) : 0
     },
     isFinished(desc) {
       let now = new Date()
