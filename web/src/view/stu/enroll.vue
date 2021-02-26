@@ -4,11 +4,18 @@
       <el-collapse-item v-for="(item,i) in courseList" :key="item.id" class="class-con">
         <template slot="title">
           <div class="class-title-con">
-            <span class="class-title">{{ i }}</span>
-            <el-tag effect="dark" size="small" class="hours-tag" type="info"
+            <el-tag effect="dark" class="hours-tag" type="info"
                     :color="(colors.duration[item.hours-1])">{{ item.hours }}学时
             </el-tag>
+            <span class="class-title">{{ i }}</span>
+
             <span class="class-title-right">{{ item.List.length }}</span>
+            <span class="class-title-right">
+            <el-tag effect="light" size="small" type="success" v-if="courseSelected(item)">
+              <i class="el-icon-check"></i>
+            已选
+            </el-tag>
+            </span>
           </div>
         </template>
         <el-card v-for="l in item.List" class="lesson" :key="l.id" shadow="hover">
@@ -20,8 +27,8 @@
           <span class="whitespace">{{ l.desc|formatDesc }}</span>
           <span class="whitespace nowarp">{{ l.teacher_name }}</span>
           <el-tag effect="light" size="mini" class="whitespace">{{ l.class_room }}</el-tag>
-          <el-tag effect="dark" size="mini" type="info" class="whitespace" v-if="countDown(l.time)!==-1"
-                  :color="(colors.time[countDown(l.time)])">{{ timeTag[countDown(l.time)] }}</el-tag>
+          <el-tag effect="dark" size="mini" type="info" class="whitespace" v-if="countDown(l.desc)!==-1"
+                  :color="(colors.time[countDown(l.desc)])">{{ timeTag[countDown(l.desc)] }}</el-tag>
           </span>
           <span class="lesson-op">
             <span class="progress" :class="{red:l.max-l.now<=3}">{{ l.now }}/{{ l.max }}</span>
@@ -72,7 +79,7 @@ import {
   SelectClass,
   DeleteSelect
 } from "@/api/course.js";  //  此处请自行替换地址
-import {formatTimeToStr} from "@/utils/date";
+import {formatTimeToStr, schoolTimeToRealTime} from "@/utils/date";
 import infoList from "@/mixins/infoList";
 import {store} from '@/store'
 
@@ -82,6 +89,9 @@ const formatDayOfWeek = ['一', '二', '三', '四', '五', '六', '日']
 export default {
   name: "Enroll",
   mixins: [infoList],
+  async created() {
+    await this.getList()
+  },
   data() {
     return {
       activeNames: [1],
@@ -126,6 +136,13 @@ export default {
   },
   computed: {},
   methods: {
+    courseSelected(course) {
+      if (!course.List) return false
+      for (let i = 0; i < course.List.length; ++i) {
+        if (course.List[i].selected) return true
+      }
+      return false
+    },
     selectPercent: function (now, max) {
       if (now < 0) return 0
       if (max <= 0) return 0
@@ -175,7 +192,8 @@ export default {
         this.courseList = list.data.courses
       }
     },
-    countDown(time) {
+    countDown(desc) {
+      let time = schoolTimeToRealTime(desc, store.state.user.firstDay)
       let d = new Date().setHours(0, 0, 0, 0)
       let t = new Date(time).setHours(0, 0, 0, 0)
       const c = 60 * 60 * 24 * 1000
@@ -189,9 +207,6 @@ export default {
         return 0
       return -1
     }
-  },
-  async created() {
-    await this.getList()
   }
 
 }
@@ -213,6 +228,7 @@ export default {
 .class-title {
   display: inline-block;
   font-weight: bold;
+  font-size: 15px;
   margin-left: 20px;
   line-height: normal;
   vertical-align: middle;
@@ -221,6 +237,7 @@ export default {
 
 .class-title-right {
   float: right;
+  margin-left: 5px;
 }
 
 .class-title-con {

@@ -177,7 +177,7 @@
       </el-row>
       <el-row :gutter="10">
         <el-col :xs="24" :sm="12">
-          <el-card>
+          <el-card  style="height:462px">
             <div class="button-box clearflex">
               <b>服务器状态</b>
               <b class="right">
