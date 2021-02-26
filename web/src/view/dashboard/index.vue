@@ -1,18 +1,18 @@
 <template>
   <div class="big">
     <!-- 教师，学生部分 -->
-    <div v-auth.not="888">
+    <div v-if="authId!=888">
       <el-row>
         <el-col :span="24">
           <el-card style="margin-top:-6px">
             <el-row style="margin:-10px 0">
               <el-col :span="12">
-                <p class="welcome">欢迎<span v-auth.not="1">您</span>，</p>
+                <p class="welcome">欢迎<span v-if="authId!=1">您</span>，</p>
                 <p class="name">{{ name }}{{ appellation }}</p>
-                <p v-auth.not="1">{{ today }}</p>
+                <p v-if="authId!=1">{{ today }}</p>
               </el-col>
               <el-col :span="12">
-                <div class="stu-tips" v-auth="1">
+                <div class="stu-tips" v-if="authId==1">
                   <p>已修/总学时</p>
                   <p>{{ haveCredits }} / {{ totalCredits }}</p>
                   <div>{{ today }}</div>
@@ -37,13 +37,20 @@
             <p class="announce-con">{{ adminAnnouncement }}</p>
           </el-card>
           <!-- 学生部分 -->
-          <el-card v-auth="1" style="height: 294px; margin-top: 18px; margin-bottom: 18px">
+          <el-card v-if="authId==1" style="height: 294px; margin-top: 18px; margin-bottom: 18px">
+            <div class="button-box clearflex">
+              <b>课程</b>
+              <b class="right">
+                <el-link type="primary" :underline="false" @click="goToStuLesson">查看详情</el-link>
+              </b>
+            </div>
             <el-table
                 :data="tableData"
                 max-height="260px"
                 size="medium"
                 :show-header="false"
                 class="classTable"
+                empty-text="暂无课程"
             >
               <el-table-column>
                 <template slot-scope="scope">
@@ -72,9 +79,8 @@
           </el-card>
 
 
-
           <!-- 老师部分 -->
-          <el-card v-auth="2" style="height: 294px; margin-top: 18px; margin-bottom: 18px">
+          <el-card v-if="authId==2" style="height: 294px; margin-top: 18px; margin-bottom: 18px">
             <!-- <div class="button-box clearflex">
               <el-radio-group v-model="classType" size="small">
                 <el-radio-button :label="1">已上课程</el-radio-button>
@@ -88,7 +94,8 @@
                 <el-link type="primary" :underline="false" @click="goToLessonManagement">查看详情</el-link>
               </b>
             </div>
-            <el-table ref="userTable" :data="[courseList,classType]|classFilter"   max-height="260px" :show-header="false">
+            <el-table ref="userTable" :data="[courseList,classType]|classFilter" max-height="260px"
+                      :show-header="false">
               <el-table-column min-width="150">
                 <template slot-scope="scope">
                   {{ scope.row.cname }}
@@ -147,7 +154,7 @@
 
 
     <!-- 管理员 -->
-    <div v-auth="888">
+    <div v-if="authId==888">
       <el-row :gutter="10">
         <el-col :xs="24" :sm="12">
           <el-card style="height: 100px;">
@@ -170,7 +177,7 @@
       </el-row>
       <el-row :gutter="10">
         <el-col :xs="24" :sm="12">
-          <el-card >
+          <el-card>
             <div class="button-box clearflex">
               <b>服务器状态</b>
               <b class="right">
@@ -202,7 +209,7 @@
                           <el-col :span="12" v-text="state.disk.usedGb"></el-col>
                         </el-row>
                       </el-col> -->
-                      <el-col :span="12"  :offset="6">
+                      <el-col :span="12" :offset="6">
                         <el-progress
                             type="dashboard"
                             :percentage="state.disk.usedPercent"
@@ -217,8 +224,8 @@
                 <el-card v-if="state.ram" class="card_item">
                   <div slot="header">Ram</div>
                   <div>
-                    <el-row >
-                      <el-col :span="12"  :offset="6">
+                    <el-row>
+                      <el-col :span="12" :offset="6">
                         <el-progress
                             type="dashboard"
                             :percentage="state.ram.usedPercent"
@@ -230,10 +237,6 @@
                 </el-card>
               </el-col>
             </el-row>
-
-
-
-
 
 
           </el-card>
@@ -268,10 +271,6 @@
     </div>
 
 
-
-
-
-
     <el-dialog
         title="修改公告"
         :visible.sync="dialogVisible"
@@ -297,7 +296,8 @@ import {GetPersonalClasses, getTeacherClassList} from "@/api/course";
 import {getRecord, updateRecord} from "@/api/globle";
 import {realTimeToSchoolTime, schoolTimeToRealTime, formatTimeToStr} from "@/utils/date";
 import {mapGetters} from "vuex";
-import { getSystemState } from "@/api/system.js";
+import {getSystemState} from "@/api/system.js";
+
 const formatDayOfWeek = ['一', '二', '三', '四', '五', '六', '日']
 export default {
   name: "Dashboard",
@@ -313,17 +313,18 @@ export default {
       adminAnnouncement: "",
       courseList: [],
       classType: 2,
-      timer:null,
+      timer: null,
       state: {},
       colors: [
-        { color: "#5cb87a", percentage: 20 },
-        { color: "#e6a23c", percentage: 40 },
-        { color: "#f56c6c", percentage: 80 },
+        {color: "#5cb87a", percentage: 20},
+        {color: "#e6a23c", percentage: 40},
+        {color: "#f56c6c", percentage: 80},
       ],
       adminFixContent: {
         msg: "",
       },
       appellation: store.state.user.userInfo.authorityId == 1 ? '同学' : '老师',
+      authId: store.state.user.userInfo.authorityId,
       tableData: [],
       tableData2: [
         {
@@ -364,18 +365,18 @@ export default {
     };
   },
   async created() {
-    if(this.$store.state.user.userInfo.authorityId === '1') this.tableData = (await GetPersonalClasses()).data.list.crs;
+    if (this.$store.state.user.userInfo.authorityId === '1') this.tableData = (await GetPersonalClasses()).data.list.crs;
     this.adminAnnouncement = (await getRecord()).data;
     this.getToday();
-    if(this.$store.state.user.userInfo.authorityId === '2') await this.getList();
-    if(this.$store.state.user.userInfo.authorityId === '888') {
+    if (this.$store.state.user.userInfo.authorityId === '2') await this.getList();
+    if (this.$store.state.user.userInfo.authorityId === '888') {
       this.reload();
       // this.timer = setInterval(() => {
       //   this.reload();
       // }, 1000*10);
     }
   },
-  beforeDestroy(){
+  beforeDestroy() {
     clearInterval(this.timer)
     this.timer = null
   },
@@ -418,7 +419,7 @@ export default {
   },
   methods: {
     async reload() {
-      const { data } = await getSystemState();
+      const {data} = await getSystemState();
       this.state = data.server;
     },
     goToSystemState() {
@@ -426,6 +427,9 @@ export default {
     },
     goToLessonManagement() {
       this.$router.push('/lessonManagement')
+    },
+    goToStuLesson() {
+      this.$router.push('/lessons')
     },
     isFinished(desc) {
       let now = new Date()
@@ -475,11 +479,12 @@ export default {
 
 <style scoped>
 @media screen and (min-width: 320px) and (max-width: 750px) {
-  .lessonCon{
+  .lessonCon {
     overflow-x: auto;
     width: 80vw;
   }
 }
+
 .fail {
   color: #FF6666;
 }
@@ -558,6 +563,7 @@ b {
   position: relative;
   padding: 10px 0px;
 }
+
 .button-box .right {
   position: absolute;
   right: 0;
