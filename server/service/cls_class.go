@@ -8,6 +8,8 @@ import (
 	"gin-vue-admin/model/request"
 	"gin-vue-admin/model/response"
 	"gorm.io/gorm"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -78,10 +80,16 @@ func DeleteSelect(sc request.SelectClass) (err error) {
 
 		// TODO:去掉order by
 		c := model.Class{}
-		tmptx2 := tx.Select("selected", "time").First(&c, sc.Cid)
+		tmptx2 := tx.Select("selected", "time", "desc").First(&c, sc.Cid)
+
+		// desc split by "-", such as "1-1-1"
+		ts := strings.Split(c.Desc, "-")
+		week, _ := strconv.Atoi(ts[0])
+		d, _ := strconv.Atoi(ts[1])
 
 		// 上课当天不允许退课
-		if time.Now().Day() == c.Time.Day() {
+		t, _ := time.ParseInLocation("2006-01-02", global.GVA_CONFIG.System.FirstDay, time.Local)
+		if time.Now().Day() == t.AddDate(0, 0, week*7+d).Day() {
 			return constant.ErrDelClassOnDayOfClass
 		}
 
@@ -253,7 +261,6 @@ func GetStuClassList(rq request.UsernameRequest) (err error, list interface{}, t
 			co := response.Course{
 				ID:          c.ID,
 				TeacherName: c.Tname,
-				Time:        c.Time,
 				Desc:        c.Desc,
 				ClassRoom:   c.Classroom,
 				Max:         c.Total,
@@ -290,7 +297,6 @@ func GetTeacherClassList(rq request.UsernameRequest) (err error, list interface{
 			Cname:     c.Cname,
 			Ccredit:   c.Ccredit,
 			Desc:      c.Desc,
-			Time:      c.Time,
 			Selected:  c.Selected,
 			Classroom: c.Classroom,
 		})
@@ -337,6 +343,22 @@ func SetStuGrade(rq request.TeacherRequest) (err error) {
 	db := global.GVA_DB.Select("grade").Where("class_id = ? AND username = ?", rq.Cid, rq.Username).First(&sc)
 	if db.Error != nil {
 		return constant.InternalErr
+	}
+	if sc.Grade >= 60 {
+		var s model.SysUser
+		err = global.GVA_DB.Select("have_credits").Where("username = ?", rq.Username).First(&s).Error
+		if err != nil {
+			return err
+		}
+		var c model.Class
+		err= global.GVA_DB.Select("ccredit").Where("id = ?", rq.Cid).First(&c).Error
+		if err != nil {
+			return err
+		}
+		err = global.GVA_DB.Model(&model.SysUser{}).Update("have_credits", c.Ccredit).Error
+		if err != nil {
+			return err
+		}
 	}
 	return db.Update("grade", rq.Grade).Error
 }

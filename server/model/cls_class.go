@@ -14,7 +14,7 @@ type Class struct {
 	Desc      string    `json:"desc" form:"desc" gorm:"column:desc;comment:上课时间中文描述;type:varchar(15);"`
 	Etime     time.Time `json:"etime" form:"etime" gorm:"column:etime;comment:选课结束;type:datetime;"`
 	Stime     time.Time `json:"stime" form:"stime" gorm:"column:stime;comment:选课开始;type:datetime;"`
-	Time      time.Time `json:"time" form:"time" gorm:"column:time;comment:上课时间;type:datetime;"`
+	// Time      time.Time `json:"time" form:"time" gorm:"column:time;comment:上课时间;type:datetime;"`
 	Tname     string    `json:"tname" form:"tname" gorm:"column:tname;comment:教师名;type:varchar(5);"`
 	Selected  int       `json:"selected" form:"selected" gorm:"column:selected;comment:已选人数;type:int;default:0"`
 	Total     int       `json:"total" form:"total" gorm:"column:total;comment:总人数;type:int;default:0"`
