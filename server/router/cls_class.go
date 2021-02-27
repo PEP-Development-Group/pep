@@ -8,13 +8,12 @@ import (
 func InitClassRouter(Router *gin.RouterGroup) {
 	ClassRouter := Router.Group("class")
 	{
-		ClassRouter.GET("getCreateForm", v1.GetCreateForm)           // 获取创建课程所需信息	1
-		ClassRouter.POST("createClass", v1.CreateClass)           // 新建Class	1
-		ClassRouter.DELETE("deleteClass", v1.DeleteClass)           // 删除Class	1
-		ClassRouter.DELETE("deleteClassByIds", v1.DeleteClassByIds) // 批量删除Class	1
-		ClassRouter.PUT("updateClass", v1.UpdateClass)              // 更新Class	1
-		ClassRouter.GET("findClass", v1.FindClass)                  // 根据ID获取Class	1
-		ClassRouter.PUT("addUserCancelNums", v1.AddUserCancelNums)  // 增加某人取消次数	1
+		ClassRouter.POST("createClass", v1.CreateClass)              // 新建Class	1
+		ClassRouter.DELETE("deleteClass", v1.DeleteClass)            // 删除Class	1
+		ClassRouter.DELETE("deleteClassByIds", v1.DeleteClassByIds)  // 批量删除Class	1
+		ClassRouter.PUT("updateClass", v1.UpdateClass)               // 更新Class	1
+		ClassRouter.GET("findClass", v1.FindClass)                   // 根据ID获取Class	1
+		ClassRouter.PUT("addUserCancelNums", v1.AddUserCancelNums) // 增加某人取消次数	1
 
 		ClassRouter.GET("getClassList", v1.GetStuClassList)          // 学生选课Class列表（树状api）	1
 		ClassRouter.GET("getClass", v1.GetClassList)                 // Class管理列表				1

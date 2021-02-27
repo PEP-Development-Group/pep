@@ -8,39 +8,7 @@ import (
 	"gin-vue-admin/service"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
-	"strconv"
 )
-
-type Resp struct {
-	Value string `json:"value"`
-	Others int `json:"others,omitempty"`
-}
-
-var (
-	classList = []Resp{{Value: "分光计", Others: 4},{Value: "重力加速度测量", Others: 2}}
-	// TeacherList = []Resp{{Value: "王老师", Others: 561897},{Value: "段老师", Others: 29871}}
-	TeacherList = []Resp{}
-	classroomList = []Resp{}
-)
-
-func init() {
-	classList = make([]Resp, 35)//预留5个新增位置
-	for i := 201; i <= 230; i++ {
-		classroomList = append(classList, Resp{Value: "逸夫馆"+strconv.Itoa(i)})
-	}
-}
-
-// @Tags Class
-// @Summary 创建Class
-// @Security ApiKeyAuth
-// @accept application/json
-// @Produce application/json
-// @Param data body model.Class true "创建Class"
-// @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
-// @Router /class/getCreateForm [get]
-func GetCreateForm(c *gin.Context) {
-	response.OkWithData(gin.H{"classList":classList,"teacherList":TeacherList,"classroomList":classroomList}, c)
-}
 
 // @Tags Class
 // @Summary 创建Class
