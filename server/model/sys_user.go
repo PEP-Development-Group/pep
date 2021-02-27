@@ -13,7 +13,7 @@ type SysUser struct {
 	Name     string    `json:"name,omitempty" gorm:"type:varchar(10);default:系统用户;comment:姓名"`
 
 	Authority   SysAuthority `json:"authority" gorm:"foreignKey:AuthorityId;references:AuthorityId;comment:用户角色"`
-	AuthorityId string       `json:"authorityId" gorm:"default:888;comment:用户角色ID"`
+	AuthorityId string       `json:"authorityId" gorm:"default:1;comment:用户角色ID"`
 
 	CancelNums int    `json:"cancel_nums,omitempty" gorm:"default:3;comment:取消次数"`
 	Class      string `json:"class,omitempty" gorm:"varchar(10);comment:班级"`
