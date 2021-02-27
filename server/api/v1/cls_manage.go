@@ -19,11 +19,17 @@ type Resp struct {
 var (
 	classList = []Resp{{Value: "分光计", Others: 4},{Value: "重力加速度测量", Others: 2}}
 	// TeacherList = []Resp{{Value: "王老师", Others: 561897},{Value: "段老师", Others: 29871}}
-	TeacherList = []Resp{}
-	classroomList = []Resp{}
+	TeacherList  []Resp
+	classroomList  []Resp
 )
 
 func init() {
+	var ts []model.SysUser
+	global.GVA_DB.Select("name","id").Where("authorityId = ?", "2").Find(&ts)
+	for _, t := range ts {
+		TeacherList = append(TeacherList, Resp{Value: t.Name,Others: int(t.ID)})
+	}
+	
 	classList = make([]Resp, 35)//预留5个新增位置
 	for i := 201; i <= 230; i++ {
 		classroomList = append(classList, Resp{Value: "逸夫馆"+strconv.Itoa(i)})
