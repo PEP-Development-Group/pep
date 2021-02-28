@@ -308,10 +308,6 @@ export default {
   margin-right: 5px;
 }
 
-.el-button + .el-button {
-  margin-left: 0;
-}
-
 .user-type-radio {
   margin-bottom: 20px;
   margin-left: 80px;
