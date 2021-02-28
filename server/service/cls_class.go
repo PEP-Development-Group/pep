@@ -346,7 +346,8 @@ func SetStuGrade(rq request.TeacherRequest) (err error) {
 	}
 	if sc.Grade >= 60 {
 		var s model.SysUser
-		err = global.GVA_DB.Select("have_credits").Where("username = ?", rq.Username).First(&s).Error
+		db  := global.GVA_DB.Model(&model.SysUser{}).Select("have_credits").Where("username = ?", rq.Username)
+		err = db.First(&s).Error
 		if err != nil {
 			return err
 		}
@@ -355,7 +356,7 @@ func SetStuGrade(rq request.TeacherRequest) (err error) {
 		if err != nil {
 			return err
 		}
-		err = global.GVA_DB.Model(&model.SysUser{}).Update("have_credits", c.Ccredit).Error
+		err = db.Update("have_credits", c.Ccredit).Error
 		if err != nil {
 			return err
 		}
