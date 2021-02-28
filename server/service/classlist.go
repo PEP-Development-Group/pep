@@ -69,6 +69,6 @@ func GetClassList(id uint) (err error, classlist model.ClassList) {
 
 func GetClassListInfoList() (err error, list interface{}) {
     var classlists []model.ClassList
-	err = global.GVA_DB.Find(&classlists).Error
+	err = global.GVA_DB.Select("id","cname","ccredit","classroom").Find(&classlists).Error
 	return err, classlists
 }
