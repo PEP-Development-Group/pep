@@ -49,7 +49,7 @@ system:
 
 # captcha configuration
 captcha:
-  key-long: 4
+  key-long: 6
   img-width: 240
   img-height: 80
 

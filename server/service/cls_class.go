@@ -80,7 +80,7 @@ func DeleteSelect(sc request.SelectClass) (err error) {
 
 		// TODO:去掉order by
 		c := model.Class{}
-		tmptx2 := tx.Select("selected", "time", "desc").First(&c, sc.Cid)
+		tmptx2 := tx.Select("selected", "desc").First(&c, sc.Cid)
 
 		// desc split by "-", such as "1-1-1"
 		ts := strings.Split(c.Desc, "-")
