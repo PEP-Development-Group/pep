@@ -24,8 +24,7 @@ func CreateClassList(classlist model.ClassList) (err error) {
 // @return                    error
 
 func DeleteClassList(classlist model.ClassList) (err error) {
-	err = global.GVA_DB.Delete(classlist).Error
-	return err
+	return global.GVA_DB.Where("id = ?", classlist.ID).Unscoped().Delete(&model.ClassList{}).Error
 }
 
 // @title    DeleteClassListByIds

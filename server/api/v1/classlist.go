@@ -2,6 +2,7 @@ package v1
 
 import (
 	"fmt"
+	"gin-vue-admin/global"
 	"gin-vue-admin/model"
 	"gin-vue-admin/model/request"
 	"gin-vue-admin/model/response"
@@ -117,6 +118,15 @@ func GetClassListList(c *gin.Context) {
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("获取数据失败，%v", err), c)
 	} else {
-		response.OkWithData(list, c)
+		var ts []model.SysUser
+		global.GVA_DB.Select("name","id").Where("authority_id = ?", "2").Find(&ts)
+		var tl []response.TeacherRecord
+		for _, t := range ts {
+			tl = append(tl, response.TeacherRecord{Name: t.Name,TID: int(t.ID)})
+		}
+		response.OkWithData(gin.H{
+			"classlist": list,
+			"teachers": tl,
+		}, c)
 	}
 }

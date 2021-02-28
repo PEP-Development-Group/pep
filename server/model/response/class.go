@@ -63,6 +63,11 @@ type TeacherClassStuRecord struct {
 	Grade    uint   `json:"grade"`
 }
 
+type TeacherRecord struct {
+	Name string `json:"value"`
+	TID int `json:"tid"`
+}
+
 /*
 {
     "code": 0,

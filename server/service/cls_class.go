@@ -13,6 +13,12 @@ import (
 	"time"
 )
 
+func GetUserCreditsInfo(username string) (have int, cancel int, err error) {
+	var u model.SysUser
+	err = global.GVA_DB.Select("have_credits", "cancel_nums").Where("username = ?", username).First(&u).Error
+	return u.HaveCredits, u.CancelNums, err
+}
+
 //@author: [sh1luo](https://github.com/sh1luo)
 //@function: CreateClass
 //@description: 创建选课记录

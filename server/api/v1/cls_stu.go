@@ -9,6 +9,19 @@ import (
 	"go.uber.org/zap"
 )
 
+func GetUserCreditInfo(c *gin.Context) {
+	username := getUsername(c)
+	if have, cancel,err := service.GetUserCreditsInfo(username); err != nil {
+		global.GVA_LOG.Error("获取学生信息失败!", zap.Any("err", err))
+		response.FailWithMessage(err.Error(), c)
+	} else {
+		response.OkWithData(gin.H{
+			"have_credits":have,
+			"cancel_nums":cancel,
+		}, c)
+	}
+}
+
 // @Tags Class
 // @Summary 选课
 // @Security ApiKeyAuth
