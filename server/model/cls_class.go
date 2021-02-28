@@ -35,26 +35,3 @@ func (Class) TableName() string {
 func (SelectClass) TableName() string {
 	return "user_classes"
 }
-
-// 如果使用工作流功能 需要打开下方注释 并到initialize的workflow中进行注册 且必须指定TableName
-// type ClassWorkflow struct {
-// 	// 工作流操作结构体
-// 	WorkflowBase      `json:"wf"`
-// 	Class   `json:"business"`
-// }
-
-// func (Class) TableName() string {
-// 	return "cls_class"
-// }
-
-// 工作流注册代码
-
-// initWorkflowModel内部注册
-// model.WorkflowBusinessStruct["class"] = func() model.GVA_Workflow {
-//   return new(model.ClassWorkflow)
-// }
-
-// initWorkflowTable内部注册
-// model.WorkflowBusinessTable["class"] = func() interface{} {
-// 	return new(model.Class)
-// }

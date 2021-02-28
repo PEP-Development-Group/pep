@@ -6,8 +6,8 @@ import (
 )
 
 type GVA_MODEL struct {
-	ID        uint `gorm:"primarykey"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
+	ID        uint `json:"id,omitempty" gorm:"primarykey"`
+	CreatedAt time.Time `json:"created_at,omitempty"`
+	UpdatedAt time.Time `json:"updated_at,omitempty"`
+	DeletedAt gorm.DeletedAt `gorm:"index,omitempty" json:"-"`
 }

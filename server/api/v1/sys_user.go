@@ -133,9 +133,6 @@ func Register(c *gin.Context) {
 		global.GVA_LOG.Error("注册失败", zap.Any("err", err))
 		response.FailWithDetailed(response.SysUserResponse{User: userReturn}, "注册失败", c)
 	} else {
-		if user.AuthorityId == "2" {
-			TeacherList = append(TeacherList, Resp{Value: userReturn.Name, Others: int(userReturn.ID)})
-		}
 		response.OkWithDetailed(response.SysUserResponse{User: userReturn}, "注册成功", c)
 	}
 }
@@ -253,17 +250,10 @@ func DeleteUser(c *gin.Context) {
 		response.FailWithMessage("删除失败, 不能删除自己", c)
 		return
 	}
-	if u, err := service.DeleteUser(reqId.Id); err != nil {
+	if err := service.DeleteUser(reqId.Id); err != nil {
 		global.GVA_LOG.Error("删除失败!", zap.Any("err", err))
 		response.FailWithMessage("删除失败", c)
 	} else {
-		if u.AuthorityId == "2" {
-			for k, v := range TeacherList {
-				if uint(v.Others) == u.ID {
-					TeacherList = append(TeacherList[:k], TeacherList[k+1:]...)
-				}
-			}
-		}
 		response.OkWithMessage("删除成功", c)
 	}
 }
