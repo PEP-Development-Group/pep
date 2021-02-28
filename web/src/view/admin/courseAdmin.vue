@@ -58,9 +58,9 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="上课时间" prop="time" min-width="120" sortable>
+      <el-table-column label="上课时间" min-width="120" sortable>
         <template slot-scope="scope">
-          <el-popover trigger="hover" :content="scope.row.time|formatDateDay" placement="right">
+          <el-popover trigger="hover" :content=" scope.row.desc|formatDescDateDay" placement="right">
             <div slot="reference" class="text-wrapper">
               {{ scope.row.desc | formatDesc }}
             </div>
@@ -68,9 +68,14 @@
         </template>
       </el-table-column>
       <el-table-column label="教室" prop="classroom" min-width="120" sortable></el-table-column>
-      <el-table-column label="人数" prop="total" min-width="80" sortable></el-table-column>
-      <el-table-column label="操作" width="200" align="center">
+      <el-table-column label="人数" prop="total" min-width="50" sortable></el-table-column>
+      <el-table-column label="操作" min-width="180" align="center">
         <template slot-scope="scope">
+          <el-button type="primary" icon="el-icon-s-order" plain size="small" slot="reference"
+                     @click="viewLesson(scope.row.cid)"
+                     class="option-btn">查看
+          </el-button>
+          <!--          TODO 管理员查看名单改成绩-->
           <el-button class="table-button" @click="updateClass(scope.row)" size="small" type="primary"
                      icon="el-icon-edit">变更
           </el-button>
@@ -93,13 +98,29 @@
     <el-dialog :before-close="closeDialog" :visible.sync="dialogFormVisible" title="课程操作">
       <el-form :model="formData" label-position="right" label-width="80px" :inline="false">
         <el-form-item label="课程名:">
-          <el-input v-model="formData.cname" clearable placeholder="请输入"></el-input>
+          <el-autocomplete v-model="formData.cname" :fetch-suggestions="queryClass" clearable
+                           placeholder="请输入" @select="setClassHours">
+            <template slot-scope="{ item }">
+              <div class="name">{{ item.value }}
+                <span class="info-text">{{ item.hours }}学时</span>
+              </div>
+            </template>
+          </el-autocomplete>
         </el-form-item>
         <el-form-item label="教师:">
-          <el-input v-model="formData.tname" clearable placeholder="请输入"></el-input>
+          <el-autocomplete v-model="formData.tname" :fetch-suggestions="queryTeacher" clearable
+                           placeholder="请输入">
+            <template slot-scope="{ item }">
+              <div class="name">{{ item.value }}
+                <span class="info-text">{{ item.tid }}</span>
+              </div>
+            </template>
+          </el-autocomplete>
+
         </el-form-item>
         <el-form-item label="教室:">
-          <el-input v-model="formData.classroom" clearable placeholder="请输入"></el-input>
+          <el-autocomplete v-model="formData.classroom" :fetch-suggestions="queryClassroom" clearable
+                           placeholder="请输入"></el-autocomplete>
         </el-form-item>
         <el-form-item label="总人数:">
           <el-input-number v-model="formData.total" clearable placeholder="请输入"></el-input-number>
@@ -107,7 +128,7 @@
         <el-form-item label="选课时间:">
           <el-date-picker type="datetimerange" range-separator="至"
                           start-placeholder="开始时间"
-                          end-placeholder="结束时间" placeholder="选择时间" v-model="timespan" clearable>
+                          end-placeholder="结束时间" placeholder="选择时间" v-model="timespan">
 
           </el-date-picker>
         </el-form-item>
@@ -124,10 +145,7 @@
             </el-radio-button>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="课时:" class="inline-item">
-          <el-input-number v-model="formData.ccredit"></el-input-number>
-        </el-form-item>
-        <el-form-item label="节数:" class="inline-item">
+        <el-form-item label="节数:">
           <el-input-number v-model="classTime"></el-input-number>
         </el-form-item>
         <el-divider v-if="description"></el-divider>
@@ -185,11 +203,10 @@ export default {
       deleteVisible: false,
       multipleSelection: [],
       formData: {
-        ccredit: 2,
+        ccredit: null,
         cname: "",
         etime: null,
         stime: null,
-        time: null,
         tname: "",
         desc: "",
         classroom: "",
@@ -223,6 +240,9 @@ export default {
       ],
       timespan: [],
       week: 1,
+      classList: [{"value": "分光计", "hours": 4}],
+      teacherList: [{"value": "王老师", "tid": "20340101"}],
+      classroomList: [{"value": "逸夫馆201"}],
     };
   },
   filters: {
@@ -234,9 +254,16 @@ export default {
         return "";
       }
     },
-    formatDateDay: function (time) {
+    formatDescDateDay: function (desc) {
+      let time = schoolTimeToRealTime(desc, store.state.user.firstDay)
+      if (time != null) {
+        return formatTimeToStr(time, "yyyy年MM月dd日");
+      } else {
+        return "";
+      }
+    }, formatDateDay: function (time) {
       if (time != null && time != "") {
-        var date = new Date(time);
+        let date = new Date(time)
         return formatTimeToStr(date, "yyyy年MM月dd日");
       } else {
         return "";
@@ -268,6 +295,24 @@ export default {
   },
   watch: {},
   methods: {
+    setClassHours(i) {
+      this.formData.ccredit = i.hours
+    },
+    queryClass(queryStr, cb) {
+      let res = queryStr ? this.classList.filter(this.createFilter(queryStr)) : this.classList;
+      cb(res)
+    },
+    loadTeacherList(){
+
+    },
+    queryTeacher(queryStr, cb) {
+      let res = queryStr ? this.teacherList.filter(this.createFilter(queryStr)) : this.teacherList;
+      cb(res)
+    },
+    queryClassroom(queryStr, cb) {
+      let res = queryStr ? this.classroomList.filter(this.createFilter(queryStr)) : this.classroomList;
+      cb(res)
+    },
     filterHandler(value, row, column) {
       const property = column['property'];
       return row[property] === value;
@@ -336,7 +381,6 @@ export default {
         cname: "",
         etime: null,
         stime: null,
-        time: null,
         tname: "",
 
       };
@@ -358,7 +402,6 @@ export default {
       this.formData.stime = new Date(this.timespan[0])
       this.formData.etime = new Date(this.timespan[1])
       this.formData.desc = this.description
-      this.formData.time = this.realTime
     },
     async enterDialog() {
       let res;
@@ -415,10 +458,6 @@ export default {
   line-height: 22px;
 }
 
-.inline-item {
-  display: inline-block;
-}
-
 .el-form-item__content .el-input-group {
   vertical-align: middle;
 }
@@ -440,5 +479,15 @@ export default {
 
 .summary .el-tag {
   vertical-align: middle;
+}
+
+.name {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.info-text {
+  font-size: 12px;
+  color: #b4b4b4;
 }
 </style>

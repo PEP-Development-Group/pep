@@ -11,9 +11,9 @@
       <el-table-column label="课程" min-width="150">
         <template slot-scope="scope">
           {{ scope.row.cname }}
-          <el-tag effect="dark" size="mini" class="space" type="success">{{ scope.row.ccredit }}学时
+          <el-tag effect="dark" size="mini" class="left-space" type="success">{{ scope.row.ccredit }}学时
           </el-tag>
-          <el-tag effect="light" size="mini" class="space">{{ scope.row.classroom }}</el-tag>
+          <el-tag effect="light" size="mini" class="left-space">{{ scope.row.classroom }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="时间" min-width="150">
@@ -104,7 +104,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.space {
+.left-space {
   float: right;
   margin-left: 10px;
 }

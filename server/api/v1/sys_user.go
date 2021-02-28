@@ -247,7 +247,7 @@ func DeleteUser(c *gin.Context) {
 	}
 	jwtId := getUserID(c)
 	if jwtId == uint(reqId.Id) {
-		response.FailWithMessage("删除失败, 不能删除自己", c)
+		response.FailWithMessage("删除失败, 自杀失败", c)
 		return
 	}
 	if err := service.DeleteUser(reqId.Id); err != nil {

@@ -229,7 +229,7 @@ func GetClassInfoList(info request.ClassSearch) (err error, list interface{}, to
 func GetStuClassList(rq request.UsernameRequest) (err error, list interface{}, total int) {
 	// TODO:SQL调优
 	var clsAll []model.Class
-	global.GVA_DB.Select("id", "ccredit", "cname", "tname", "desc", "classroom", "total", "selected", "time", "etime", "stime").Find(&clsAll)
+	global.GVA_DB.Select("id", "ccredit", "cname", "tname", "desc", "classroom", "total", "selected", "etime", "stime").Find(&clsAll)
 	var cls []model.Class
 	for _, class := range clsAll {
 		if class.Stime.Before(time.Now()) && class.Etime.After(time.Now()) {
@@ -285,7 +285,7 @@ func GetTeacherClassList(rq request.UsernameRequest) (err error, list interface{
 	}
 
 	var cls []model.Class
-	err = global.GVA_DB.Select("id", "cname", "ccredit", "desc", "time", "selected", "classroom").Find(&cls, "tname = ?", t.Name).Error
+	err = global.GVA_DB.Select("id", "cname", "ccredit", "desc", "selected", "classroom").Find(&cls, "tname = ?", t.Name).Error
 	if err != nil {
 		return
 	}

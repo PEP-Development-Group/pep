@@ -13,7 +13,7 @@
                   </p>
                 </li>
                 <li>
-                  <p class="title">学号</p>
+                  <p class="title">{{ userInfo.authorityId == 1 ? '学号' : '工号' }}</p>
                   <p class="desc">
                     {{ userInfo.username }}
                   </p>
@@ -22,7 +22,7 @@
                   <p class="title">修改密码</p>
                   <p class="desc">
                     修改个人密码
-                    <a href="#" @click="showPassword=true">修改密码</a>
+                    <a href="#" @click="changePasswordDialog">修改密码</a>
                   </p>
                 </li>
               </ul>
@@ -96,6 +96,10 @@ export default {
   },
   methods: {
     ...mapMutations("user", ["ResetUserInfo"]),
+    changePasswordDialog() {
+      this.$message.error('公测阶段禁止用户更改密码');
+      // this.showPassword = true;
+    },
     savePassword() {
       this.$refs.modifyPwdForm.validate(valid => {
         if (valid) {
@@ -121,9 +125,6 @@ export default {
         confirmPassword: ""
       };
       this.$refs.modifyPwdForm.clearValidate();
-    },
-    openChooseImg() {
-      this.$refs.chooseImg.open();
     },
     async enterImg(url) {
       const res = await setUserInfo({headerImg: url, ID: this.userInfo.ID});

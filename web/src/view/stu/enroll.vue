@@ -1,14 +1,27 @@
 <template>
   <div>
-    <el-collapse v-model="activeNames">
+    <div class="warning-info">
+      <i class="el-icon-warning"></i> 请注意退课有次数限制,你还可以退课 次
+    </div>
+    <div class="class-info">
+      <i class="el-icon-info"></i> 本学期需要修满 学时,当前已修 学时
+    </div>
+    <el-collapse v-model="activeNames" class="class-area">
       <el-collapse-item v-for="(item,i) in courseList" :key="item.id" class="class-con">
         <template slot="title">
           <div class="class-title-con">
-            <span class="class-title">{{ i }}</span>
-            <el-tag effect="dark" size="small" class="hours-tag" type="info"
+            <el-tag effect="dark" class="hours-tag" type="info"
                     :color="(colors.duration[item.hours-1])">{{ item.hours }}学时
             </el-tag>
+            <span class="class-title">{{ i }}</span>
+
             <span class="class-title-right">{{ item.List.length }}</span>
+            <span class="class-title-right">
+            <el-tag effect="light" size="small" type="success" v-if="courseSelected(item)">
+              <i class="el-icon-check"></i>
+            已选
+            </el-tag>
+            </span>
           </div>
         </template>
         <el-card v-for="l in item.List" class="lesson" :key="l.id" shadow="hover">
@@ -17,17 +30,17 @@
                        :percentage="selectPercent(l.now,l.max)"
                        :stroke-width="2"></el-progress>
           <span class="lesson-info">
-          <span class="whitespace">{{ l.desc|formatDesc }}</span>
+          <span class="whitespace nowarp">{{ l.desc|formatDesc }}</span>
           <span class="whitespace nowarp">{{ l.teacher_name }}</span>
           <el-tag effect="light" size="mini" class="whitespace">{{ l.class_room }}</el-tag>
-          <el-tag effect="dark" size="mini" type="info" class="whitespace" v-if="countDown(l.time)!==-1"
-                  :color="(colors.time[countDown(l.time)])">{{ timeTag[countDown(l.time)] }}</el-tag>
+          <el-tag effect="dark" size="mini" type="info" class="whitespace" v-if="countDown(l.desc)!==-1"
+                  :color="(colors.time[countDown(l.desc)])">{{ timeTag[countDown(l.desc)] }}</el-tag>
           </span>
           <span class="lesson-op">
             <span class="progress" :class="{red:l.max-l.now<=3}">{{ l.now }}/{{ l.max }}</span>
           <el-button type="primary" v-if="l.selected===false" :disabled="l.now===l.max"
                      @click="selectCourse(i,item,l)">选课</el-button>
-          <el-button type="danger" v-else @click="deleteCourse(l.id)">退选</el-button>
+          <el-button type="danger" v-else @click="deleteCourse(l.id,l)">退选</el-button>
           </span>
         </el-card>
       </el-collapse-item>
@@ -72,9 +85,10 @@ import {
   SelectClass,
   DeleteSelect
 } from "@/api/course.js";  //  此处请自行替换地址
-import {formatTimeToStr} from "@/utils/date";
+import {formatTimeToStr, schoolTimeToRealTime} from "@/utils/date";
 import infoList from "@/mixins/infoList";
 import {store} from '@/store'
+import context from "@/main";
 
 const userInfo = store.getters['user/userInfo']
 const formatDayOfWeek = ['一', '二', '三', '四', '五', '六', '日']
@@ -82,6 +96,9 @@ const formatDayOfWeek = ['一', '二', '三', '四', '五', '六', '日']
 export default {
   name: "Enroll",
   mixins: [infoList],
+  async created() {
+    await this.getList()
+  },
   data() {
     return {
       activeNames: [1],
@@ -126,6 +143,13 @@ export default {
   },
   computed: {},
   methods: {
+    courseSelected(course) {
+      if (!course.List) return false
+      for (let i = 0; i < course.List.length; ++i) {
+        if (course.List[i].selected) return true
+      }
+      return false
+    },
     selectPercent: function (now, max) {
       if (now < 0) return 0
       if (max <= 0) return 0
@@ -136,6 +160,7 @@ export default {
         cid: l.id,
         username: userInfo.username
       }
+      context.$bus.emit("showLoading")
       const res = await SelectClass(d)
       if (res.code === 0) {
         this.confirmData = {
@@ -147,6 +172,7 @@ export default {
         }
         this.confirmVisible = true
       }
+      context.$bus.emit("closeLoading")
       await this.getList()
     },
     async deleteCourse(cid) {
@@ -156,6 +182,7 @@ export default {
         type: 'warning',
         showClose: false,
       }).then(async () => {
+        context.$bus.emit("showLoading")
         const res = await DeleteSelect({"username": userInfo.username, "cid": cid})
         if (res.code === 0) {
           this.$message({type: "success", message: "退课成功"})
@@ -167,7 +194,7 @@ export default {
           message: '未退课'
         });
       });
-
+      context.$bus.emit("closeLoading")
     },
     async getList() {
       const list = await GetClassListWithPerson();
@@ -175,7 +202,8 @@ export default {
         this.courseList = list.data.courses
       }
     },
-    countDown(time) {
+    countDown(desc) {
+      let time = schoolTimeToRealTime(desc, store.state.user.firstDay)
       let d = new Date().setHours(0, 0, 0, 0)
       let t = new Date(time).setHours(0, 0, 0, 0)
       const c = 60 * 60 * 24 * 1000
@@ -189,9 +217,6 @@ export default {
         return 0
       return -1
     }
-  },
-  async created() {
-    await this.getList()
   }
 
 }
@@ -213,6 +238,7 @@ export default {
 .class-title {
   display: inline-block;
   font-weight: bold;
+  font-size: 15px;
   margin-left: 20px;
   line-height: normal;
   vertical-align: middle;
@@ -221,6 +247,7 @@ export default {
 
 .class-title-right {
   float: right;
+  margin-left: 5px;
 }
 
 .class-title-con {
@@ -246,30 +273,30 @@ export default {
   display: inline-block;
   line-height: normal;
   vertical-align: middle;
-  max-width: calc(100% - 120px);
+  max-width: calc(100% - 90px);
 }
 
 .lesson {
   box-sizing: border-box;
   margin: 8px;
-  /*font-size: medium;*/
 }
 
 .lesson-progress {
   vertical-align: middle;
   margin-right: 2px;
-  margin-left: -8px;
+  margin-left: -16px;
 }
 
 .lesson-op {
   background-color: #f1f3f4;
   border-radius: 4px;
   float: right;
+  margin-right: -14px;
 }
 
 .whitespace {
   vertical-align: middle;
-  margin: 6px;
+  margin: 4px;
 }
 
 .progress {
@@ -282,7 +309,7 @@ export default {
 .check {
   font-size: 18px;
   vertical-align: middle;
-  margin-left: -7px;
+  margin-left: -17px;
 }
 
 .nowarp {
@@ -314,5 +341,26 @@ export default {
 
 .red {
   color: #FF6666;
+}
+.class-area{
+  max-width: 800px;
+}
+.warning-info {
+  margin-bottom: 5px;
+  padding: 8px 16px;
+  background-color: #fef0f0;
+  color: #f56c6c;
+  border-radius: 4px;
+  max-width: 800px;
+  box-sizing: border-box;
+}
+.class-info{
+  margin-bottom: 5px;
+  padding: 8px 16px;
+  background-color: #f0f8ff;
+  color: #1989fa;
+  border-radius: 4px;
+  max-width: 800px;
+  box-sizing: border-box;
 }
 </style>
