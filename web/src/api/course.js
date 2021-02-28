@@ -145,7 +145,8 @@ export const SelectClass = (data) => {
     return service({
         url: "/class/selectClass",
         method: 'post',
-        data: data
+        data: data,
+        donNotShowLoading: false
     })
 }
 
@@ -154,7 +155,7 @@ export const DeleteSelect = (data) => {
         url: "/class/deleteSelect",
         method: 'delete',
         data: data,
-        donNotShowLoading: true
+        donNotShowLoading: false
     })
 }
 
@@ -204,3 +205,101 @@ export const addUserCancelNums = (data) => {
     })
 }
 
+// @Tags ClassList
+// @Summary 创建ClassList
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body model.ClassList true "创建ClassList"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
+// @Router /classlist/createClassList [post]
+export const createClassList = (data) => {
+    return service({
+        url: "/classlist/createClassList",
+        method: 'post',
+        data
+    })
+}
+
+
+// @Tags ClassList
+// @Summary 删除ClassList
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body model.ClassList true "删除ClassList"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"删除成功"}"
+// @Router /classlist/deleteClassList [delete]
+export const deleteClassList = (data) => {
+    return service({
+        url: "/classlist/deleteClassList",
+        method: 'delete',
+        data
+    })
+}
+
+// @Tags ClassList
+// @Summary 删除ClassList
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body request.IdsReq true "批量删除ClassList"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"删除成功"}"
+// @Router /classlist/deleteClassList [delete]
+export const deleteClassListByIds = (data) => {
+    return service({
+        url: "/classlist/deleteClassListByIds",
+        method: 'delete',
+        data
+    })
+}
+
+// @Tags ClassList
+// @Summary 更新ClassList
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body model.ClassList true "更新ClassList"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"更新成功"}"
+// @Router /classlist/updateClassList [put]
+export const updateClassList = (data) => {
+    return service({
+        url: "/classlist/updateClassList",
+        method: 'put',
+        data
+    })
+}
+
+
+// @Tags ClassList
+// @Summary 用id查询ClassList
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body model.ClassList true "用id查询ClassList"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"查询成功"}"
+// @Router /classlist/findClassList [get]
+export const findClassList = (params) => {
+    return service({
+        url: "/classlist/findClassList",
+        method: 'get',
+        params
+    })
+}
+
+
+// @Tags ClassList
+// @Summary 分页获取ClassList列表
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body request.PageInfo true "分页获取ClassList列表"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
+// @Router /classlist/getClassListList [get]
+export const getClassListList = (params) => {
+    return service({
+        url: "/classlist/getClassListList",
+        method: 'get',
+        params
+    })
+}
