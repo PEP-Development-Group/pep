@@ -50,6 +50,7 @@ func Routers() *gin.Engine {
 		//router.InitWorkflowProcessRouter(PrivateGroup)       // 工作流相关接口
 
 		router.InitClassRouter(PrivateGroup) // 课程相关
+		router.InitClassListRouter(PrivateGroup) // 课程固定信息相关，课程名-学时-上课地点
 
 		router.InitGlobalRouter(PublicGroup) // 全局留言
 	}

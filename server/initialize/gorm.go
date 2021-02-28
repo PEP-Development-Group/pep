@@ -57,7 +57,7 @@ func MysqlTables(db *gorm.DB) {
 
 		model.Class{},
 		model.SelectClass{},
-
+		model.ClassList{},
 		// model.Board{},
 	)
 	if err != nil {
