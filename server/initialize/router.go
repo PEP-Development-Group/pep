@@ -13,7 +13,9 @@ import (
 // 初始化总路由
 
 func Routers() *gin.Engine {
+	gin.SetMode(gin.ReleaseMode)
 	var Router = gin.Default()
+
 	// Router.StaticFS(global.GVA_CONFIG.Local.Path, http.Dir(global.GVA_CONFIG.Local.Path)) // 为用户头像和文件提供静态地址
 	// Router.Use(middleware.LoadTls())  // 打开就能玩https了
 	global.GVA_LOG.Info("use middleware logger")
@@ -49,7 +51,7 @@ func Routers() *gin.Engine {
 		router.InitFileUploadAndDownloadRouter(PrivateGroup) // 文件上传下载功能路由
 		//router.InitWorkflowProcessRouter(PrivateGroup)       // 工作流相关接口
 
-		router.InitClassRouter(PrivateGroup) // 课程相关
+		router.InitClassRouter(PrivateGroup)     // 课程相关
 		router.InitClassListRouter(PrivateGroup) // 课程固定信息相关，课程名-学时-上课地点
 
 		router.InitGlobalRouter(PublicGroup) // 全局留言

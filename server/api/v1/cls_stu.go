@@ -9,15 +9,17 @@ import (
 	"go.uber.org/zap"
 )
 
+// 获取学生学分，取消次数信息
+// @Router /class/getUserCreditInfo [get]
 func GetUserCreditInfo(c *gin.Context) {
 	username := getUsername(c)
-	if have, cancel,err := service.GetUserCreditsInfo(username); err != nil {
+	if have, cancel, err := service.GetUserCreditsInfo(username); err != nil {
 		global.GVA_LOG.Error("获取学生信息失败!", zap.Any("err", err))
 		response.FailWithMessage(err.Error(), c)
 	} else {
 		response.OkWithData(gin.H{
-			"have_credits":have,
-			"cancel_nums":cancel,
+			"have_credits": have,
+			"cancel_nums":  cancel,
 		}, c)
 	}
 }

@@ -2,7 +2,7 @@ package request
 
 import "gin-vue-admin/model"
 
-type ClassListSearch struct{
-    model.ClassList
-    PageInfo
+type ClassListSearch struct {
+	model.ClassList
+	PageInfo
 }

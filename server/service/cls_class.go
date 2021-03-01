@@ -1,6 +1,7 @@
 package service
 
 import (
+	"database/sql"
 	"errors"
 	"gin-vue-admin/constant"
 	"gin-vue-admin/global"
@@ -27,13 +28,27 @@ func GetUserCreditsInfo(username string) (have int, cancel int, err error) {
 
 func SelectClass(sc request.SelectClass) (err error) {
 	cls := model.Class{}
-	err = global.GVA_DB.Select("selected", "total", "id").Where("id = ?", sc.Cid).First(&cls).Error
+	err = global.GVA_DB.Select("id", "cname", "selected", "total").Where("id = ?", sc.Cid).First(&cls).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return constant.ErrClassNotExist
 	}
-
 	if cls.Selected >= cls.Total {
 		return constant.ErrClassHasFull
+	}
+
+	// 同名课程只能选择一个
+	var cname string
+	var rows *sql.Rows
+	rows, err = global.GVA_DB.Raw("select distinct cname from cls_class where id IN (select class_id from user_classes where username = ? AND deleted_at IS NULL) group by cname", sc.Username).Rows()
+	if err != nil {
+		return constant.InternalErr
+	}
+	defer rows.Close()
+	for rows.Next() {
+		_ = rows.Scan(&cname)
+		if cname == cls.Cname {
+			return constant.ErrClassNameSame
+		}
 	}
 
 	return global.GVA_DB.Transaction(func(tx *gorm.DB) error {
@@ -74,7 +89,7 @@ func DeleteSelect(sc request.SelectClass) (err error) {
 			return constant.ErrClassHasNotSelected
 		}
 
-		err = tmptx.Delete(&model.SelectClass{}).Error
+		err = tmptx.Unscoped().Delete(&model.SelectClass{}).Error
 		if err != nil {
 			return constant.ErrDelClass
 		}
@@ -352,13 +367,13 @@ func SetStuGrade(rq request.TeacherRequest) (err error) {
 	}
 	if sc.Grade >= 60 {
 		var s model.SysUser
-		db  := global.GVA_DB.Model(&model.SysUser{}).Select("have_credits").Where("username = ?", rq.Username)
+		db := global.GVA_DB.Model(&model.SysUser{}).Select("have_credits").Where("username = ?", rq.Username)
 		err = db.First(&s).Error
 		if err != nil {
 			return err
 		}
 		var c model.Class
-		err= global.GVA_DB.Select("ccredit").Where("id = ?", rq.Cid).First(&c).Error
+		err = global.GVA_DB.Select("ccredit").Where("id = ?", rq.Cid).First(&c).Error
 		if err != nil {
 			return err
 		}
