@@ -248,7 +248,7 @@ func GetClassInfoList(info request.ClassSearch) (err error, list interface{}, to
 }
 
 func GetStuClassList(rq request.UsernameRequest) (err error, list interface{}, total int) {
-	// TODO:SQL调优
+	// TODO:SQL调优?
 	var clsAll []model.Class
 	global.GVA_DB.Select("id", "ccredit", "cname", "tname", "desc", "classroom", "total", "selected", "etime", "stime").Find(&clsAll)
 	var cls []model.Class
@@ -291,7 +291,22 @@ func GetStuClassList(rq request.UsernameRequest) (err error, list interface{}, t
 				co.Selected = true
 			}
 			classes.G[c.Cname].List = append(classes.G[c.Cname].List, co)
+		}
 
+		// 对已修过的课程进行标识
+		var cname string
+		var rows *sql.Rows
+		// 找出用户选过的所有课程的课程名
+		rows, err = global.GVA_DB.Raw("select distinct cname from cls_class where id IN (select class_id from user_classes where username = ? AND deleted_at IS NULL) group by cname", rq.Username).Rows()
+		if err != nil {
+			return constant.InternalErr, nil, 0
+		}
+		defer rows.Close()
+		for rows.Next() {
+			_ = rows.Scan(&cname)
+			if _, ok := classes.G[cname]; ok {
+				classes.G[cname].Learned = true
+			}
 		}
 	}
 
