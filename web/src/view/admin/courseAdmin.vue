@@ -75,7 +75,7 @@
                      @click="viewLesson(scope.row.ID)"
                      class="option-btn">查看
           </el-button>
-          <el-button class="table-button" @click="viewLesson(scope.row.cid)" size="small" type="primary"
+          <el-button class="table-button" @click="updateClass(scope.row)" size="small" type="primary"
                      icon="el-icon-edit">变更
           </el-button>
           <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteRow(scope.row)">删除</el-button>

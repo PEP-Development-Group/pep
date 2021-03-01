@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import {DeleteSelect, GetPersonalClasses} from "@/api/course";
+import {DeleteSelect, GetPersonalClasses, getUserCreditInfo} from "@/api/course";
 import {store} from "@/store";
 import {schoolTimeToRealTime} from "@/utils/date";
 
@@ -40,6 +40,7 @@ export default {
   async created() {
     await this.getList()
     this.getAve()
+    await this.updateInfo()
   },
   filters: {
     formatDesc: function (d) {
@@ -50,6 +51,11 @@ export default {
     }
   },
   methods: {
+    async updateInfo() {
+      const res = await getUserCreditInfo()
+      this.cancelTimes = res.data.cancel_nums
+      this.haveCredits = res.data.have_credits
+    },
     //TODO 需要根据课程情况调整算法
     getAve() {
       if (this.tableData == null) {
