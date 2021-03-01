@@ -46,13 +46,13 @@ func MysqlTables(db *gorm.DB) {
 		model.ExaFileChunk{},
 		model.ExaSimpleUploader{},
 		model.ExaCustomer{},
-		model.SysOperationRecord{},
-		model.WorkflowProcess{},
-		model.WorkflowNode{},
-		model.WorkflowEdge{},
-		model.WorkflowStartPoint{},
-		model.WorkflowEndPoint{},
-		model.WorkflowMove{},
+		//model.SysOperationRecord{},
+		//model.WorkflowProcess{},
+		//model.WorkflowNode{},
+		//model.WorkflowEdge{},
+		//model.WorkflowStartPoint{},
+		//model.WorkflowEndPoint{},
+		//model.WorkflowMove{},
 		model.ExaWfLeave{},
 
 		model.Class{},
@@ -103,7 +103,7 @@ func GormMysql() *gorm.DB {
 //@return: *gorm.Config
 
 func gormConfig(mod bool) *gorm.Config {
-	var config = &gorm.Config{DisableForeignKeyConstraintWhenMigrating: true}
+	var config = &gorm.Config{DisableForeignKeyConstraintWhenMigrating: true, PrepareStmt: true}
 	switch global.GVA_CONFIG.Mysql.LogZap {
 	case "silent", "Silent":
 		config.Logger = internal.Default.LogMode(logger.Silent)

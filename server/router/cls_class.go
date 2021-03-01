@@ -27,6 +27,6 @@ func InitClassRouter(Router *gin.RouterGroup) {
 		ClassRouter.POST("selectClass", v1.SelectClass)     // 学生选课		1
 		ClassRouter.DELETE("deleteSelect", v1.DeleteSelect) // 学生退选		1
 
-		ClassRouter.GET("getUserCreditInfo",v1.GetUserCreditInfo)
+		ClassRouter.GET("getUserCreditInfo", v1.GetUserCreditInfo)
 	}
 }

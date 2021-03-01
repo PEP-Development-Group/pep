@@ -34,7 +34,7 @@ func DeleteClassList(classlist model.ClassList) (err error) {
 // @return                    error
 
 func DeleteClassListByIds(ids request.IdsReq) (err error) {
-	err = global.GVA_DB.Delete(&[]model.ClassList{},"id in (?)",ids.Ids).Error
+	err = global.GVA_DB.Delete(&[]model.ClassList{}, "id in (?)", ids.Ids).Error
 	return err
 }
 
@@ -68,7 +68,7 @@ func GetClassList(id uint) (err error, classlist model.ClassList) {
 // @return                    error
 
 func GetClassListInfoList() (err error, list interface{}) {
-    var classlists []model.ClassList
-	err = global.GVA_DB.Select("id","cname","ccredit","classroom").Find(&classlists).Error
+	var classlists []model.ClassList
+	err = global.GVA_DB.Select("id", "cname", "ccredit", "classroom").Find(&classlists).Error
 	return err, classlists
 }

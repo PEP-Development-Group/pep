@@ -65,7 +65,7 @@ type TeacherClassStuRecord struct {
 
 type TeacherRecord struct {
 	Name string `json:"value"`
-	TID string `json:"tid"`
+	TID  string `json:"tid"`
 }
 
 /*

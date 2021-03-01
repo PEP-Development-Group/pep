@@ -119,14 +119,14 @@ func GetClassListList(c *gin.Context) {
 		response.FailWithMessage(fmt.Sprintf("获取数据失败，%v", err), c)
 	} else {
 		var ts []model.SysUser
-		global.GVA_DB.Select("name","username").Where("authority_id = ?", "2").Find(&ts)
+		global.GVA_DB.Select("name", "username").Where("authority_id = ?", "2").Find(&ts)
 		var tl []response.TeacherRecord
 		for _, t := range ts {
-			tl = append(tl, response.TeacherRecord{Name: t.Name,TID: t.Username})
+			tl = append(tl, response.TeacherRecord{Name: t.Name, TID: t.Username})
 		}
 		response.OkWithData(gin.H{
 			"classlist": list,
-			"teachers": tl,
+			"teachers":  tl,
 		}, c)
 	}
 }
