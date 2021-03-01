@@ -2,15 +2,16 @@ package response
 
 import "time"
 
-// 学生选课列表返回
+// 学生选课列表返回（树状api）
 type ClassListResponse struct {
 	G map[string]*Group `json:"classes"`
 }
 
 type Group struct {
-	ID    int `json:"id"`
-	Hours int `json:"hours"`
-	List  []Course
+	ID      int  `json:"id"`
+	Hours   int  `json:"hours"`
+	Learned bool `json:"learned"`
+	List    []Course
 }
 
 type Course struct {
