@@ -312,3 +312,11 @@ export const getClassListList = (params) => {
         params
     })
 }
+
+export const delAll = (data) => {
+    return service({
+        url: "/board/delAll",
+        method: 'delete',
+        data
+    })
+}
