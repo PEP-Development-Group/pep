@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"errors"
+	"gin-vue-admin/constant"
 	"gin-vue-admin/global"
 	"gin-vue-admin/model/request"
 	"gin-vue-admin/model/response"
@@ -20,6 +21,7 @@ func JWTAuth() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
+
 		if service.IsBlacklist(token) {
 			response.FailWithDetailed(gin.H{"reload": true}, "您的帐户异地登陆或令牌失效", c)
 			c.Abort()
@@ -38,6 +40,18 @@ func JWTAuth() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
+
+		if cnt, _ := global.GVA_REDIS.Get(claims.Username).Int(); cnt >= 10 {
+			// username流量过大直接把token拉入黑名单
+			timer := time.Duration(global.GVA_CONFIG.JWT.ExpiresTime) * time.Second
+			global.GVA_REDIS.Set(token, "exist", timer)
+			response.FailWithMessage(constant.LoginAgain.Error(), c)
+			c.Abort()
+			return
+		} else if cnt == 0 {
+			global.GVA_REDIS.Set(claims.Username, 0, 10*time.Second)
+		}
+		global.GVA_REDIS.Incr(claims.Username)
 
 		//if err, _ = service.FindUserByUuid(claims.UUID.String()); err != nil {
 		//	_ = service.CreateJsonBlackListRecord(model.JwtBlacklist{Jwt: token})

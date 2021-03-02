@@ -60,9 +60,9 @@ mysql:
   db-name: 'saupep'
   username: 'pep_admin'
   password: 'SAUpep123'
-  max-idle-conns: 10
-  max-open-conns: 100
-  log-mode: true
+  max-idle-conns: 100
+  max-open-conns: 200
+  log-mode: false
   log-zap: ""
 
 # local configuration

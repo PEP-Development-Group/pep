@@ -5,6 +5,7 @@ import "errors"
 var (
 	InternalErr = errors.New("操作失败")
 	TooMany     = errors.New("操作过于频繁，稍后再试")
+	LoginAgain = errors.New("需要重新登录")
 
 	ErrClassNotExist = errors.New("课程不存在")
 
