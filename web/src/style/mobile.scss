@@ -94,4 +94,7 @@
   .el-message-box {
     width: 80% !important;
   }
+  .el-menu-item:focus, .el-menu-item:hover {
+    background-color: transparent !important;//修复Safari需要两次点击的问题
+  }
 }

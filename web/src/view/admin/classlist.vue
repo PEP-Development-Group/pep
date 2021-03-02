@@ -28,9 +28,10 @@
 
       <el-table-column label="教室" prop="classroom" min-width="120"></el-table-column>
 
-      <el-table-column label="操作" width="150">
+      <el-table-column label="操作" width="180" align="center">
         <template slot-scope="scope">
-          <el-button @click="updateClassList(scope.row)" size="small" type="primary">变更</el-button>
+          <el-button @click="updateClassList(scope.row)" size="small" type="primary" style="margin-right: 5px">变更
+          </el-button>
           <el-popover placement="top" width="160" v-model="scope.row.visible">
             <p>确定要删除吗？</p>
             <div style="text-align: right; margin: 0">
@@ -112,7 +113,7 @@ export default {
   },
   methods: {
     async getClassTableData() {
-      this.tableData = (await getClassListList()).data
+      this.tableData = (await getClassListList()).data.classlist
     },
     //条件搜索前端看此方法
     onSubmit() {
@@ -140,7 +141,7 @@ export default {
       }
     },
     async updateClassList(row) {
-      const res = await findClassList({ID: row.id});
+      const res = await findClassList({ID: row.ID});
       this.type = "update";
       if (res.code == 0) {
         this.formData = res.data.reclasslist;
@@ -158,7 +159,7 @@ export default {
     },
     async deleteClassList(row) {
       this.visible = false;
-      const res = await deleteClassList({ID: row.id});
+      const res = await deleteClassList({ID: row.ID});
       if (res.code == 0) {
         this.$message({
           type: "success",

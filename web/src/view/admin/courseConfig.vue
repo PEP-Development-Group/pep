@@ -12,11 +12,27 @@
         <el-button @click="update" type="primary">提交</el-button>
       </el-form-item>
     </el-form>
+    <el-card class="danger-zone">
+      危险区域
+      <el-divider></el-divider>
+      <el-popover placement="top" v-model="deleteVisible" width="160">
+        <p>确定要删除吗？</p>
+        <div style="text-align: right; margin: 0">
+          <el-button @click="deleteVisible = false" size="mini" type="text">取消</el-button>
+          <el-button @click="initDB" size="mini" type="primary">确定</el-button>
+        </div>
+        <el-button icon="el-icon-delete" size="mini" slot="reference" type="danger">清空数据库</el-button>
+      </el-popover>
+      <br>
+      <br>
+      *清空数据表，所有学生，课程记录，选课记录
+    </el-card>
   </div>
 </template>
 
 <script>
 import {getSystemConfig, setSystemConfig} from "@/api/system";
+import {delAll} from "@/api/course";
 
 export default {
   name: "courseConfig",
@@ -24,12 +40,33 @@ export default {
     return {
       config: {
         system: {}
-      }
+      },
+      deleteVisible: false
     }
   }, async created() {
     await this.initForm();
   },
   methods: {
+    async initDB() {
+      this.$confirm('你确定要清空数据库吗? 这个操作不可逆', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        showClose: false,
+      }).then(async () => {
+        const res = await delAll()
+        if (res.code === 0) {
+          this.$message({type: "success", message: "清空成功"})
+        }
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '操作取消'
+        });
+      });
+
+
+    },
     async initForm() {
       const res = await getSystemConfig();
       if (res.code == 0) {
@@ -53,5 +90,9 @@ export default {
 </script>
 
 <style scoped>
-
+.danger-zone {
+  max-width: 800px;
+  border-color: #FF6666;
+  border-style: dashed;
+}
 </style>

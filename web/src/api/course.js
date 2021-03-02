@@ -159,6 +159,15 @@ export const DeleteSelect = (data) => {
     })
 }
 
+export const getUserCreditInfo = (params) => {
+    return service({
+        url: "/class/getUserCreditInfo",
+        method: 'get',
+        donNotShowLoading: true,
+        params
+    })
+}
+
 export const GetPersonalClasses = (params) => {
     return service({
         url: "/class/getPersonalClasses",
@@ -301,5 +310,13 @@ export const getClassListList = (params) => {
         url: "/classlist/getClassListList",
         method: 'get',
         params
+    })
+}
+
+export const delAll = (data) => {
+    return service({
+        url: "/board/delAll",
+        method: 'delete',
+        data
     })
 }

@@ -1,10 +1,10 @@
 <template>
   <div>
     <div class="warning-info">
-      <i class="el-icon-warning"></i> 请注意退课有次数限制,你还可以退课 次
+      <i class="el-icon-warning"></i> 请注意退课有次数限制,你还可以退课 {{ cancelTimes }} 次
     </div>
     <div class="class-info">
-      <i class="el-icon-info"></i> 本学期需要修满 学时,当前已修 学时
+      <i class="el-icon-info"></i> 本学期需要修满 {{ totalCredits }} 学时,当前已修 {{ haveCredits }} 学时
     </div>
     <el-collapse v-model="activeNames" class="class-area">
       <el-collapse-item v-for="(item,i) in courseList" :key="item.id" class="class-con">
@@ -15,9 +15,9 @@
             </el-tag>
             <span class="class-title">{{ i }}</span>
 
-            <span class="class-title-right">{{ item.List.length }}</span>
+            <span class="class-title-right">共{{ item.List.length }}节</span>
             <span class="class-title-right">
-            <el-tag effect="light" size="small" type="success" v-if="courseSelected(item)">
+            <el-tag effect="light" size="small" type="success" v-if="item.learned">
               <i class="el-icon-check"></i>
             已选
             </el-tag>
@@ -38,7 +38,7 @@
           </span>
           <span class="lesson-op">
             <span class="progress" :class="{red:l.max-l.now<=3}">{{ l.now }}/{{ l.max }}</span>
-          <el-button type="primary" v-if="l.selected===false" :disabled="l.now===l.max"
+          <el-button type="primary" v-if="l.selected===false" :disabled="l.now===l.max||item.learned"
                      @click="selectCourse(i,item,l)">选课</el-button>
           <el-button type="danger" v-else @click="deleteCourse(l.id,l)">退选</el-button>
           </span>
@@ -83,7 +83,8 @@
 import {
   GetClassListWithPerson,
   SelectClass,
-  DeleteSelect
+  DeleteSelect,
+  getUserCreditInfo
 } from "@/api/course.js";  //  此处请自行替换地址
 import {formatTimeToStr, schoolTimeToRealTime} from "@/utils/date";
 import infoList from "@/mixins/infoList";
@@ -98,6 +99,7 @@ export default {
   mixins: [infoList],
   async created() {
     await this.getList()
+    await this.updateInfo()
   },
   data() {
     return {
@@ -115,7 +117,10 @@ export default {
         desc: null,
         teacher: null,
         hours: null
-      }
+      },
+      totalCredits: userInfo.total_credits,
+      haveCredits: userInfo.have_credits,
+      cancelTimes: userInfo.cancel_nums
     };
   },
   filters: {
@@ -141,14 +146,24 @@ export default {
       }
     }
   },
-  computed: {},
+  computed: {
+    sortClass() {
+      let list = this.courseList;
+      return list.sort(this.cmp)
+    }
+  },
   methods: {
-    courseSelected(course) {
-      if (!course.List) return false
-      for (let i = 0; i < course.List.length; ++i) {
-        if (course.List[i].selected) return true
+    async updateInfo() {
+      const res = await getUserCreditInfo()
+      this.cancelTimes = res.data.cancel_nums
+      this.haveCredits = res.data.have_credits
+    },
+    cmp() {
+      return function (a, b) {
+        if ((a.selected && !b.selected) || (!a.selected && b.selected))
+          return (a.selected && !b.selected) ? 1 : -1
+        return a.hours < b.hours ? -1 : 1
       }
-      return false
     },
     selectPercent: function (now, max) {
       if (now < 0) return 0
@@ -170,6 +185,7 @@ export default {
           teacher: l.teacher_name,
           hours: item.hours
         }
+        await this.updateInfo()
         this.confirmVisible = true
       }
       context.$bus.emit("closeLoading")
@@ -187,6 +203,7 @@ export default {
         if (res.code === 0) {
           this.$message({type: "success", message: "退课成功"})
         }
+        await this.updateInfo()
         await this.getList()
       }).catch(() => {
         this.$message({
@@ -342,9 +359,11 @@ export default {
 .red {
   color: #FF6666;
 }
-.class-area{
+
+.class-area {
   max-width: 800px;
 }
+
 .warning-info {
   margin-bottom: 5px;
   padding: 8px 16px;
@@ -354,7 +373,8 @@ export default {
   max-width: 800px;
   box-sizing: border-box;
 }
-.class-info{
+
+.class-info {
   margin-bottom: 5px;
   padding: 8px 16px;
   background-color: #f0f8ff;
