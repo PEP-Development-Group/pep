@@ -1,12 +1,13 @@
 <template>
   <div>
-    <el-page-header @back="goBack" :content="lesson.cname">
+    <el-page-header @back="goBack">
       <template slot="title">
         <div></div>
       </template>
       <template slot="content">
-        <div class="title-main">{{ lesson.cname }}</div>
-        <div class="title-desc">{{ lesson.desc |formatDesc }}</div>
+        <div class="title-main" v-if="lesson">{{ lesson.cname }}</div>
+        <div class="title-desc" v-if="lesson">{{ lesson.desc |formatDesc }} <span v-auth="888">{{ lesson.tname }}</span>
+        </div>
       </template>
     </el-page-header>
     <el-table :data="stuList">
@@ -24,6 +25,7 @@
 <script>
 import {getTeacherAClassStuList, findClass} from "@/api/course";
 import GradeForm from "@/view/teacher/gradeForm";
+import {store} from "@/store";
 
 const formatDayOfWeek = ['一', '二', '三', '四', '五', '六', '日']
 export default {
@@ -34,7 +36,7 @@ export default {
       cid: 0,
       lesson: null,
       stuList: [],
-
+      authID: store.state.user.userInfo.authorityId
     }
   },
   filters: {

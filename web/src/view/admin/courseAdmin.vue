@@ -72,10 +72,9 @@
       <el-table-column label="操作" min-width="180" align="center">
         <template slot-scope="scope">
           <el-button type="primary" icon="el-icon-s-order" plain size="small" slot="reference"
-                     @click="viewLesson(scope.row.cid)"
+                     @click="viewLesson(scope.row.ID)"
                      class="option-btn">查看
           </el-button>
-          <!--          TODO 管理员查看名单改成绩-->
           <el-button class="table-button" @click="updateClass(scope.row)" size="small" type="primary"
                      icon="el-icon-edit">变更
           </el-button>
@@ -99,10 +98,11 @@
       <el-form :model="formData" label-position="right" label-width="80px" :inline="false">
         <el-form-item label="课程名:">
           <el-autocomplete v-model="formData.cname" :fetch-suggestions="queryClass" clearable
-                           placeholder="请输入" @select="setClassHours">
+                           placeholder="请输入" @select="setClassData">
             <template slot-scope="{ item }">
-              <div class="name">{{ item.value }}
-                <span class="info-text">{{ item.hours }}学时</span>
+              <div class="name">{{ item.cname }}
+                <span class="info-text">{{ item.ccredit }}学时 </span>
+                <span class="info-text"> {{ item.classroom }}</span>
               </div>
             </template>
           </el-autocomplete>
@@ -117,10 +117,6 @@
             </template>
           </el-autocomplete>
 
-        </el-form-item>
-        <el-form-item label="教室:">
-          <el-autocomplete v-model="formData.classroom" :fetch-suggestions="queryClassroom" clearable
-                           placeholder="请输入"></el-autocomplete>
         </el-form-item>
         <el-form-item label="总人数:">
           <el-input-number v-model="formData.total" clearable placeholder="请输入"></el-input-number>
@@ -185,7 +181,8 @@ import {
   deleteClassByIds,
   updateClass,
   findClass,
-  getClass
+  getClass,
+  getClassListList
 } from "@/api/course";  //  此处请自行替换地址
 import {formatTimeToStr, schoolTimeToRealTime} from "@/utils/date";
 import infoList from "@/mixins/infoList";
@@ -240,9 +237,8 @@ export default {
       ],
       timespan: [],
       week: 1,
-      classList: [{"value": "分光计", "hours": 4}],
-      teacherList: [{"value": "王老师", "tid": "20340101"}],
-      classroomList: [{"value": "逸夫馆201"}],
+      classList: [],
+      teacherList: [],
     };
   },
   filters: {
@@ -295,23 +291,41 @@ export default {
   },
   watch: {},
   methods: {
-    setClassHours(i) {
-      this.formData.ccredit = i.hours
+    viewLesson(cid) {
+      this.$router.push({
+        path: 'lesson',
+        query: {
+          cid: cid
+        }
+      })
+    },
+    setClassData(i) {
+      this.formData.ccredit = i.ccredit
+      this.formData.cname = i.cname
+      this.formData.classroom = i.classroom
+    },
+    classFilter(queryString) {
+      return (c) => {
+        return (c.cname.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+      };
     },
     queryClass(queryStr, cb) {
-      let res = queryStr ? this.classList.filter(this.createFilter(queryStr)) : this.classList;
+      let res = queryStr ? this.classList.filter(this.classFilter(queryStr)) : this.classList;
       cb(res)
     },
-    loadTeacherList(){
-
+    teacherFilter(queryString) {
+      return (c) => {
+        return (c.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+      };
     },
     queryTeacher(queryStr, cb) {
-      let res = queryStr ? this.teacherList.filter(this.createFilter(queryStr)) : this.teacherList;
+      let res = queryStr ? this.teacherList.filter(this.teacherFilter(queryStr)) : this.teacherList;
       cb(res)
     },
-    queryClassroom(queryStr, cb) {
-      let res = queryStr ? this.classroomList.filter(this.createFilter(queryStr)) : this.classroomList;
-      cb(res)
+    async loadClassList() {
+      let res = (await getClassListList()).data
+      this.classList = res.classlist
+      this.teacherList = res.teachers
     },
     filterHandler(value, row, column) {
       const property = column['property'];
@@ -433,6 +447,7 @@ export default {
   },
   async created() {
     await this.getTableData();
+    await this.loadClassList();
   }
 };
 </script>

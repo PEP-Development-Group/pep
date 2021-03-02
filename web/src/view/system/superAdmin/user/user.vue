@@ -64,7 +64,7 @@
           <el-input v-model="userInfo.username" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="应修学时" min-width="150" label-width="80px" v-show="userType===1">
-          <el-input v-model="userInfo.total_credits" type="number" ></el-input>
+          <el-input v-model.number="userInfo.total_credits" type="number" ></el-input>
         </el-form-item>
         <el-form-item label="密码" label-width="80px" prop="password">
           <el-input v-model="userInfo.password" type="password" autocomplete="off"></el-input>
@@ -306,10 +306,6 @@ export default {
 
 .option-btn {
   margin-right: 5px;
-}
-
-.el-button + .el-button {
-  margin-left: 0;
 }
 
 .user-type-radio {
