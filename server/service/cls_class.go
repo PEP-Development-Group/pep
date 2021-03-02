@@ -380,6 +380,8 @@ func SetStuGrade(rq request.TeacherRequest) (err error) {
 	if db.Error != nil {
 		return constant.InternalErr
 	}
+
+	// 成绩>=60，才算已修学时
 	if sc.Grade >= 60 {
 		var s model.SysUser
 		db := global.GVA_DB.Model(&model.SysUser{}).Select("have_credits").Where("username = ?", rq.Username)
@@ -392,7 +394,7 @@ func SetStuGrade(rq request.TeacherRequest) (err error) {
 		if err != nil {
 			return err
 		}
-		err = db.Update("have_credits", c.Ccredit).Error
+		err = db.Update("have_credits", s.HaveCredits+c.Ccredit).Error
 		if err != nil {
 			return err
 		}

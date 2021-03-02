@@ -11,7 +11,6 @@ type Register struct {
 	AuthorityId string `json:"authorityId"`
 
 	Class string `json:"class"`
-	PID   string `json:"pid"`
 
 	CancelNums   int `json:"cancel_nums"`
 	TotalCredits int `json:"total_credits"`
