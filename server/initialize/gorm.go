@@ -1,15 +1,14 @@
 package initialize
 
 import (
-	"pep/global"
-	"pep/initialize/internal"
-	"pep/model"
 	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"os"
-	"time"
+	"pep/global"
+	"pep/initialize/internal"
+	"pep/model"
 )
 
 //@author: SliverHorn
@@ -93,7 +92,6 @@ func GormMysql() *gorm.DB {
 		sqlDB, _ := db.DB()
 		sqlDB.SetMaxIdleConns(m.MaxIdleConns)
 		sqlDB.SetMaxOpenConns(m.MaxOpenConns)
-		sqlDB.SetConnMaxLifetime(24 * time.Hour)
 		return db
 	}
 }
