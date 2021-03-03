@@ -122,7 +122,7 @@ func Register(c *gin.Context) {
 	user := &model.SysUser{
 		Username:     R.Username,
 		Name:         R.Name,
-		Password:     R.Password,
+		Password:     utils.MD5V([]byte(R.Password)),
 		AuthorityId:  R.AuthorityId,
 		Class:        R.Class,
 		CancelNums:   R.CancelNums,
