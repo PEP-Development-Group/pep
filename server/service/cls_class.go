@@ -28,7 +28,7 @@ func GetUserCreditsInfo(username string) (selected int, have int, cancel int, er
 
 func SelectClass(sc request.SelectClass) (err error) {
 	cls := model.Class{}
-	err = global.GVA_DB.Select("id", "cname", "selected", "total").Where("id = ?", sc.Cid).First(&cls).Error
+	err = global.GVA_DB.Select("id", "cname", "selected", "total", "ccredit").Where("id = ?", sc.Cid).First(&cls).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return constant.ErrClassNotExist
 	}
@@ -59,6 +59,11 @@ func SelectClass(sc request.SelectClass) (err error) {
 	}
 
 	return global.GVA_DB.Transaction(func(tx *gorm.DB) error {
+		err = tx.Model(&model.SysUser{}).Where("username = ?", sc.Username).UpdateColumn("selected_credits",u.SelectedCredits+cls.Ccredit).Error
+		if err != nil {
+			return err
+		}
+
 		err = tx.Model(&cls).Update("selected", cls.Selected+1).Error
 		if err != nil {
 			return err
