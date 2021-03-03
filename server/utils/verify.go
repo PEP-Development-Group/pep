@@ -16,5 +16,5 @@ var (
 	ChangePasswordVerify   = Rules{"Username": {NotEmpty()}, "Password": {NotEmpty()}, "NewPassword": {NotEmpty()}}
 	SetUserAuthorityVerify = Rules{"UUID": {NotEmpty()}, "AuthorityId": {NotEmpty()}}
 
-	StudentVerify = Rules{"Username": {Le("183411010125")}}
+	// StudentVerify = Rules{"Username": {Le("183411010125")}}
 )
