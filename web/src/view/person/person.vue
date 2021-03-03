@@ -3,7 +3,7 @@
     <el-row>
       <el-col :span="24">
         <div class="user-addcount">
-          <el-tabs v-model="activeName" @tab-click="handleClick">
+          <el-tabs v-model="activeName">
             <el-tab-pane label="账号信息" name="second">
               <ul>
                 <li>
@@ -105,8 +105,8 @@ export default {
         if (valid) {
           changePassword({
             username: this.userInfo.username,
-            password: this.pwdModify.password,
-            newPassword: this.pwdModify.newPassword
+            password: this.$md5(this.pwdModify.password),
+            newPassword: this.$md5(this.pwdModify.newPassword)
           }).then((res) => {
             if (res.code == 0) {
               this.$message.success("修改密码成功！");
@@ -125,19 +125,6 @@ export default {
         confirmPassword: ""
       };
       this.$refs.modifyPwdForm.clearValidate();
-    },
-    async enterImg(url) {
-      const res = await setUserInfo({headerImg: url, ID: this.userInfo.ID});
-      if (res.code == 0) {
-        this.ResetUserInfo({headerImg: url});
-        this.$message({
-          type: "success",
-          message: "设置成功"
-        });
-      }
-    },
-    handleClick(tab, event) {
-      console.log(tab, event);
     }
   }
 };
