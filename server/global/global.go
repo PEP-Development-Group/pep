@@ -1,7 +1,7 @@
 package global
 
 import (
-	"gin-vue-admin/config"
+	"pep/config"
 	"github.com/go-redis/redis"
 	"github.com/juju/ratelimit"
 	"github.com/spf13/viper"

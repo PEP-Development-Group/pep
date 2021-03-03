@@ -2,11 +2,11 @@ package v1
 
 import (
 	"fmt"
-	"gin-vue-admin/global"
-	"gin-vue-admin/model"
-	"gin-vue-admin/model/response"
-	"gin-vue-admin/service"
-	"gin-vue-admin/utils"
+	"pep/global"
+	"pep/model"
+	"pep/model/response"
+	"pep/service"
+	"pep/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"

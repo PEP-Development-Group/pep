@@ -1,7 +1,7 @@
 package upload
 
 import (
-	"gin-vue-admin/global"
+	"pep/global"
 	"mime/multipart"
 )
 

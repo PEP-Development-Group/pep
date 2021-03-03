@@ -1,9 +1,9 @@
 package initialize
 
 import (
-	"gin-vue-admin/global"
-	"gin-vue-admin/initialize/internal"
-	"gin-vue-admin/model"
+	"pep/global"
+	"pep/initialize/internal"
+	"pep/model"
 	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"

@@ -1,4 +1,4 @@
-module gin-vue-admin
+module pep
 
 go 1.14
 

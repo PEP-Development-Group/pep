@@ -1,4 +1,4 @@
-# Gin-Vue-Admin Global Configuration
+# pep Global Configuration
 
 # jwt configuration
 jwt:
@@ -9,7 +9,7 @@ jwt:
 zap:
   level: 'info'
   format: 'console'
-  prefix: '[GIN-VUE-ADMIN]'
+  prefix: '[pep]'
   director: 'log'
   link-name: 'latest_log'
   show-line: true

@@ -2,8 +2,8 @@ package service
 
 import (
 	"errors"
-	"gin-vue-admin/global"
-	"gin-vue-admin/model"
+	"pep/global"
+	"pep/model"
 )
 
 //@author: [sh1luo](https://github.com/sh1luo)

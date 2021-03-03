@@ -1,7 +1,7 @@
 package model
 
 import (
-	"gin-vue-admin/global"
+	"pep/global"
 )
 
 type JwtBlacklist struct {

@@ -2,8 +2,8 @@ package core
 
 import (
 	"fmt"
-	"gin-vue-admin/global"
-	"gin-vue-admin/initialize"
+	"pep/global"
+	"pep/initialize"
 	"go.uber.org/zap"
 	"time"
 )

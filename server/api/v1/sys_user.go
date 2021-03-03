@@ -1,13 +1,13 @@
 package v1
 
 import (
-	"gin-vue-admin/global"
-	"gin-vue-admin/middleware"
-	"gin-vue-admin/model"
-	"gin-vue-admin/model/request"
-	"gin-vue-admin/model/response"
-	"gin-vue-admin/service"
-	"gin-vue-admin/utils"
+	"pep/global"
+	"pep/middleware"
+	"pep/model"
+	"pep/model/request"
+	"pep/model/response"
+	"pep/service"
+	"pep/utils"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"

@@ -1,7 +1,7 @@
 package request
 
 import (
-	"gin-vue-admin/model"
+	"pep/model"
 )
 
 type ClassSearch struct {

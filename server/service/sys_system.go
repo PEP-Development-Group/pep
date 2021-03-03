@@ -1,10 +1,10 @@
 package service
 
 import (
-	"gin-vue-admin/config"
-	"gin-vue-admin/global"
-	"gin-vue-admin/model"
-	"gin-vue-admin/utils"
+	"pep/config"
+	"pep/global"
+	"pep/model"
+	"pep/utils"
 	"go.uber.org/zap"
 )
 

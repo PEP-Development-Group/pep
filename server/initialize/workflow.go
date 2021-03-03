@@ -1,6 +1,6 @@
 package initialize
 
-import "gin-vue-admin/model"
+import "pep/model"
 
 func initWorkflowModel() {
 	model.WorkflowBusinessStruct = make(map[string]func() model.GVA_Workflow)

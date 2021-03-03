@@ -1,10 +1,10 @@
 package initialize
 
 import (
-	_ "gin-vue-admin/docs"
-	"gin-vue-admin/global"
-	"gin-vue-admin/middleware"
-	"gin-vue-admin/router"
+	_ "pep/docs"
+	"pep/global"
+	"pep/middleware"
+	"pep/router"
 	"github.com/gin-gonic/gin"
 	"github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"

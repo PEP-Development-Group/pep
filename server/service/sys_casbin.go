@@ -2,9 +2,9 @@ package service
 
 import (
 	"errors"
-	"gin-vue-admin/global"
-	"gin-vue-admin/model"
-	"gin-vue-admin/model/request"
+	"pep/global"
+	"pep/model"
+	"pep/model/request"
 	"github.com/casbin/casbin/util"
 	"github.com/casbin/casbin/v2"
 	gormadapter "github.com/casbin/gorm-adapter/v3"

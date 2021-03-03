@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"gin-vue-admin/constant"
-	"gin-vue-admin/global"
+	"pep/constant"
+	"pep/global"
 	"github.com/gin-gonic/gin"
 	"time"
 )

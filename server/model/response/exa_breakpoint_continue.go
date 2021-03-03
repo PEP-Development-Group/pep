@@ -1,6 +1,6 @@
 package response
 
-import "gin-vue-admin/model"
+import "pep/model"
 
 type FilePathResponse struct {
 	FilePath string `json:"filePath"`

@@ -16,11 +16,11 @@ limitations under the License.
 package gva
 
 import (
-	"gin-vue-admin/core"
+	"pep/core"
 	"github.com/gookit/color"
 
-	_ "gin-vue-admin/core"
-	"gin-vue-admin/global"
+	_ "pep/core"
+	"pep/global"
 
 	"github.com/spf13/cobra"
 )
@@ -28,8 +28,8 @@ import (
 // initdbCmd represents the initdb command
 var initdbCmd = &cobra.Command{
 	Use:   "initdb",
-	Short: "gin-vue-admin初始化数据",
-	Long: `gin-vue-admin初始化数据适配数据库情况: 
+	Short: "pep初始化数据",
+	Long: `pep初始化数据适配数据库情况: 
 1. mysql完美适配,
 2. postgresql不能保证完美适配,
 3. sqlite未适配,

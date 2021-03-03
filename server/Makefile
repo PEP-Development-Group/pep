@@ -1,6 +1,6 @@
 .PHONY: all build run gotool clean help
 
-BINARY="gin-vue-admin"
+BINARY="pep"
 GVA = "gva"
 
 all: check gva initdb run

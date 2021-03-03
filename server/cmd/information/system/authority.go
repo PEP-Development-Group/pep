@@ -1,8 +1,8 @@
 package information
 
 import (
-	"gin-vue-admin/global"
-	"gin-vue-admin/model"
+	"pep/global"
+	"pep/model"
 	"github.com/gookit/color"
 	"time"
 

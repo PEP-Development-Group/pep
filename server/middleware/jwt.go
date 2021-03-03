@@ -2,11 +2,11 @@ package middleware
 
 import (
 	"errors"
-	"gin-vue-admin/constant"
-	"gin-vue-admin/global"
-	"gin-vue-admin/model/request"
-	"gin-vue-admin/model/response"
-	"gin-vue-admin/service"
+	"pep/constant"
+	"pep/global"
+	"pep/model/request"
+	"pep/model/response"
+	"pep/service"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"strconv"

@@ -1,7 +1,7 @@
 package information
 
 import (
-	"gin-vue-admin/global"
+	"pep/global"
 	"github.com/gookit/color"
 	"gorm.io/gorm"
 )

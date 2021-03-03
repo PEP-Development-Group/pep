@@ -1,7 +1,7 @@
 package service
 
 import (
-	"gin-vue-admin/global"
+	"pep/global"
 	"time"
 )
 

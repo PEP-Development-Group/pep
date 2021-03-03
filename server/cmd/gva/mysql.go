@@ -2,10 +2,10 @@ package gva
 
 import (
 	"fmt"
-	information "gin-vue-admin/cmd/information/extra"
-	data "gin-vue-admin/cmd/information/system"
-	"gin-vue-admin/global"
-	"gin-vue-admin/model"
+	information "pep/cmd/information/extra"
+	data "pep/cmd/information/system"
+	"pep/global"
+	"pep/model"
 	gormadapter "github.com/casbin/gorm-adapter/v3"
 	"github.com/gookit/color"
 	"gorm.io/driver/mysql"

@@ -1,7 +1,7 @@
 package response
 
 import (
-	"gin-vue-admin/model"
+	"pep/model"
 )
 
 type SysUserResponse struct {

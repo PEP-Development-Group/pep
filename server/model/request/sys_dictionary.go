@@ -1,6 +1,6 @@
 package request
 
-import "gin-vue-admin/model"
+import "pep/model"
 
 type SysDictionarySearch struct {
 	model.SysDictionary

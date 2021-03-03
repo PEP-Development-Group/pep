@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"gin-vue-admin/global"
+	"pep/global"
 	"go.uber.org/zap"
 	"os"
 )

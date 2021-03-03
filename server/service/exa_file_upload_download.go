@@ -2,11 +2,11 @@ package service
 
 import (
 	"errors"
-	"gin-vue-admin/global"
-	"gin-vue-admin/model"
-	"gin-vue-admin/model/request"
-	"gin-vue-admin/utils"
-	"gin-vue-admin/utils/upload"
+	"pep/global"
+	"pep/model"
+	"pep/model/request"
+	"pep/utils"
+	"pep/utils/upload"
 	uuid "github.com/satori/go.uuid"
 	"github.com/tealeg/xlsx/v3"
 	"mime/multipart"

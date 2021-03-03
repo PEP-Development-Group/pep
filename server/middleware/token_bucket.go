@@ -1,9 +1,9 @@
 package middleware
 
 import (
-	"gin-vue-admin/constant"
-	"gin-vue-admin/global"
-	"gin-vue-admin/model/response"
+	"pep/constant"
+	"pep/global"
+	"pep/model/response"
 	"github.com/gin-gonic/gin"
 )
 

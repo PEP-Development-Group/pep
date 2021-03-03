@@ -16,7 +16,7 @@ limitations under the License.
 package gva
 
 import (
-	"gin-vue-admin/utils"
+	"pep/utils"
 	"github.com/spf13/cobra"
 	"os"
 )

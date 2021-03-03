@@ -1,7 +1,7 @@
 package response
 
 import (
-	"gin-vue-admin/config"
+	"pep/config"
 )
 
 type SysConfigResponse struct {

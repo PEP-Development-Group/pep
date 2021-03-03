@@ -3,9 +3,9 @@ package core
 import (
 	"flag"
 	"fmt"
-	"gin-vue-admin/global"
-	_ "gin-vue-admin/packfile"
-	"gin-vue-admin/utils"
+	"pep/global"
+	_ "pep/packfile"
+	"pep/utils"
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
 	"os"
