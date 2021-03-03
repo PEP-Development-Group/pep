@@ -93,7 +93,6 @@ func GormMysql() *gorm.DB {
 		sqlDB, _ := db.DB()
 		sqlDB.SetMaxIdleConns(m.MaxIdleConns)
 		sqlDB.SetMaxOpenConns(m.MaxOpenConns)
-		sqlDB.SetConnMaxIdleTime(time.Hour)
 		sqlDB.SetConnMaxLifetime(24 * time.Hour)
 		return db
 	}
