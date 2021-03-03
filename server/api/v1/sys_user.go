@@ -258,6 +258,18 @@ func DeleteUser(c *gin.Context) {
 	}
 }
 
+func DeleteUserByIds(c *gin.Context) {
+	var IDS request.IdsReq
+	_ = c.ShouldBindJSON(&IDS)
+	err := service.DeleteClassListByIds(IDS)
+	if err != nil {
+		global.GVA_LOG.Error("批量删除失败!", zap.Any("err", err))
+		response.FailWithMessage("批量删除失败", c)
+	} else {
+		response.OkWithMessage("删除成功", c)
+	}
+}
+
 // @Tags SysUser
 // @Summary 设置用户信息
 // @Security ApiKeyAuth

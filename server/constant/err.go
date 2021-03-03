@@ -13,6 +13,7 @@ var (
 	ErrClassHasSelected    = errors.New("该课程已选")
 	ErrClassNameSame       = errors.New("同名课程只能选择一个")
 	ErrClassHasNotSelected = errors.New("未选择该课程")
+	ErrSelectFull = errors.New("已选够应修学时，无法继续选课，请退选部分课程后继续选课")
 
 	ErrDelClassTooMany      = errors.New("退课次数太多")
 	ErrDelClassOnDayOfClass = errors.New("上课当天无法退课")

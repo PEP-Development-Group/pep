@@ -14,10 +14,10 @@ import (
 	"time"
 )
 
-func GetUserCreditsInfo(username string) (have int, cancel int, err error) {
+func GetUserCreditsInfo(username string) (selected int, have int, cancel int, err error) {
 	var u model.SysUser
-	err = global.GVA_DB.Select("have_credits", "cancel_nums").Where("username = ?", username).First(&u).Error
-	return u.HaveCredits, u.CancelNums, err
+	err = global.GVA_DB.Select("have_credits", "cancel_nums", "selected_credits").Where("username = ?", username).First(&u).Error
+	return u.SelectedCredits, u.HaveCredits, u.CancelNums, err
 }
 
 //@author: [sh1luo](https://github.com/sh1luo)
@@ -34,6 +34,13 @@ func SelectClass(sc request.SelectClass) (err error) {
 	}
 	if cls.Selected >= cls.Total {
 		return constant.ErrClassHasFull
+	}
+
+	// 已修够或者超选不可继续选课
+	u := model.SysUser{}
+	global.GVA_DB.Select("selected_credits", "have_credits", "total_credits").Where("username = ?", sc.Username).First(&u)
+	if u.HaveCredits >= u.TotalCredits || u.SelectedCredits >= u.TotalCredits {
+		return constant.ErrSelectFull
 	}
 
 	// 同名课程只能选择一个
@@ -75,14 +82,13 @@ func SelectClass(sc request.SelectClass) (err error) {
 
 func DeleteSelect(sc request.SelectClass) (err error) {
 	user := model.SysUser{}
-	global.GVA_DB.Select("CancelNums").Where("username = ?", sc.Username).First(&user)
+	global.GVA_DB.Select("CancelNums", "SelectedCredits").Where("username = ?", sc.Username).First(&user)
 	if user.CancelNums == 0 {
 		return constant.ErrDelClassTooMany
 	}
 
 	return global.GVA_DB.Transaction(func(tx *gorm.DB) error {
 		cls := model.SelectClass{}
-
 		tmptx := tx.Where("class_id = ? AND username = ?", sc.Cid, sc.Username)
 		tmptx.First(&cls)
 		if errors.Is(tmptx.Error, gorm.ErrRecordNotFound) {
@@ -101,7 +107,7 @@ func DeleteSelect(sc request.SelectClass) (err error) {
 
 		// TODO:去掉order by
 		c := model.Class{}
-		tmptx2 := tx.Select("selected", "desc").First(&c, sc.Cid)
+		tmptx2 := tx.Select("selected", "desc", "").First(&c, sc.Cid)
 
 		// desc split by "-", such as "1-1-1"
 		ts := strings.Split(c.Desc, "-")
@@ -115,6 +121,11 @@ func DeleteSelect(sc request.SelectClass) (err error) {
 		}
 
 		err = tmptx2.Update("selected", c.Selected-1).Error
+		if err != nil {
+			return constant.ErrDelClass
+		}
+
+		err= tx.Model(&model.SysUser{}).Where("username = ?", sc.Username).UpdateColumn("selected_credits",user.SelectedCredits+c.Ccredit).Error
 		if err != nil {
 			return constant.ErrDelClass
 		}

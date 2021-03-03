@@ -13,13 +13,14 @@ import (
 // @Router /class/getUserCreditInfo [get]
 func GetUserCreditInfo(c *gin.Context) {
 	username := getUsername(c)
-	if have, cancel, err := service.GetUserCreditsInfo(username); err != nil {
+	if selected, have, cancel, err := service.GetUserCreditsInfo(username); err != nil {
 		global.GVA_LOG.Error("获取学生信息失败!", zap.Any("err", err))
 		response.FailWithMessage(err.Error(), c)
 	} else {
 		response.OkWithData(gin.H{
 			"have_credits": have,
 			"cancel_nums":  cancel,
+			"selected_credits": selected,
 		}, c)
 	}
 }
