@@ -34,7 +34,7 @@
               ></i>
             </el-input>
           </el-form-item>
-          <el-form-item style="position: relative">
+          <el-form-item style="position: relative" prop="captcha">
             <el-input
                 v-model="loginForm.captcha"
                 name="logVerify"
@@ -76,15 +76,23 @@ export default {
   name: "Login",
   data() {
     const checkUsername = (rule, value, callback) => {
-      if (value.length < 5 || value.length > 12) {
+      if (value.length < 3 || value.length > 15) {
         return callback(new Error("请输入正确的用户名"));
       } else {
         callback();
       }
     };
     const checkPassword = (rule, value, callback) => {
-      if (value.length < 6 || value.length > 12) {
+      if (value.length < 6 || value.length > 32) {
         return callback(new Error("请输入正确的密码"));
+      } else {
+        callback();
+      }
+    };
+    const checkCaptcha = (rule, value, callback) => {
+      console.log(value)
+      if (value.length < 5) {
+        return callback(new Error("请输入验证码"));
       } else {
         callback();
       }
@@ -101,6 +109,7 @@ export default {
       rules: {
         username: [{validator: checkUsername, trigger: "blur"}],
         password: [{validator: checkPassword, trigger: "blur"}],
+        captcha: [{validator: checkCaptcha, trigger: "blur"}]
       },
       logVerify: "",
       picPath: "",
@@ -114,6 +123,7 @@ export default {
   methods: {
     ...mapActions("user", ["LoginIn"]),
     async login() {
+      this.loginForm.password = this.$md5(this.loginForm.password)
       return await this.LoginIn(this.loginForm);
     },
     async submitForm() {
@@ -122,6 +132,8 @@ export default {
         if (v) {
           const flag = await this.login();
           if (!flag) {
+            this.loginForm.captcha = ""
+            this.loginForm.password = ""
             this.loginVefify();
           }
         } else {
@@ -130,7 +142,6 @@ export default {
             message: "请正确填写登录信息",
             showClose: true,
           });
-          this.loginVefify();
           this.loading = false
           return false;
         }
