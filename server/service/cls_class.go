@@ -3,12 +3,12 @@ package service
 import (
 	"database/sql"
 	"errors"
+	"gorm.io/gorm"
 	"pep/constant"
 	"pep/global"
 	"pep/model"
 	"pep/model/request"
 	"pep/model/response"
-	"gorm.io/gorm"
 	"strconv"
 	"strings"
 	"time"
@@ -112,12 +112,15 @@ func DeleteSelect(sc request.SelectClass) (err error) {
 
 		// TODO:去掉order by
 		c := model.Class{}
-		tmptx2 := tx.Select("selected", "desc", "").First(&c, sc.Cid)
-
+		tmptx2 := tx.Select("selected", "desc", "ccredit").First(&c, sc.Cid)
+		
 		// desc split by "-", such as "1-1-1"
 		ts := strings.Split(c.Desc, "-")
-		week, _ := strconv.Atoi(ts[0])
-		d, _ := strconv.Atoi(ts[1])
+		week, err := strconv.Atoi(ts[0])
+		d, err := strconv.Atoi(ts[1])
+		if err != nil {
+			return err
+		}
 
 		// 上课当天不允许退课
 		t, _ := time.ParseInLocation("2006-01-02", global.GVA_CONFIG.System.FirstDay, time.Local)
