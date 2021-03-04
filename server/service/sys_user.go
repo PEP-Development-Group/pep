@@ -61,7 +61,7 @@ func Register(u model.SysUser) (err error, userInter model.SysUser) {
 func Login(u *model.SysUser) (err error, userInter *model.SysUser) {
 	var user model.SysUser
 	u.Password = utils.MD5V([]byte(u.Password))
-	err = global.GVA_DB.Select("id", "uuid", "AuthorityId", "name", "class", "have_credits", "total_credits", "cancel_nums").Where("username = ? AND password = ?", u.Username, u.Password).First(&user).Error
+	err = global.GVA_DB.Select("uuid", "AuthorityId", "name", "class", "have_credits", "total_credits", "cancel_nums").Where("username = ? AND password = ?", u.Username, u.Password).First(&user).Error
 	user.Username = u.Username
 	user.Authority = authority[user.AuthorityId]
 	return err, &user
@@ -103,7 +103,7 @@ func GetUserInfoList(info request.PageInfo) (err error, list interface{}, total 
 	db := global.GVA_DB.Model(&model.SysUser{})
 	var userList []model.SysUser
 	db.Where("authority_id = ? ", info.Param).Count(&total)
-	err = db.Limit(limit).Offset(offset).Preload("Authority").Select("id", "username", "name", "cancel_nums", "class", "have_credits", "total_credits").Where("authority_id = ? ", info.Param).Find(&userList).Error
+	err = db.Limit(limit).Offset(offset).Preload("Authority").Select("username", "name", "cancel_nums", "class", "have_credits", "total_credits").Where("authority_id = ? ", info.Param).Find(&userList).Error
 	return err, userList, total
 }
 
@@ -126,7 +126,7 @@ func SetUserAuthority(uuid uuid.UUID, authorityId string) (err error) {
 
 func DeleteUser(id int64) error {
 	// var user model.SysUser
-	err := global.GVA_DB.Select("id", "authorityId").Where("username = ?", id).Delete(&model.SysUser{}).Error
+	err := global.GVA_DB.Select("authorityId").Where("username = ?", id).Delete(&model.SysUser{}).Error
 	return err
 }
 
@@ -148,22 +148,8 @@ func SetUserInfo(reqUser model.SysUser) (err error, user model.SysUser) {
 //@param: id int
 //@return: err error, user *model.SysUser
 
-func FindUserById(id int) (err error, user *model.SysUser) {
+func FindUserById(username int) (err error, user *model.SysUser) {
 	var u model.SysUser
-	err = global.GVA_DB.Where("`id` = ?", id).First(&u).Error
+	err = global.GVA_DB.Where("`username` = ?", username).First(&u).Error
 	return err, &u
 }
-
-//@author: [SliverHorn](https://github.com/SliverHorn)
-//@function: FindUserByUuid
-//@description: 通过uuid获取用户信息
-//@param: uuid string
-//@return: err error, user *model.SysUser
-
-//func FindUserByUuid(uuid string) (err error, user *model.SysUser) {
-//	var u model.SysUser
-//	if err = global.GVA_DB.Where("`uuid` = ?", uuid).First(&u).Error; err != nil {
-//		return errors.New("用户不存在"), &u
-//	}
-//	return nil, &u
-//}
