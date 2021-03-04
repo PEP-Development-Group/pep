@@ -3,16 +3,16 @@
     <el-scrollbar style="height:calc(100vh - 64px)">
       <transition :duration="{ enter: 800, leave: 100 }" mode="out-in" name="el-fade-in-linear">
         <el-menu
-          :collapse="isCollapse"
-          :collapse-transition="true"
-          :default-active="active"
-          @select="selectMenuItem"
-          class="el-menu-vertical"
-          text-color="#748496"
-          unique-opened
+            :collapse="isCollapse"
+            :collapse-transition="true"
+            :default-active="active"
+            @select="selectMenuItem"
+            class="el-menu-vertical"
+            text-color="#748496"
+            unique-opened
         >
           <template v-for="item in asyncRouters[0].children">
-            <aside-component :key="item.name" :routerInfo="item" v-if="!item.hidden" />
+            <aside-component :key="item.name" :routerInfo="item" v-if="!item.hidden"/>
           </template>
         </el-menu>
       </transition>
@@ -21,8 +21,9 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import {mapGetters, mapMutations} from "vuex";
 import AsideComponent from "@/view/layout/aside/asideComponent";
+
 export default {
   name: "Aside",
   data() {
@@ -37,19 +38,20 @@ export default {
       const query = {};
       const params = {};
       ele.route.parameters &&
-        ele.route.parameters.map(item => {
-          if (item.type == "query") {
-            query[item.key] = item.value;
-          } else {
-            params[item.key] = item.value;
-          }
-        });
+      ele.route.parameters.map(item => {
+        if (item.type == "query") {
+          query[item.key] = item.value;
+        } else {
+          params[item.key] = item.value;
+        }
+      });
       if (index === this.$route.name) return;
       if (index.indexOf("http://") > -1 || index.indexOf("https://") > -1) {
         window.open(index);
       } else {
-        this.$router.push({ name: index, query, params });
+        this.$router.push({name: index, query, params});
       }
+      this.$bus.emit('closeMenu')
     }
   },
   computed: {
@@ -86,6 +88,7 @@ export default {
     height: 100%;
   }
 }
+
 .menu-info {
   .menu-contorl {
     line-height: 52px;

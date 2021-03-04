@@ -98,6 +98,12 @@ export default {
     Aside,
     BottomInfo,
   },
+  created() {
+    this.$bus.on("closeMenu", () => {
+      if (this.isShadowBg)
+        this.changeShadow()
+    });
+  },
   methods: {
     ...mapActions('user', ['LoginOut']),
     reload() {

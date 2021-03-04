@@ -8,11 +8,10 @@
       <div class="lesson-title">
         <span class="cname">{{ item.cname }}</span>
         <el-tag size="mini">{{ item.hours }}学时</el-tag>
-        <span class="grade fail" v-if="item.grade===101">旷课</span>
-        <span class="grade" v-else-if="isFinished(item.desc)"
-              :class="{fail:item.grade<60,pass:item.grade>=60}">{{
-            item.grade === 102 ? "成绩未出" : item.grade
-          }}</span>
+        <span class="grade" v-if="isFinished(item.desc)"
+              :class="{fail:item.grade<60||item.grade===101,pass:item.grade>=60}">
+            {{ item.grade === 102 ? "成绩未出" : item.grade === 101 ? "旷课" : item.grade }}
+          </span>
         <span class="grade" v-else>
           <el-button type="danger" size="mini" plain @click="deleteCourse(item.id)">退课</el-button>
         </span>

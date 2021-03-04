@@ -40,6 +40,7 @@
           <el-card v-if="authId==1" style="height: 294px; margin-top: 18px; margin-bottom: 18px">
             <div class="button-box clearflex">
               <b>课程</b>
+              <span style="color: #999999" v-if="todoClass">还有{{ todoClass }}节实验已选未上</span>
               <b class="right">
                 <el-link type="primary" :underline="false" @click="goToStuLesson">查看详情</el-link>
               </b>
@@ -55,14 +56,13 @@
               <el-table-column>
                 <template slot-scope="scope">
                   <div class="lessonCon">
-                  <span class="nowarp"><span style="font-weight: bold">{{ scope.row.cname }}</span>
+                  <span class="nowarp"><span style="font-weight: bold">{{ scope.cname }}</span>
                   <el-divider direction="vertical"></el-divider>
                   {{ scope.row.hours }}学时</span>
-                    <span class="grade fail" v-if="scope.row.grade===101">旷课</span>
-                    <span class="grade" v-else-if="isFinished(scope.row.desc)"
-                          :class="{fail:scope.row.grade<60,pass:scope.row.grade>=60}">{{
-                        scope.row.grade === 102 ? "成绩未出" : scope.row.grade
-                      }}</span>
+                    <span class="grade" v-if="isFinished(scope.row.desc)"
+                          :class="{fail:scope.row.grade<60||scope.row.grade===101,pass:scope.row.grade>=60}">
+            {{ scope.row.grade === 102 ? "成绩未出" : scope.row.grade === 101 ? "旷课" : scope.row.grade }}
+                    </span>
                     <el-divider direction="vertical"></el-divider>
                     <span class="nowarp">{{ scope.row.desc|formatDesc }}
                       <el-divider direction="vertical"></el-divider>
@@ -310,6 +310,7 @@ export default {
       today: "",
       totalCredits: store.state.user.userInfo.total_credits,
       haveCredits: store.state.user.userInfo.have_credits,
+      selectedCredits: null,
       adminAnnouncement: "",
       courseList: [],
       classType: 2,
@@ -365,11 +366,14 @@ export default {
     };
   },
   async created() {
-    if (this.$store.state.user.userInfo.authorityId === '1') this.tableData = (await GetPersonalClasses()).data.list.crs;
+    if (this.$store.state.user.userInfo.authorityId === '1') {
+      this.tableData = (await GetPersonalClasses()).data.list.crs;
+      await this.updateInfo()
+    }
     this.adminAnnouncement = (await getRecord()).data;
     this.getToday();
     if (this.$store.state.user.userInfo.authorityId === '2') await this.getList();
-    this.updateInfo()
+
   },
   beforeDestroy() {
     clearInterval(this.timer)
@@ -412,12 +416,27 @@ export default {
   },
   computed: {
     ...mapGetters("user", ["token"]),
+    todoClass: function () {
+      const t = new Date()
+      if (store.state.user.userInfo.authorityId === '1') {
+        if (this.tableData) {
+          let cnt = 0
+          for (let i = 0; i < this.tableData.length; ++i) {
+            if (schoolTimeToRealTime(this.tableData[i].desc, store.state.user.firstDay) > t) {
+              ++cnt
+            }
+          }
+          return cnt
+        }
+      }
+      return null
+    }
   },
   methods: {
     async updateInfo() {
       const res = await getUserCreditInfo()
-      this.totalCredits = res.data.total_credits
       this.haveCredits = res.data.have_credits
+      this.selectedCredits = res.data.selected_credits
     },
     // async reload() {
     //   const {data} = await getSystemState();
