@@ -185,58 +185,58 @@
               </b>
             </div>
 
-            <el-row :gutter="10" style="margin:60px 0px">
-              <el-col :xs="24" :sm="12">
-                <el-card v-if="state.disk" class="card_item">
-                  <div slot="header">Disk</div>
-                  <div>
-                    <el-row>
-                      <!-- <el-col :span="12">
-                        <el-row :gutter="10">
-                          <el-col :span="12">total (MB)</el-col>
-                          <el-col :span="12" v-text="state.disk.totalMb"></el-col>
-                        </el-row>
-                        <el-row :gutter="10">
-                          <el-col :span="12">used (MB)</el-col>
-                          <el-col :span="12" v-text="state.disk.usedMb"></el-col>
-                        </el-row>
-                        <el-row :gutter="10">
-                          <el-col :span="12">total (GB)</el-col>
-                          <el-col :span="12" v-text="state.disk.totalGb"></el-col>
-                        </el-row>
-                        <el-row :gutter="10">
-                          <el-col :span="12">used (GB)</el-col>
-                          <el-col :span="12" v-text="state.disk.usedGb"></el-col>
-                        </el-row>
-                      </el-col> -->
-                      <el-col :span="12" :offset="6">
-                        <el-progress
-                            type="dashboard"
-                            :percentage="state.disk.usedPercent"
-                            :color="colors"
-                        ></el-progress>
-                      </el-col>
-                    </el-row>
-                  </div>
-                </el-card>
-              </el-col>
-              <el-col :xs="24" :sm="12">
-                <el-card v-if="state.ram" class="card_item">
-                  <div slot="header">Ram</div>
-                  <div>
-                    <el-row>
-                      <el-col :span="12" :offset="6">
-                        <el-progress
-                            type="dashboard"
-                            :percentage="state.ram.usedPercent"
-                            :color="colors"
-                        ></el-progress>
-                      </el-col>
-                    </el-row>
-                  </div>
-                </el-card>
-              </el-col>
-            </el-row>
+<!--            <el-row :gutter="10" style="margin:60px 0px">-->
+<!--              <el-col :xs="24" :sm="12">-->
+<!--                <el-card v-if="state.disk" class="card_item">-->
+<!--                  <div slot="header">Disk</div>-->
+<!--                  <div>-->
+<!--                    <el-row>-->
+<!--                      &lt;!&ndash; <el-col :span="12">-->
+<!--                        <el-row :gutter="10">-->
+<!--                          <el-col :span="12">total (MB)</el-col>-->
+<!--                          <el-col :span="12" v-text="state.disk.totalMb"></el-col>-->
+<!--                        </el-row>-->
+<!--                        <el-row :gutter="10">-->
+<!--                          <el-col :span="12">used (MB)</el-col>-->
+<!--                          <el-col :span="12" v-text="state.disk.usedMb"></el-col>-->
+<!--                        </el-row>-->
+<!--                        <el-row :gutter="10">-->
+<!--                          <el-col :span="12">total (GB)</el-col>-->
+<!--                          <el-col :span="12" v-text="state.disk.totalGb"></el-col>-->
+<!--                        </el-row>-->
+<!--                        <el-row :gutter="10">-->
+<!--                          <el-col :span="12">used (GB)</el-col>-->
+<!--                          <el-col :span="12" v-text="state.disk.usedGb"></el-col>-->
+<!--                        </el-row>-->
+<!--                      </el-col> &ndash;&gt;-->
+<!--                      <el-col :span="12" :offset="6">-->
+<!--                        <el-progress-->
+<!--                            type="dashboard"-->
+<!--                            :percentage="state.disk.usedPercent"-->
+<!--                            :color="colors"-->
+<!--                        ></el-progress>-->
+<!--                      </el-col>-->
+<!--                    </el-row>-->
+<!--                  </div>-->
+<!--                </el-card>-->
+<!--              </el-col>-->
+<!--              <el-col :xs="24" :sm="12">-->
+<!--                <el-card v-if="state.ram" class="card_item">-->
+<!--                  <div slot="header">Ram</div>-->
+<!--                  <div>-->
+<!--                    <el-row>-->
+<!--                      <el-col :span="12" :offset="6">-->
+<!--                        <el-progress-->
+<!--                            type="dashboard"-->
+<!--                            :percentage="state.ram.usedPercent"-->
+<!--                            :color="colors"-->
+<!--                        ></el-progress>-->
+<!--                      </el-col>-->
+<!--                    </el-row>-->
+<!--                  </div>-->
+<!--                </el-card>-->
+<!--              </el-col>-->
+<!--            </el-row>-->
 
 
           </el-card>
@@ -296,7 +296,7 @@ import {GetPersonalClasses, getTeacherClassList} from "@/api/course";
 import {getRecord, updateRecord} from "@/api/globle";
 import {realTimeToSchoolTime, schoolTimeToRealTime, formatTimeToStr} from "@/utils/date";
 import {mapGetters} from "vuex";
-import {getSystemState} from "@/api/system.js";
+// import {getSystemState} from "@/api/system.js";
 
 const formatDayOfWeek = ['一', '二', '三', '四', '五', '六', '日']
 export default {
@@ -369,12 +369,6 @@ export default {
     this.adminAnnouncement = (await getRecord()).data;
     this.getToday();
     if (this.$store.state.user.userInfo.authorityId === '2') await this.getList();
-    if (this.$store.state.user.userInfo.authorityId === '888') {
-      this.reload();
-      // this.timer = setInterval(() => {
-      //   this.reload();
-      // }, 1000*10);
-    }
   },
   beforeDestroy() {
     clearInterval(this.timer)
@@ -418,10 +412,10 @@ export default {
     ...mapGetters("user", ["token"]),
   },
   methods: {
-    async reload() {
-      const {data} = await getSystemState();
-      this.state = data.server;
-    },
+    // async reload() {
+    //   const {data} = await getSystemState();
+    //   this.state = data.server;
+    // },
     goToSystemState() {
       this.$router.push('/system/state')
     },
