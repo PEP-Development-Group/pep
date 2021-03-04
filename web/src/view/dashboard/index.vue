@@ -106,7 +106,7 @@
               </el-table-column>
               <el-table-column min-width="150">
                 <template slot-scope="scope">
-                  <el-popover trigger="hover" :content="scope.row.time|formatDateDay" placement="right">
+                  <el-popover trigger="hover" :content="scope.row.desc|descFormatDateDay" placement="right">
                     <div slot="reference" class="text-wrapper">
                       {{ scope.row.desc | formatDesc }}
                     </div>
@@ -177,7 +177,7 @@
       </el-row>
       <el-row :gutter="10">
         <el-col :xs="24" :sm="12">
-          <el-card  style="height:462px">
+          <el-card style="height:462px">
             <div class="button-box clearflex">
               <b>服务器状态</b>
               <b class="right">
@@ -388,7 +388,7 @@ export default {
       let currTime = new Date()
       if (list[0])
         return list[0].filter((item) => {
-          let o = new Date(item.time) < currTime
+          let o = schoolTimeToRealTime(item.desc, store.state.user.firstDay) < currTime
           return ((list[1] === 1) && o) || ((list[1] === 2) && !o)
         })
       return []
@@ -399,7 +399,8 @@ export default {
         return "第" + descList[0] + "周 周" + formatDayOfWeek[descList[1] - 1] + " 第" + descList[2] + "节";
       }
     },
-    formatDateDay: function (time) {
+    descFormatDateDay: function (desc) {
+      let time = schoolTimeToRealTime(desc, store.state.user.firstDay)
       if (time != null && time != "") {
         var date = new Date(time);
         return formatTimeToStr(date, "yyyy年MM月dd日");

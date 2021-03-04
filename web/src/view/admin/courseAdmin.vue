@@ -68,7 +68,11 @@
         </template>
       </el-table-column>
       <el-table-column label="教室" prop="classroom" min-width="120" sortable></el-table-column>
-      <el-table-column label="人数" prop="total" min-width="50" sortable></el-table-column>
+      <el-table-column label="人数" prop="total" min-width="50" sortable>
+        <template slot-scope="scope">
+          {{ scope.row.selected }}/{{ scope.row.total }}
+        </template>
+      </el-table-column>
       <el-table-column label="操作" min-width="180" align="center">
         <template slot-scope="scope">
           <el-button type="primary" icon="el-icon-s-order" plain size="small" slot="reference"
@@ -354,7 +358,7 @@ export default {
       if (this.multipleSelection.length == 0) {
         this.$message({
           type: 'warning',
-          message: '请选择要删除的数据'
+          message: '请选择要删除的课程'
         })
         return
       }
