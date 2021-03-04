@@ -2,13 +2,12 @@ package middleware
 
 import (
 	"errors"
-	"pep/constant"
+	"github.com/dgrijalva/jwt-go"
+	"github.com/gin-gonic/gin"
 	"pep/global"
 	"pep/model/request"
 	"pep/model/response"
 	"pep/service"
-	"github.com/dgrijalva/jwt-go"
-	"github.com/gin-gonic/gin"
 	"strconv"
 	"time"
 )
@@ -41,17 +40,17 @@ func JWTAuth() gin.HandlerFunc {
 			return
 		}
 
-		if cnt, _ := global.GVA_REDIS.Get(claims.Username).Int(); cnt >= 10 {
-			// username流量过大直接把token拉入黑名单
-			timer := time.Duration(global.GVA_CONFIG.JWT.ExpiresTime) * time.Second
-			global.GVA_REDIS.Set(token, "exist", timer)
-			response.FailWithMessage(constant.LoginAgain.Error(), c)
-			c.Abort()
-			return
-		} else if cnt == 0 {
-			global.GVA_REDIS.Set(claims.Username, 0, 10*time.Second)
-		}
-		global.GVA_REDIS.Incr(claims.Username)
+		//if cnt, _ := global.GVA_REDIS.Get(claims.Username).Int(); cnt >= 10 {
+		//	// username流量过大直接把token拉入黑名单
+		//	timer := time.Duration(global.GVA_CONFIG.JWT.ExpiresTime) * time.Second
+		//	global.GVA_REDIS.Set(token, "exist", timer)
+		//	response.FailWithMessage(constant.LoginAgain.Error(), c)
+		//	c.Abort()
+		//	return
+		//} else if cnt == 0 {
+		//	global.GVA_REDIS.Set(claims.Username, 0, 10*time.Second)
+		//}
+		//global.GVA_REDIS.Incr(claims.Username)
 
 		//if err, _ = service.FindUserByUuid(claims.UUID.String()); err != nil {
 		//	_ = service.CreateJsonBlackListRecord(model.JwtBlacklist{Jwt: token})
