@@ -121,8 +121,8 @@ export default {
         hours: null
       },
       totalCredits: userInfo.total_credits,
-      choosedCredits: userInfo.selected_credits,
-      cancelTimes: userInfo.cancel_nums
+      choosedCredits: "-",
+      cancelTimes: "-"
     };
   },
   filters: {
