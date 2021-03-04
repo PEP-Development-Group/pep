@@ -421,7 +421,7 @@ func GetMyNeed(userID uint, AuthorityID string) (err error, wfms []model.Workflo
 	return err, wfms
 }
 
-func GetWorkflowMoveByID(id float64) (err error, move model.WorkflowMove, moves []model.WorkflowMove, business interface{}) {
+func GetWorkflowMoveByID(id int64) (err error, move model.WorkflowMove, moves []model.WorkflowMove, business interface{}) {
 	var result interface{}
 	err = global.GVA_DB.Transaction(func(tx *gorm.DB) error {
 		var txErr error

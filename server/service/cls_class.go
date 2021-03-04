@@ -39,7 +39,7 @@ func SelectClass(sc request.SelectClass) (err error) {
 	// 已修够或者超选不可继续选课
 	u := model.SysUser{}
 	global.GVA_DB.Select("selected_credits", "have_credits", "total_credits").Where("username = ?", sc.Username).First(&u)
-	if u.HaveCredits >= u.TotalCredits || u.SelectedCredits >= u.TotalCredits {
+	if u.HaveCredits >= u.TotalCredits || u.SelectedCredits+cls.Ccredit >= u.TotalCredits {
 		return constant.ErrSelectFull
 	}
 

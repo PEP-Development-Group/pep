@@ -59,7 +59,7 @@ func DeleteClassList(c *gin.Context) {
 func DeleteClassListByIds(c *gin.Context) {
 	var IDS request.IdsReq
 	_ = c.ShouldBindJSON(&IDS)
-	err := service.DeleteClassListByIds(IDS)
+	err := service.DeleteUserByIds(IDS)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("删除失败，%v", err), c)
 	} else {

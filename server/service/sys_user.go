@@ -124,9 +124,9 @@ func SetUserAuthority(uuid uuid.UUID, authorityId string) (err error) {
 //@param: id float64
 //@return: err error
 
-func DeleteUser(id float64) error {
-	var user model.SysUser
-	err := global.GVA_DB.Select("id", "authorityId").Where("id = ?", id).Unscoped().Delete(&user).Error
+func DeleteUser(id int64) error {
+	// var user model.SysUser
+	err := global.GVA_DB.Select("id", "authorityId").Where("username = ?", id).Delete(&model.SysUser{}).Error
 	return err
 }
 
@@ -138,7 +138,7 @@ func DeleteUser(id float64) error {
 
 func SetUserInfo(reqUser model.SysUser) (err error, user model.SysUser) {
 	reqUser.Password = utils.MD5V([]byte(reqUser.Password))
-	err = global.GVA_DB.Where("id = ?", reqUser.ID).Updates(&reqUser).Error
+	err = global.GVA_DB.Where("username = ?", reqUser.Username).Updates(&reqUser).Error
 	return err, reqUser
 }
 
