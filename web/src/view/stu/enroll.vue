@@ -10,10 +10,12 @@
       <el-collapse-item v-for="(item,i) in courseList" :key="item.id" class="class-con">
         <template slot="title">
           <div class="class-title-con">
-            <el-tag effect="dark" class="hours-tag" type="info"
-                    :color="(colors.duration[item.hours-1])">{{ item.hours }}学时
-            </el-tag>
-            <span class="class-title">{{ i }}</span>
+            <!--            <el-tag effect="dark" class="hours-tag" type="info"-->
+            <!--                    :color="(colors.duration[item.hours-1])">{{ item.hours }}学时-->
+            <!--            </el-tag>-->
+            <span class="class-hours">{{ item.hours }}学时</span>
+            <el-divider direction="vertical"></el-divider>
+            <span class="class-title" :class="{tiny:item.learned}">{{ i }}</span>
 
             <span class="class-title-right">共{{ item.List.length }}节</span>
             <span class="class-title-right">
@@ -156,7 +158,7 @@ export default {
     async updateInfo() {
       const res = await getUserCreditInfo()
       this.cancelTimes = res.data.cancel_nums
-      this.choosedCredits = res.data.have_credits
+      this.choosedCredits = res.data.selected_credits
     },
     cmp() {
       return function (a, b) {
@@ -252,14 +254,23 @@ export default {
   margin-left: 10px;
 }
 
+.class-hours {
+  color: #999999;
+  margin-left: 10px;
+}
+
 .class-title {
   display: inline-block;
   font-weight: bold;
   font-size: 15px;
-  margin-left: 20px;
+  /*margin-left: 10px;*/
   line-height: normal;
   vertical-align: middle;
-  max-width: calc(100% - 80px);
+  max-width: calc(100% - 105px);
+}
+
+.tiny {
+  max-width: calc(100% - 168px);
 }
 
 .class-title-right {
