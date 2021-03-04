@@ -52,7 +52,7 @@
   </div>
 </template>
 <script>
-import {setUserInfo, changePassword} from "@/api/user";
+import {changePassword} from "@/api/user";
 
 import {mapGetters, mapMutations} from "vuex";
 
@@ -97,8 +97,8 @@ export default {
   methods: {
     ...mapMutations("user", ["ResetUserInfo"]),
     changePasswordDialog() {
-      this.$message.error('公测阶段禁止用户更改密码');
-      // this.showPassword = true;
+      // this.$message.error('公测阶段禁止用户更改密码');
+      this.showPassword = true;
     },
     savePassword() {
       this.$refs.modifyPwdForm.validate(valid => {
