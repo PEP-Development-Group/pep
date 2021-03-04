@@ -140,7 +140,7 @@ func SetUserInfo(reqUser model.SysUser) (err error, user model.SysUser) {
 	if reqUser.Password != "" {
 		reqUser.Password = utils.MD5V([]byte(reqUser.Password))
 	}
-	err = global.GVA_DB.Where("id = ?", reqUser.ID).Updates(&reqUser).Error
+	err = global.GVA_DB.Where("username = ?", reqUser.Username).Updates(&reqUser).Error
 	return err, reqUser
 }
 

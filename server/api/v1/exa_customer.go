@@ -20,22 +20,22 @@ import (
 // @Param data body model.ExaCustomer true "客户用户名, 客户手机号码"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"创建成功"}"
 // @Router /customer/customer [post]
-func CreateExaCustomer(c *gin.Context) {
-	var customer model.ExaCustomer
-	_ = c.ShouldBindJSON(&customer)
-	if err := utils.Verify(customer, utils.CustomerVerify); err != nil {
-		response.FailWithMessage(err.Error(), c)
-		return
-	}
-	customer.SysUserID = getUserID(c)
-	customer.SysUserAuthorityID = getUserAuthorityId(c)
-	if err := service.CreateExaCustomer(customer); err != nil {
-		global.GVA_LOG.Error("创建失败!", zap.Any("err", err))
-		response.FailWithMessage("创建失败", c)
-	} else {
-		response.OkWithMessage("创建成功", c)
-	}
-}
+//func CreateExaCustomer(c *gin.Context) {
+//	var customer model.ExaCustomer
+//	_ = c.ShouldBindJSON(&customer)
+//	if err := utils.Verify(customer, utils.CustomerVerify); err != nil {
+//		response.FailWithMessage(err.Error(), c)
+//		return
+//	}
+//	customer.SysUserID = getUserID(c)
+//	customer.SysUserAuthorityID = getUserAuthorityId(c)
+//	if err := service.CreateExaCustomer(customer); err != nil {
+//		global.GVA_LOG.Error("创建失败!", zap.Any("err", err))
+//		response.FailWithMessage("创建失败", c)
+//	} else {
+//		response.OkWithMessage("创建成功", c)
+//	}
+//}
 
 // @Tags ExaCustomer
 // @Summary 删除客户

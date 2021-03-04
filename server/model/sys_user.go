@@ -1,12 +1,11 @@
 package model
 
 import (
-	"pep/global"
 	"github.com/satori/go.uuid"
 )
 
 type SysUser struct {
-	global.GVA_MODEL
+	//global.GVA_MODEL
 	UUID     uuid.UUID `json:"uuid,omitempty" gorm:"comment:用户UUID"`
 	Username int64    `json:"username,omitempty" gorm:"type:bigint(20);comment:学号/工号"`
 	Password string    `json:"password,omitempty" gorm:"type:varchar(32);comment:登录密码"`

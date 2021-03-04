@@ -46,7 +46,6 @@ func tokenNext(c *gin.Context, user *model.SysUser) {
 	j := &middleware.JWT{SigningKey: []byte(global.GVA_CONFIG.JWT.SigningKey)} // 唯一签名
 	claims := request.CustomClaims{
 		UUID:        user.UUID,
-		ID:          user.ID,
 		Username:    user.Username,
 		AuthorityId: user.AuthorityId,
 		StandardClaims: jwt.StandardClaims{
@@ -245,8 +244,8 @@ func DeleteUser(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	jwtId := getUserID(c)
-	if jwtId == uint(reqId.Id) {
+	jwtId := getUsername(c)
+	if jwtId == reqId.Id {
 		response.FailWithMessage("删除失败, 自杀失败", c)
 		return
 	}
@@ -294,15 +293,15 @@ func SetUserInfo(c *gin.Context) {
 }
 
 // 从Gin的Context中获取从jwt解析出来的用户ID
-func getUserID(c *gin.Context) uint {
-	if claims, exists := c.Get("claims"); !exists {
-		global.GVA_LOG.Error("从Gin的Context中获取从jwt解析出来的用户ID失败, 请检查路由是否使用jwt中间件")
-		return 0
-	} else {
-		waitUse := claims.(*request.CustomClaims)
-		return waitUse.ID
-	}
-}
+//func getUserID(c *gin.Context) uint {
+//	if claims, exists := c.Get("claims"); !exists {
+//		global.GVA_LOG.Error("从Gin的Context中获取从jwt解析出来的用户ID失败, 请检查路由是否使用jwt中间件")
+//		return 0
+//	} else {
+//		waitUse := claims.(*request.CustomClaims)
+//		return waitUse.ID
+//	}
+//}
 
 // 从Gin的Context中获取从jwt解析出来的username
 func getUsername(c *gin.Context) int64 {

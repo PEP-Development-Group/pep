@@ -17,8 +17,8 @@ func InitWorkflowProcessRouter(Router *gin.RouterGroup) {
 		WorkflowProcessRouter.GET("getWorkflowProcessList", v1.GetWorkflowProcessList)            // 获取WorkflowProcess列表
 		WorkflowProcessRouter.POST("startWorkflow", v1.StartWorkflow)                             // 开启工作流
 		WorkflowProcessRouter.POST("completeWorkflowMove", v1.CompleteWorkflowMove)               // 提交工作流
-		WorkflowProcessRouter.GET("getMyStated", v1.GetMyStated)                                  // 获取我发起的工作流
-		WorkflowProcessRouter.GET("getMyNeed", v1.GetMyNeed)                                      // 获取我的待办
-		WorkflowProcessRouter.GET("getWorkflowMoveByID", v1.GetWorkflowMoveByID)                  // 获取我的待办
+		//WorkflowProcessRouter.GET("getMyStated", v1.GetMyStated)                                  // 获取我发起的工作流
+		//WorkflowProcessRouter.GET("getMyNeed", v1.GetMyNeed)                                      // 获取我的待办
+		//WorkflowProcessRouter.GET("getWorkflowMoveByID", v1.GetWorkflowMoveByID)                  // 获取我的待办
 	}
 }
