@@ -137,7 +137,9 @@ func DeleteUser(id int64) error {
 //@return: err error, user model.SysUser
 
 func SetUserInfo(reqUser model.SysUser) (err error, user model.SysUser) {
-	reqUser.Password = utils.MD5V([]byte(reqUser.Password))
+	if reqUser.Password != "" {
+		reqUser.Password = utils.MD5V([]byte(reqUser.Password))
+	}
 	err = global.GVA_DB.Where("id = ?", reqUser.ID).Updates(&reqUser).Error
 	return err, reqUser
 }
