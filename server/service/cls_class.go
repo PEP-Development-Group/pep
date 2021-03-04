@@ -213,7 +213,7 @@ func DeleteClass(class model.Class) (err error) {
 //@return: err error
 
 func DeleteClassByIds(ids request.IdsReq) (err error) {
-	err = global.GVA_DB.Delete(&[]model.Class{}, "id in ?", ids.Ids).Error
+	err = global.GVA_DB.Unscoped().Delete(&[]model.Class{}, "id in ?", ids.Ids).Error
 	return err
 }
 

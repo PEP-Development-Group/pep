@@ -34,7 +34,7 @@ func DeleteClassList(classlist model.ClassList) (err error) {
 // @return                    error
 
 func DeleteClassListByIds(ids request.IdsReq) (err error) {
-	err = global.GVA_DB.Delete(&[]model.SysUser{}, "id in (?)", ids.Ids).Error
+	err = global.GVA_DB.Unscoped().Delete(&[]model.SysUser{}, "id in (?)", ids.Ids).Error
 	return err
 }
 

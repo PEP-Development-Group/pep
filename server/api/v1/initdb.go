@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// InitDB init db,delete all students,classes,selection records.
 func InitDB(c *gin.Context) {
 	err := global.GVA_DB.Unscoped().Where("authority_id = ?", 1).Delete(&model.SysUser{}).Error
 	err = global.GVA_DB.Exec("DELETE FROM cls_class").Error

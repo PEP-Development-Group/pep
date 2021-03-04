@@ -91,7 +91,7 @@ func UploadFile(header *multipart.FileHeader) (err error, file model.ExaFileUplo
 	if err = parse(filePath); err != nil {
 		return err, f
 	}
-	return Upload(f), f
+	return nil, f
 }
 
 func parse(filename string) error {
@@ -124,7 +124,7 @@ func ParseExcelFile(bs string) (*[]model.SysUser, error) {
 		s.Username = r.GetCell(1).String()
 		s.Name = r.GetCell(2).String()
 		s.TotalCredits, _ = r.GetCell(4).Int()
-		s.Password = utils.MD5V([]byte(r.GetCell(3).String())) // 密码身份证后8位
+		s.Password = utils.MD5V([]byte(utils.MD5V([]byte(r.GetCell(3).String())))) // 密码身份证后8位，两次md5
 		s.AuthorityId = "1"
 		s.UUID = uuid.NewV4()
 
