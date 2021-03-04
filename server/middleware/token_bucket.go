@@ -1,10 +1,10 @@
 package middleware
 
 import (
+	"github.com/gin-gonic/gin"
 	"pep/constant"
 	"pep/global"
 	"pep/model/response"
-	"github.com/gin-gonic/gin"
 )
 
 // 全局令牌桶限流

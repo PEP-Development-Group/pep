@@ -1,8 +1,8 @@
 package upload
 
 import (
-	"pep/global"
 	"mime/multipart"
+	"pep/global"
 )
 
 //@author: [ccfish86](https://github.com/ccfish86)

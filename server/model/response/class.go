@@ -58,7 +58,7 @@ type TeacherClassStuResponse struct {
 }
 
 type TeacherClassStuRecord struct {
-	Username int64 `json:"username"`
+	Username int64  `json:"username"`
 	Name     string `json:"name"`
 	Class    string `json:"class"`
 	Grade    uint   `json:"grade"`
@@ -66,7 +66,7 @@ type TeacherClassStuRecord struct {
 
 type TeacherRecord struct {
 	Name string `json:"value"`
-	TID  int64 `json:"tid"`
+	TID  int64  `json:"tid"`
 }
 
 /*

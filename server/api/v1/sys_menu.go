@@ -2,14 +2,14 @@ package v1
 
 import (
 	"fmt"
+	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 	"pep/global"
 	"pep/model"
 	"pep/model/request"
 	"pep/model/response"
 	"pep/service"
 	"pep/utils"
-	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
 )
 
 // @Tags AuthorityMenu
@@ -24,7 +24,7 @@ func GetMenu(c *gin.Context) {
 	auID := getUserAuthorityId(c)
 	if menus, ok := service.CheckUserAuthorityExist(auID); ok {
 		response.OkWithDetailed(response.SysMenusResponse{Menus: *menus}, "获取成功", c)
-		fmt.Println("无需再次查询数据库！id:",auID)
+		fmt.Println("无需再次查询数据库！id:", auID)
 		return
 	}
 

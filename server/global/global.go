@@ -1,12 +1,12 @@
 package global
 
 import (
-	"pep/config"
 	"github.com/go-redis/redis"
 	"github.com/juju/ratelimit"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
+	"pep/config"
 )
 
 var (

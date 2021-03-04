@@ -3,11 +3,11 @@
 package utils
 
 import (
-	"pep/global"
 	zaprotatelogs "github.com/lestrrat-go/file-rotatelogs"
 	"go.uber.org/zap/zapcore"
 	"os"
 	"path"
+	"pep/global"
 	"time"
 )
 

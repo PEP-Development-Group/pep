@@ -1,11 +1,11 @@
 package v1
 
 import (
-	"pep/global"
-	"pep/model/response"
 	"github.com/gin-gonic/gin"
 	"github.com/mojocn/base64Captcha"
 	"go.uber.org/zap"
+	"pep/global"
+	"pep/model/response"
 	"time"
 )
 

@@ -2,13 +2,13 @@ package upload
 
 import (
 	"errors"
-	"pep/global"
-	"pep/utils"
 	"go.uber.org/zap"
 	"io"
 	"mime/multipart"
 	"os"
 	"path"
+	"pep/global"
+	"pep/utils"
 	"strings"
 	"time"
 )

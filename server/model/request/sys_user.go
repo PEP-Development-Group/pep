@@ -4,7 +4,7 @@ import uuid "github.com/satori/go.uuid"
 
 // User register structure
 type Register struct {
-	Username int64 `json:"userName"`
+	Username int64  `json:"userName"`
 	Password string `json:"password"`
 	Name     string `json:"name" gorm:"default:'系统用户'"`
 
@@ -18,7 +18,7 @@ type Register struct {
 
 // User login structure
 type Login struct {
-	Username  int64 `json:"username"`
+	Username  int64  `json:"username"`
 	Password  string `json:"password"`
 	Captcha   string `json:"captcha"`
 	CaptchaId string `json:"captchaId"`
@@ -26,7 +26,7 @@ type Login struct {
 
 // Modify password structure
 type ChangePasswordStruct struct {
-	Username    int64 `json:"username"`
+	Username    int64  `json:"username"`
 	Password    string `json:"password"`
 	NewPassword string `json:"newPassword"`
 }
@@ -39,5 +39,5 @@ type SetUserAuth struct {
 
 type AddCancelNums struct {
 	Username int64 `json:"username"`
-	Cnt      int    `json:"cnt"`
+	Cnt      int   `json:"cnt"`
 }

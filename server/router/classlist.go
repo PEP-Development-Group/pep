@@ -1,8 +1,8 @@
 package router
 
 import (
-	"pep/api/v1"
 	"github.com/gin-gonic/gin"
+	"pep/api/v1"
 )
 
 func InitClassListRouter(Router *gin.RouterGroup) {

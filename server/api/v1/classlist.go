@@ -2,12 +2,12 @@ package v1
 
 import (
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"pep/global"
 	"pep/model"
 	"pep/model/request"
 	"pep/model/response"
 	"pep/service"
-	"github.com/gin-gonic/gin"
 )
 
 // @Tags ClassList

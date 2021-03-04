@@ -1,6 +1,9 @@
 package v1
 
 import (
+	"github.com/dgrijalva/jwt-go"
+	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 	"pep/global"
 	"pep/middleware"
 	"pep/model"
@@ -8,9 +11,6 @@ import (
 	"pep/model/response"
 	"pep/service"
 	"pep/utils"
-	"github.com/dgrijalva/jwt-go"
-	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
 	"time"
 )
 

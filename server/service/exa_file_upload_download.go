@@ -2,15 +2,15 @@ package service
 
 import (
 	"errors"
+	uuid "github.com/satori/go.uuid"
+	"github.com/tealeg/xlsx/v3"
+	"mime/multipart"
+	"os"
 	"pep/global"
 	"pep/model"
 	"pep/model/request"
 	"pep/utils"
 	"pep/utils/upload"
-	uuid "github.com/satori/go.uuid"
-	"github.com/tealeg/xlsx/v3"
-	"mime/multipart"
-	"os"
 	"strings"
 )
 
@@ -121,7 +121,7 @@ func ParseExcelFile(bs string) (*[]model.SysUser, error) {
 	err = sh.ForEachRow(func(r *xlsx.Row) error {
 		var s model.SysUser
 		s.Class = r.GetCell(0).String()
-		s.Username,_ = r.GetCell(1).Int64()
+		s.Username, _ = r.GetCell(1).Int64()
 		s.Name = r.GetCell(2).String()
 		s.TotalCredits, _ = r.GetCell(4).Int()
 		s.Password = utils.MD5V([]byte(utils.MD5V([]byte(r.GetCell(3).String())))) // 密码身份证后8位，两次md5

@@ -59,7 +59,7 @@ func SelectClass(sc request.SelectClass) (err error) {
 	}
 
 	return global.GVA_DB.Transaction(func(tx *gorm.DB) error {
-		err = tx.Model(&model.SysUser{}).Where("username = ?", sc.Username).UpdateColumn("selected_credits",u.SelectedCredits+cls.Ccredit).Error
+		err = tx.Model(&model.SysUser{}).Where("username = ?", sc.Username).UpdateColumn("selected_credits", u.SelectedCredits+cls.Ccredit).Error
 		if err != nil {
 			return err
 		}
@@ -133,7 +133,7 @@ func DeleteSelect(sc request.SelectClass) (err error) {
 			return constant.ErrDelClass
 		}
 
-		err= tx.Model(&model.SysUser{}).Where("username = ?", sc.Username).UpdateColumn("selected_credits",user.SelectedCredits-c.Ccredit).Error
+		err = tx.Model(&model.SysUser{}).Where("username = ?", sc.Username).UpdateColumn("selected_credits", user.SelectedCredits-c.Ccredit).Error
 		if err != nil {
 			return constant.ErrDelClass
 		}

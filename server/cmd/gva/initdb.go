@@ -16,8 +16,8 @@ limitations under the License.
 package gva
 
 import (
-	"pep/core"
 	"github.com/gookit/color"
+	"pep/core"
 
 	_ "pep/core"
 	"pep/global"

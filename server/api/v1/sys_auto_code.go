@@ -2,16 +2,16 @@ package v1
 
 import (
 	"fmt"
-	"pep/global"
-	"pep/model"
-	"pep/model/response"
-	"pep/service"
-	"pep/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"net/url"
 	"os"
+	"pep/global"
+	"pep/model"
+	"pep/model/response"
+	"pep/service"
+	"pep/utils"
 )
 
 // @Tags AutoCode

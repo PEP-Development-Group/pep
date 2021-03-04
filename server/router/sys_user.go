@@ -1,8 +1,8 @@
 package router
 
 import (
-	"pep/api/v1"
 	"github.com/gin-gonic/gin"
+	"pep/api/v1"
 )
 
 func InitUserRouter(Router *gin.RouterGroup) {
@@ -15,6 +15,6 @@ func InitUserRouter(Router *gin.RouterGroup) {
 		UserRouter.DELETE("deleteUser", v1.DeleteUser)           // 删除用户
 		UserRouter.PUT("setUserInfo", v1.SetUserInfo)            // 设置用户信息
 
-		UserRouter.DELETE("deleteUserByIds", v1.DeleteUserByIds)           // 批量删除用户
+		UserRouter.DELETE("deleteUserByIds", v1.DeleteUserByIds) // 批量删除用户
 	}
 }

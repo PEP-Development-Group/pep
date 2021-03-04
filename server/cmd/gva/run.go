@@ -16,9 +16,9 @@ limitations under the License.
 package gva
 
 import (
-	"pep/utils"
 	"github.com/spf13/cobra"
 	"os"
+	"pep/utils"
 )
 
 // runCmd represents the run command

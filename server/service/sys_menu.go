@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"gorm.io/gorm"
 	"pep/global"
 	"pep/model"
 	"pep/model/request"
-	"gorm.io/gorm"
 	"strconv"
 	"time"
 )
@@ -84,7 +84,7 @@ func CacheMenus(auID string, value interface{}) {
 		fmt.Println("cache menus err:", err)
 		return
 	}
-	fmt.Println("cache menu successful！id:",auID)
+	fmt.Println("cache menu successful！id:", auID)
 }
 
 func DelMenu(auID string) {

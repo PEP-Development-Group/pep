@@ -1,10 +1,10 @@
 package v1
 
 import (
+	"github.com/gin-gonic/gin"
 	"pep/global"
 	"pep/model"
 	"pep/model/response"
-	"github.com/gin-gonic/gin"
 )
 
 // InitDB init db,delete all students,classes,selection records.

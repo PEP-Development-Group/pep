@@ -1,13 +1,13 @@
 package middleware
 
 import (
-	"pep/global"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"net"
 	"net/http"
 	"net/http/httputil"
 	"os"
+	"pep/global"
 	"runtime/debug"
 	"strings"
 )

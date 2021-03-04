@@ -1,12 +1,12 @@
 package v1
 
 import (
+	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 	"pep/global"
 	"pep/model/request"
 	"pep/model/response"
 	"pep/service"
-	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
 )
 
 // 获取学生学分，取消次数信息
@@ -18,8 +18,8 @@ func GetUserCreditInfo(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 	} else {
 		response.OkWithData(gin.H{
-			"have_credits": have,
-			"cancel_nums":  cancel,
+			"have_credits":     have,
+			"cancel_nums":      cancel,
 			"selected_credits": selected,
 		}, c)
 	}

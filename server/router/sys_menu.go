@@ -1,8 +1,8 @@
 package router
 
 import (
-	"pep/api/v1"
 	"github.com/gin-gonic/gin"
+	"pep/api/v1"
 )
 
 func InitMenuRouter(Router *gin.RouterGroup) (R gin.IRoutes) {

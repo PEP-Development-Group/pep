@@ -1,14 +1,14 @@
 package v1
 
 import (
+	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 	"pep/global"
 	"pep/model"
 	"pep/model/request"
 	"pep/model/response"
 	"pep/service"
 	"pep/utils"
-	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
 )
 
 // @Tags Authority

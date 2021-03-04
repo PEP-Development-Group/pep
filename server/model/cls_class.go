@@ -24,8 +24,8 @@ type Class struct {
 type SelectClass struct {
 	global.GVA_MODEL
 	Username int64 `json:"username" gorm:"column:username;comment:学号;type:varchar(20);"`
-	Cid      uint   `json:"cid" gorm:"column:class_id;comment:课程id;type:tinyint;"`
-	Grade    uint   `json:"grade" gorm:"column:grade;default:102;comment:成绩/101旷课/102未上成绩;type:tinyint;"`
+	Cid      uint  `json:"cid" gorm:"column:class_id;comment:课程id;type:tinyint;"`
+	Grade    uint  `json:"grade" gorm:"column:grade;default:102;comment:成绩/101旷课/102未上成绩;type:tinyint;"`
 }
 
 func (Class) TableName() string {

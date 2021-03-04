@@ -1,10 +1,10 @@
 package information
 
 import (
-	"pep/global"
-	"pep/model"
 	"github.com/gookit/color"
 	"gorm.io/gorm"
+	"pep/global"
+	"pep/model"
 	"time"
 )
 

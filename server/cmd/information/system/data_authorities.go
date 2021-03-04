@@ -1,9 +1,9 @@
 package information
 
 import (
-	"pep/global"
 	"github.com/gookit/color"
 	"gorm.io/gorm"
+	"pep/global"
 )
 
 var DataAuthorities = new(dataAuthorities)

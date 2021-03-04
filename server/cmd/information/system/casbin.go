@@ -1,10 +1,10 @@
 package information
 
 import (
-	"pep/global"
 	gormadapter "github.com/casbin/gorm-adapter/v3"
 	"github.com/gookit/color"
 	"gorm.io/gorm"
+	"pep/global"
 )
 
 var Casbin = new(casbin)

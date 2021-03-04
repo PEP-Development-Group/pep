@@ -1,11 +1,11 @@
 package middleware
 
 import (
+	"github.com/gin-gonic/gin"
 	"pep/global"
 	"pep/model/request"
 	"pep/model/response"
 	"pep/service"
-	"github.com/gin-gonic/gin"
 )
 
 // 拦截器

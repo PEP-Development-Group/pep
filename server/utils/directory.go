@@ -1,9 +1,9 @@
 package utils
 
 import (
-	"pep/global"
 	"go.uber.org/zap"
 	"os"
+	"pep/global"
 )
 
 //@author: [piexlmax](https://github.com/piexlmax)

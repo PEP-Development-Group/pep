@@ -1,9 +1,9 @@
 package information
 
 import (
+	"github.com/gookit/color"
 	"pep/global"
 	"pep/model"
-	"github.com/gookit/color"
 )
 
 var AuthorityMenu = new(authorityMenu)

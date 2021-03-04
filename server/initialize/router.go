@@ -1,13 +1,13 @@
 package initialize
 
 import (
+	"github.com/gin-gonic/gin"
+	"github.com/swaggo/gin-swagger"
+	"github.com/swaggo/gin-swagger/swaggerFiles"
 	_ "pep/docs"
 	"pep/global"
 	"pep/middleware"
 	"pep/router"
-	"github.com/gin-gonic/gin"
-	"github.com/swaggo/gin-swagger"
-	"github.com/swaggo/gin-swagger/swaggerFiles"
 )
 
 // 初始化总路由
