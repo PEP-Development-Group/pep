@@ -185,58 +185,58 @@
               </b>
             </div>
 
-<!--            <el-row :gutter="10" style="margin:60px 0px">-->
-<!--              <el-col :xs="24" :sm="12">-->
-<!--                <el-card v-if="state.disk" class="card_item">-->
-<!--                  <div slot="header">Disk</div>-->
-<!--                  <div>-->
-<!--                    <el-row>-->
-<!--                      &lt;!&ndash; <el-col :span="12">-->
-<!--                        <el-row :gutter="10">-->
-<!--                          <el-col :span="12">total (MB)</el-col>-->
-<!--                          <el-col :span="12" v-text="state.disk.totalMb"></el-col>-->
-<!--                        </el-row>-->
-<!--                        <el-row :gutter="10">-->
-<!--                          <el-col :span="12">used (MB)</el-col>-->
-<!--                          <el-col :span="12" v-text="state.disk.usedMb"></el-col>-->
-<!--                        </el-row>-->
-<!--                        <el-row :gutter="10">-->
-<!--                          <el-col :span="12">total (GB)</el-col>-->
-<!--                          <el-col :span="12" v-text="state.disk.totalGb"></el-col>-->
-<!--                        </el-row>-->
-<!--                        <el-row :gutter="10">-->
-<!--                          <el-col :span="12">used (GB)</el-col>-->
-<!--                          <el-col :span="12" v-text="state.disk.usedGb"></el-col>-->
-<!--                        </el-row>-->
-<!--                      </el-col> &ndash;&gt;-->
-<!--                      <el-col :span="12" :offset="6">-->
-<!--                        <el-progress-->
-<!--                            type="dashboard"-->
-<!--                            :percentage="state.disk.usedPercent"-->
-<!--                            :color="colors"-->
-<!--                        ></el-progress>-->
-<!--                      </el-col>-->
-<!--                    </el-row>-->
-<!--                  </div>-->
-<!--                </el-card>-->
-<!--              </el-col>-->
-<!--              <el-col :xs="24" :sm="12">-->
-<!--                <el-card v-if="state.ram" class="card_item">-->
-<!--                  <div slot="header">Ram</div>-->
-<!--                  <div>-->
-<!--                    <el-row>-->
-<!--                      <el-col :span="12" :offset="6">-->
-<!--                        <el-progress-->
-<!--                            type="dashboard"-->
-<!--                            :percentage="state.ram.usedPercent"-->
-<!--                            :color="colors"-->
-<!--                        ></el-progress>-->
-<!--                      </el-col>-->
-<!--                    </el-row>-->
-<!--                  </div>-->
-<!--                </el-card>-->
-<!--              </el-col>-->
-<!--            </el-row>-->
+            <!--            <el-row :gutter="10" style="margin:60px 0px">-->
+            <!--              <el-col :xs="24" :sm="12">-->
+            <!--                <el-card v-if="state.disk" class="card_item">-->
+            <!--                  <div slot="header">Disk</div>-->
+            <!--                  <div>-->
+            <!--                    <el-row>-->
+            <!--                      &lt;!&ndash; <el-col :span="12">-->
+            <!--                        <el-row :gutter="10">-->
+            <!--                          <el-col :span="12">total (MB)</el-col>-->
+            <!--                          <el-col :span="12" v-text="state.disk.totalMb"></el-col>-->
+            <!--                        </el-row>-->
+            <!--                        <el-row :gutter="10">-->
+            <!--                          <el-col :span="12">used (MB)</el-col>-->
+            <!--                          <el-col :span="12" v-text="state.disk.usedMb"></el-col>-->
+            <!--                        </el-row>-->
+            <!--                        <el-row :gutter="10">-->
+            <!--                          <el-col :span="12">total (GB)</el-col>-->
+            <!--                          <el-col :span="12" v-text="state.disk.totalGb"></el-col>-->
+            <!--                        </el-row>-->
+            <!--                        <el-row :gutter="10">-->
+            <!--                          <el-col :span="12">used (GB)</el-col>-->
+            <!--                          <el-col :span="12" v-text="state.disk.usedGb"></el-col>-->
+            <!--                        </el-row>-->
+            <!--                      </el-col> &ndash;&gt;-->
+            <!--                      <el-col :span="12" :offset="6">-->
+            <!--                        <el-progress-->
+            <!--                            type="dashboard"-->
+            <!--                            :percentage="state.disk.usedPercent"-->
+            <!--                            :color="colors"-->
+            <!--                        ></el-progress>-->
+            <!--                      </el-col>-->
+            <!--                    </el-row>-->
+            <!--                  </div>-->
+            <!--                </el-card>-->
+            <!--              </el-col>-->
+            <!--              <el-col :xs="24" :sm="12">-->
+            <!--                <el-card v-if="state.ram" class="card_item">-->
+            <!--                  <div slot="header">Ram</div>-->
+            <!--                  <div>-->
+            <!--                    <el-row>-->
+            <!--                      <el-col :span="12" :offset="6">-->
+            <!--                        <el-progress-->
+            <!--                            type="dashboard"-->
+            <!--                            :percentage="state.ram.usedPercent"-->
+            <!--                            :color="colors"-->
+            <!--                        ></el-progress>-->
+            <!--                      </el-col>-->
+            <!--                    </el-row>-->
+            <!--                  </div>-->
+            <!--                </el-card>-->
+            <!--              </el-col>-->
+            <!--            </el-row>-->
 
 
           </el-card>
@@ -292,7 +292,7 @@
 
 <script>
 import {store} from "@/store";
-import {GetPersonalClasses, getTeacherClassList} from "@/api/course";
+import {GetPersonalClasses, getTeacherClassList, getUserCreditInfo} from "@/api/course";
 import {getRecord, updateRecord} from "@/api/globle";
 import {realTimeToSchoolTime, schoolTimeToRealTime, formatTimeToStr} from "@/utils/date";
 import {mapGetters} from "vuex";
@@ -369,6 +369,7 @@ export default {
     this.adminAnnouncement = (await getRecord()).data;
     this.getToday();
     if (this.$store.state.user.userInfo.authorityId === '2') await this.getList();
+    this.updateInfo()
   },
   beforeDestroy() {
     clearInterval(this.timer)
@@ -413,6 +414,11 @@ export default {
     ...mapGetters("user", ["token"]),
   },
   methods: {
+    async updateInfo() {
+      const res = await getUserCreditInfo()
+      this.totalCredits = res.data.total_credits
+      this.haveCredits = res.data.have_credits
+    },
     // async reload() {
     //   const {data} = await getSystemState();
     //   this.state = data.server;
