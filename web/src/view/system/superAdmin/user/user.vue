@@ -5,10 +5,19 @@
         <el-radio-button :label="1">学生</el-radio-button>
         <el-radio-button :label="2">教师</el-radio-button>
       </el-radio-group>
-      <el-button @click="addUser" type="success">添加用户</el-button>
+      <el-popover placement="top" v-model="MultiDeleteVisible" width="160">
+        <p>确定要删除吗？</p>
+        <div style="text-align: right; margin: 0">
+          <el-button @click="MultiDeleteVisible = false" size="mini" type="text">取消</el-button>
+          <el-button @click="onDelete" size="mini" type="primary">确定</el-button>
+        </div>
+        <el-button icon="el-icon-delete" slot="reference" type="danger">批量删除</el-button>
+      </el-popover>
+      <el-button @click="addUser" type="success" style="margin-right: 5px">添加用户</el-button>
     </div>
 
-    <el-table ref="userTable" :data="tableData" border stripe>
+    <el-table ref="userTable" :data="tableData" border stripe @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="50" align="center"></el-table-column>
       <el-table-column :label="getIdType" min-width="150" prop="username"></el-table-column>
       <el-table-column label="姓名" min-width="150" prop="name"></el-table-column>
       <el-table-column label="剩余取消次数" min-width="150" prop="cancel_nums" v-if="userType===1"></el-table-column>
@@ -21,10 +30,10 @@
         <template slot-scope="scope">
           <el-button type="primary" icon="el-icon-plus" size="small" slot="reference"
                      @click="modifyUserCancel(scope.row)"
-                     class="option-btn" v-if="userType===1">增加取消次数
+                     v-if="userType===1">增加取消次数
           </el-button>
           <el-button type="warning" icon="el-icon-edit" size="small" slot="reference" @click="modifyUser(scope.row)"
-                     class="option-btn">修改信息
+                     class="opt-btn">修改信息
           </el-button>
           <el-popover placement="top" width="160" v-model="scope.row.visible">
             <p>确定要删除此用户吗</p>
@@ -33,7 +42,7 @@
               <el-button type="primary" size="mini" @click="deleteUser(scope.row)">确定</el-button>
             </div>
 
-            <el-button type="danger" icon="el-icon-delete" size="small" slot="reference">删除
+            <el-button type="danger" icon="el-icon-delete" size="small" slot="reference" class="opt-btn">删除
             </el-button>
           </el-popover>
         </template>
@@ -64,7 +73,7 @@
           <el-input v-model="userInfo.username" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="应修学时" min-width="150" label-width="80px" v-show="userType===1">
-          <el-input v-model.number="userInfo.total_credits" type="number" ></el-input>
+          <el-input v-model.number="userInfo.total_credits" type="number"></el-input>
         </el-form-item>
         <el-form-item label="密码" label-width="80px" prop="password">
           <el-input v-model="userInfo.password" type="password" autocomplete="off"></el-input>
@@ -104,14 +113,18 @@ import {
   register,
   deleteUser,
   setUserInfo,
+  deleteUserByIds
 } from "@/api/user";
-import {addUserCancelNums} from "@/api/course";
 import infoList from "@/mixins/infoList";
 import {mapGetters} from "vuex";
+import {addUserCancelNums} from "@/api/course";
 
 export default {
   name: "Api",
   mixins: [infoList],
+  async created() {
+    await this.getTableData();
+  },
   data() {
     return {
       listApi: getUserList,
@@ -149,7 +162,9 @@ export default {
         name: [
           {required: true, message: "请输入姓名", trigger: "blur"}
         ],
-      }
+      },
+      MultiDeleteVisible: false,
+      multipleSelection: [],
     };
   },
   computed: {
@@ -159,7 +174,35 @@ export default {
     }
   },
   methods: {
-
+    handleSelectionChange(val) {
+      this.multipleSelection = val
+    },
+    async onDelete() {
+      const ids = []
+      if (this.multipleSelection.length == 0) {
+        this.$message({
+          type: 'warning',
+          message: '请选择要删除的用户'
+        })
+        return
+      }
+      this.multipleSelection &&
+      this.multipleSelection.map(item => {
+        ids.push(item.ID)
+      })
+      const res = await deleteUserByIds({ids})
+      if (res.code == 0) {
+        this.$message({
+          type: 'success',
+          message: '删除成功'
+        })
+        if (this.tableData.length == ids.length) {
+          this.page--;
+        }
+        this.deleteVisible = false
+        await this.getTableData()
+      }
+    },
     async getTableData(page = this.page, pageSize = this.pageSize, param = this.userType) {
       const table = await this.listApi({page, pageSize, param})
       if (table.code == 0) {
@@ -180,7 +223,7 @@ export default {
         name: "",
         pid: "",
         authorityId: "",
-        total_credits: 48
+        total_credits: 0
       }
     },
     async deleteUser(row) {
@@ -194,6 +237,7 @@ export default {
       this.userInfo.authorityId = this.userType.toString();
       this.$refs.userForm.validate(async valid => {
         if (valid) {
+          this.userInfo.password = this.$md5(this.userInfo.password)
           const res = await register(this.userInfo);
           if (res.code == 0) {
             this.$message({type: "success", message: "创建成功"});
@@ -211,6 +255,7 @@ export default {
     async enterModifyUserDialog() {
       this.$refs.userForm.validate(async valid => {
         if (valid) {
+          this.userInfo.password = this.$md5(this.userInfo.password)
           const res = await setUserInfo(this.userInfo);
           if (res.code == 0) {
             this.$message({type: "success", message: "修改成功"});
@@ -255,9 +300,6 @@ export default {
         });
       });
     }
-  },
-  async created() {
-    this.getTableData();
   }
 };
 </script>
@@ -304,8 +346,8 @@ export default {
   }
 }
 
-.option-btn {
-  margin-right: 5px;
+.opt-btn {
+  margin-left: 5px !important;
 }
 
 .user-type-radio {

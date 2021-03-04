@@ -7,7 +7,7 @@
       </el-radio-group>
     </div>
 
-    <el-table ref="userTable" :data="[courseList,classType]|classFilter" border stripe>
+    <el-table ref="userTable" :data="[courseList,classType]|classFilter|sortByTime" border stripe>
       <el-table-column label="课程" min-width="150">
         <template slot-scope="scope">
           {{ scope.row.cname }}
@@ -18,7 +18,7 @@
       </el-table-column>
       <el-table-column label="时间" min-width="150">
         <template slot-scope="scope">
-          <el-popover trigger="hover" :content="scope.row.time|formatDateDay" placement="right">
+          <el-popover trigger="hover" :content="scope.row.desc|descFormatDateDay" placement="right">
             <div slot="reference" class="text-wrapper">
               {{ scope.row.desc | formatDesc }}
             </div>
@@ -45,7 +45,8 @@
 import {getTeacherClassList} from "@/api/course";
 
 import {mapGetters} from "vuex";
-import {formatTimeToStr} from "@/utils/date";
+import {formatTimeToStr, schoolTimeToRealTime} from "@/utils/date";
+import {store} from "@/store";
 
 const formatDayOfWeek = ['一', '二', '三', '四', '五', '六', '日']
 export default {
@@ -57,11 +58,19 @@ export default {
     };
   },
   filters: {
+    sortByTime(list) {
+      if (list) {
+        list.sort((a, b) => {
+          return a.desc > b.desc ? 1 : -1
+        })
+        return list
+      } else return []
+    },
     classFilter(list) {
       let currTime = new Date()
       if (list[0])
         return list[0].filter((item) => {
-          let o = new Date(item.time) < currTime
+          let o = schoolTimeToRealTime(item.desc, store.state.user.firstDay) < currTime
           return ((list[1] === 1) && o) || ((list[1] === 2) && !o)
         })
       return []
@@ -70,7 +79,8 @@ export default {
         let descList = d.split('-')
         return "第" + descList[0] + "周 周" + formatDayOfWeek[descList[1] - 1] + " 第" + descList[2] + "节";
       }
-    }, formatDateDay: function (time) {
+    }, descFormatDateDay: function (desc) {
+      let time = schoolTimeToRealTime(desc, store.state.user.firstDay)
       if (time != null && time != "") {
         var date = new Date(time);
         return formatTimeToStr(date, "yyyy年MM月dd日");
@@ -78,17 +88,21 @@ export default {
         return "";
       }
     }
+
   },
   computed: {
-    ...mapGetters("user", ["token"]),
-  },
+    ...
+        mapGetters("user", ["token"]),
+  }
+  ,
   methods: {
     async getList() {
       const list = await getTeacherClassList();
       if (list.code === 0) {
         this.courseList = list.data.courses.classes
       }
-    },
+    }
+    ,
     viewLesson(cid) {
       this.$router.push({
         path: 'lesson',
@@ -97,11 +111,13 @@ export default {
         }
       })
     }
-  },
+  }
+  ,
   async created() {
     await this.getList()
   }
-};
+}
+;
 </script>
 <style lang="scss" scoped>
 .left-space {

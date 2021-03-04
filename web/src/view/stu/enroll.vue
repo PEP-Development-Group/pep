@@ -4,7 +4,7 @@
       <i class="el-icon-warning"></i> 请注意退课有次数限制,你还可以退课 {{ cancelTimes }} 次
     </div>
     <div class="class-info">
-      <i class="el-icon-info"></i> 本学期需要修满 {{ totalCredits }} 学时,当前已修 {{ haveCredits }} 学时
+      <i class="el-icon-info"></i> 本学期需要修满 {{ totalCredits }} 学时,当前已选 {{ choosedCredits }} 学时
     </div>
     <el-collapse v-model="activeNames" class="class-area">
       <el-collapse-item v-for="(item,i) in courseList" :key="item.id" class="class-con">
@@ -98,8 +98,8 @@ export default {
   name: "Enroll",
   mixins: [infoList],
   async created() {
-    await this.getList()
     await this.updateInfo()
+    await this.getList()
   },
   data() {
     return {
@@ -119,7 +119,7 @@ export default {
         hours: null
       },
       totalCredits: userInfo.total_credits,
-      haveCredits: userInfo.have_credits,
+      choosedCredits: userInfo.selected_credits,
       cancelTimes: userInfo.cancel_nums
     };
   },
@@ -156,7 +156,7 @@ export default {
     async updateInfo() {
       const res = await getUserCreditInfo()
       this.cancelTimes = res.data.cancel_nums
-      this.haveCredits = res.data.have_credits
+      this.choosedCredits = res.data.have_credits
     },
     cmp() {
       return function (a, b) {

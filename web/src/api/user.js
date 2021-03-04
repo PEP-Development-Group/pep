@@ -96,6 +96,14 @@ export const deleteUser = (data) => {
     })
 }
 
+export const deleteUserByIds = (data) => {
+    return service({
+        url: "/user/deleteUserByIds",
+        method: 'delete',
+        data: data
+    })
+}
+
 // @Tags SysUser
 // @Summary 设置用户信息
 // @Security ApiKeyAuth
