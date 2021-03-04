@@ -10,7 +10,7 @@ type ClassSearch struct {
 }
 
 type UsernameRequest struct {
-	Username string `json:"username" form:"username"`
+	Username int64 `json:"username" form:"username"`
 }
 
 type TeacherRequest struct {

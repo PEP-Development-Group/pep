@@ -9,7 +9,7 @@ import (
 type CustomClaims struct {
 	UUID        uuid.UUID
 	ID          uint
-	Username    string
+	Username    int64
 	AuthorityId string
 	BufferTime  int64
 	jwt.StandardClaims

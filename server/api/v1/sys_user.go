@@ -305,11 +305,11 @@ func getUserID(c *gin.Context) uint {
 }
 
 // 从Gin的Context中获取从jwt解析出来的username
-func getUsername(c *gin.Context) string {
+func getUsername(c *gin.Context) int64 {
 	if claims, exists := c.Get("claims"); !exists {
 		global.GVA_LOG.Error("从Gin的Context中获取从jwt解析出来的username失败, 请检查路由是否使用jwt中间件")
 		c.Abort()
-		return ""
+		return 0
 	} else {
 		waitUse := claims.(*request.CustomClaims)
 		return waitUse.Username
