@@ -124,15 +124,9 @@ func SetUserAuthority(uuid uuid.UUID, authorityId string) (err error) {
 //@param: id float64
 //@return: err error
 
-<<<<<<< HEAD
 func DeleteUser(id int64) error {
 	// var user model.SysUser
 	err := global.GVA_DB.Select("authorityId").Where("username = ?", id).Delete(&model.SysUser{}).Error
-=======
-func DeleteUser(id float64) error {
-	var user model.SysUser
-	err := global.GVA_DB.Select("id", "authorityId").Where("id = ?", id).Unscoped().Delete(&user).Error
->>>>>>> parent of c0201a8 (big)
 	return err
 }
 
