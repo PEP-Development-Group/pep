@@ -27,14 +27,14 @@ func DeleteClassList(classlist model.ClassList) (err error) {
 	return global.GVA_DB.Where("id = ?", classlist.ID).Unscoped().Delete(&model.ClassList{}).Error
 }
 
-// @title    DeleteUserByIds
+// @title    DeleteClassListByIds
 // @description   delete ClassLists
 // @auth                     （2020/04/05  20:22）
 // @param     classlist               model.ClassList
 // @return                    error
 
-func DeleteUserByIds(ids request.IdsReq) (err error) {
-	err = global.GVA_DB.Delete(&[]model.SysUser{}, "username in (?)", ids.Ids).Error
+func DeleteClassListByIds(ids request.IdsReq) (err error) {
+	err = global.GVA_DB.Unscoped().Delete(&[]model.SysUser{}, "id in (?)", ids.Ids).Error
 	return err
 }
 

@@ -2,13 +2,15 @@ package middleware
 
 import (
 	"bytes"
+	"pep/global"
+	"pep/model"
+	"pep/model/request"
+	"pep/service"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"io/ioutil"
 	"net/http"
-	"pep/global"
-	"pep/model"
-	"pep/service"
+	"strconv"
 	"time"
 )
 
@@ -25,16 +27,16 @@ func OperationRecord() gin.HandlerFunc {
 				c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(body))
 			}
 		}
-		//if claims, ok := c.Get("claims"); ok {
-		//	waitUse := claims.(*request.CustomClaims)
-		//	userId = int(waitUse.ID)
-		//} else {
-		//	id, err := strconv.Atoi(c.Request.Header.Get("x-user-id"))
-		//	if err != nil {
-		//		userId = 0
-		//	}
-		//	userId = id
-		//}
+		if claims, ok := c.Get("claims"); ok {
+			waitUse := claims.(*request.CustomClaims)
+			userId = int(waitUse.ID)
+		} else {
+			id, err := strconv.Atoi(c.Request.Header.Get("x-user-id"))
+			if err != nil {
+				userId = 0
+			}
+			userId = id
+		}
 		record := model.SysOperationRecord{
 			Ip:     c.ClientIP(),
 			Method: c.Request.Method,

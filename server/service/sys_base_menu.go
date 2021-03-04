@@ -13,7 +13,7 @@ import (
 //@param: id float64
 //@return: err error
 
-func DeleteBaseMenu(id int64) (err error) {
+func DeleteBaseMenu(id float64) (err error) {
 	err = global.GVA_DB.Preload("Parameters").Where("parent_id = ?", id).First(&model.SysBaseMenu{}).Error
 	if err != nil {
 		var menu model.SysBaseMenu
@@ -90,7 +90,7 @@ func UpdateBaseMenu(menu model.SysBaseMenu) (err error) {
 //@param: id float64
 //@return: err error, menu model.SysBaseMenu
 
-func GetBaseMenuById(id int64) (err error, menu model.SysBaseMenu) {
+func GetBaseMenuById(id float64) (err error, menu model.SysBaseMenu) {
 	err = global.GVA_DB.Preload("Parameters").Where("id = ?", id).First(&menu).Error
 	return
 }

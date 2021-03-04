@@ -193,23 +193,23 @@ func CompleteWorkflowMove(c *gin.Context) {
 // @Produce application/json
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
 // @Router /workflowProcess/getMyStated [get]
-//func GetMyStated(c *gin.Context) {
-//	if claims, exists := c.Get("claims"); !exists {
-//		errStr := "从Gin的Context中获取从jwt解析出来的用户ID失败, 请检查路由是否使用jwt中间件"
-//		global.GVA_LOG.Error(errStr)
-//		response.FailWithMessage(errStr, c)
-//	} else {
-//		waitUse := claims.(*request.CustomClaims)
-//		err, wfms := service.GetMyStated(waitUse.ID)
-//		if err != nil {
-//			errStr := err.Error()
-//			global.GVA_LOG.Error(errStr)
-//			response.FailWithMessage(errStr, c)
-//			return
-//		}
-//		response.OkWithData(gin.H{"wfms": wfms}, c)
-//	}
-//}
+func GetMyStated(c *gin.Context) {
+	if claims, exists := c.Get("claims"); !exists {
+		errStr := "从Gin的Context中获取从jwt解析出来的用户ID失败, 请检查路由是否使用jwt中间件"
+		global.GVA_LOG.Error(errStr)
+		response.FailWithMessage(errStr, c)
+	} else {
+		waitUse := claims.(*request.CustomClaims)
+		err, wfms := service.GetMyStated(waitUse.ID)
+		if err != nil {
+			errStr := err.Error()
+			global.GVA_LOG.Error(errStr)
+			response.FailWithMessage(errStr, c)
+			return
+		}
+		response.OkWithData(gin.H{"wfms": wfms}, c)
+	}
+}
 
 // @Tags WorkflowProcess
 // @Summary 我的待办
@@ -218,23 +218,23 @@ func CompleteWorkflowMove(c *gin.Context) {
 // @Produce application/json
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
 // @Router /workflowProcess/getMyNeed [get]
-//func GetMyNeed(c *gin.Context) {
-//	if claims, exists := c.Get("claims"); !exists {
-//		errStr := "从Gin的Context中获取从jwt解析出来的用户ID失败, 请检查路由是否使用jwt中间件"
-//		global.GVA_LOG.Error(errStr)
-//		response.FailWithMessage(errStr, c)
-//	} else {
-//		waitUse := claims.(*request.CustomClaims)
-//		err, wfms := service.GetMyNeed(waitUse.ID, waitUse.AuthorityId)
-//		if err != nil {
-//			errStr := err.Error()
-//			global.GVA_LOG.Error(errStr)
-//			response.FailWithMessage(errStr, c)
-//			return
-//		}
-//		response.OkWithData(gin.H{"wfms": wfms}, c)
-//	}
-//}
+func GetMyNeed(c *gin.Context) {
+	if claims, exists := c.Get("claims"); !exists {
+		errStr := "从Gin的Context中获取从jwt解析出来的用户ID失败, 请检查路由是否使用jwt中间件"
+		global.GVA_LOG.Error(errStr)
+		response.FailWithMessage(errStr, c)
+	} else {
+		waitUse := claims.(*request.CustomClaims)
+		err, wfms := service.GetMyNeed(waitUse.ID, waitUse.AuthorityId)
+		if err != nil {
+			errStr := err.Error()
+			global.GVA_LOG.Error(errStr)
+			response.FailWithMessage(errStr, c)
+			return
+		}
+		response.OkWithData(gin.H{"wfms": wfms}, c)
+	}
+}
 
 // @Tags WorkflowProcess
 // @Summary 根据id获取当前节点详情和历史
