@@ -21,17 +21,19 @@ import (
 func getMenuTreeMap(authorityId string) (err error, treeMap map[string][]model.SysMenu) {
 	var allMenus []model.SysMenu
 	treeMap = make(map[string][]model.SysMenu)
-	if res, _ := global.GVA_REDIS.Get(authorityId).Result(); res != "" {
-		bs := []byte(res)
-		_ = json.Unmarshal(bs, &allMenus)
-	}
+	err = global.GVA_DB.Where("authority_id = ?", authorityId).Order("sort").Preload("Parameters").Find(&allMenus).Error
 
-	if len(allMenus) == 0 {
-		err = global.GVA_DB.Where("authority_id = ?", authorityId).Order("sort").Preload("Parameters").Find(&allMenus).Error
-		bs, _ := json.Marshal(&allMenus)
-		// 缓存30天，中途如果有变动就删除掉重新缓存
-		global.GVA_REDIS.Set(authorityId, bs, time.Hour*24*30)
-	}
+	//if res, _ := global.GVA_REDIS.Get(authorityId).Result(); res != "" {
+	//	bs := []byte(res)
+	//	_ = json.Unmarshal(bs, &allMenus)
+	//}
+	//
+	//if len(allMenus) == 0 {
+	//	err = global.GVA_DB.Where("authority_id = ?", authorityId).Order("sort").Preload("Parameters").Find(&allMenus).Error
+	//	bs, _ := json.Marshal(&allMenus)
+	//	// 缓存30天，中途如果有变动就删除掉重新缓存
+	//	global.GVA_REDIS.Set(authorityId, bs, time.Hour*24*30)
+	//}
 
 	for _, v := range allMenus {
 		treeMap[v.ParentId] = append(treeMap[v.ParentId], v)
@@ -77,10 +79,12 @@ func CheckBase(baseMenus string) (*[]model.SysBaseMenu, bool) {
 
 func CacheMenus(auID string, value interface{}) {
 	bs, _ := json.Marshal(value)
-	_, err := global.GVA_REDIS.Set(auID, bs, time.Hour*24).Result()
+	_, err := global.GVA_REDIS.Set(auID, bs, time.Hour*6).Result()
 	if err != nil {
 		fmt.Println("cache menus err:", err)
+		return
 	}
+	fmt.Println("cache menu successful！id:",auID)
 }
 
 func DelMenu(auID string) {

@@ -62,7 +62,7 @@ mysql:
   password: 'SAUpep123'
   max-idle-conns: 100
   max-open-conns: 200
-  log-mode: false
+  log-mode: true
   log-zap: ""
 
 # local configuration
