@@ -14,7 +14,7 @@ import (
 	"time"
 )
 
-func GetUserCreditsInfo(username string) (selected int, have int, cancel int, err error) {
+func GetUserCreditsInfo(username int64) (selected int, have int, cancel int, err error) {
 	var u model.SysUser
 	err = global.GVA_DB.Select("have_credits", "cancel_nums", "selected_credits").Where("username = ?", username).First(&u).Error
 	return u.SelectedCredits, u.HaveCredits, u.CancelNums, err
@@ -367,8 +367,8 @@ func GetTeacherAClassStuList(cid uint) (err error, list interface{}, total int) 
 		return
 	}
 
-	var names []string
-	m := make(map[string]uint)
+	var names []int64
+	m := make(map[int64]uint)
 	for _, s := range scs {
 		names = append(names, s.Username)
 		m[s.Username] = s.Grade

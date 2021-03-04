@@ -8,7 +8,7 @@ import (
 type SysUser struct {
 	global.GVA_MODEL
 	UUID     uuid.UUID `json:"uuid,omitempty" gorm:"comment:用户UUID"`
-	Username string    `json:"username,omitempty" gorm:"type:varchar(20);comment:学号/工号"`
+	Username int64    `json:"username,omitempty" gorm:"type:bigint(20);comment:学号/工号"`
 	Password string    `json:"password,omitempty" gorm:"type:varchar(32);comment:登录密码"`
 	Name     string    `json:"name,omitempty" gorm:"type:varchar(10);default:系统用户;comment:姓名"`
 

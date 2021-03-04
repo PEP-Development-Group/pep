@@ -1,13 +1,10 @@
 package information
 
 import (
+	"github.com/gookit/color"
+	"gorm.io/gorm"
 	"pep/global"
 	"pep/model"
-	"github.com/gookit/color"
-	"time"
-
-	uuid "github.com/satori/go.uuid"
-	"gorm.io/gorm"
 )
 
 var Admin = new(admin)
@@ -15,7 +12,7 @@ var Admin = new(admin)
 type admin struct{}
 
 var admins = []model.SysUser{
-	{GVA_MODEL: global.GVA_MODEL{ID: 1, CreatedAt: time.Now(), UpdatedAt: time.Now()}, UUID: uuid.NewV4(), Username: "admin", Password: "e10adc3949ba59abbe56e057f20f883e", Name: "管理员", AuthorityId: "888"},
+	//{GVA_MODEL: global.GVA_MODEL{ID: 1, CreatedAt: time.Now(), UpdatedAt: time.Now()}, UUID: uuid.NewV4(), Username: 88888888, Password: "e10adc3949ba59abbe56e057f20f883e", Name: "管理员", AuthorityId: "888"},
 }
 
 //@author: [SliverHorn](https://github.com/SliverHorn)
