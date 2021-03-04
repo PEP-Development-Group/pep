@@ -113,7 +113,7 @@ func DeleteSelect(sc request.SelectClass) (err error) {
 		// TODO:去掉order by
 		c := model.Class{}
 		tmptx2 := tx.Select("selected", "desc", "ccredit").First(&c, sc.Cid)
-		
+
 		// desc split by "-", such as "1-1-1"
 		ts := strings.Split(c.Desc, "-")
 		week, err := strconv.Atoi(ts[0])
@@ -133,7 +133,7 @@ func DeleteSelect(sc request.SelectClass) (err error) {
 			return constant.ErrDelClass
 		}
 
-		err= tx.Model(&model.SysUser{}).Where("username = ?", sc.Username).UpdateColumn("selected_credits",user.SelectedCredits+c.Ccredit).Error
+		err= tx.Model(&model.SysUser{}).Where("username = ?", sc.Username).UpdateColumn("selected_credits",user.SelectedCredits-c.Ccredit).Error
 		if err != nil {
 			return constant.ErrDelClass
 		}
