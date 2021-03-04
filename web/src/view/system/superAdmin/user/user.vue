@@ -69,14 +69,14 @@
         <el-form-item label="姓名" label-width="80px" prop="name">
           <el-input v-model="userInfo.name" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item :label="getIdType" label-width="80px" prop="userName">
+        <el-form-item label="应修学时" min-width="150" label-width="80px" prop="total_credits" v-show="userType===1">
+          <el-input v-model.number="userInfo.total_credits" type="number" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item :label="getIdType" label-width="80px" prop="username">
           <el-input v-model.number="userInfo.username" autocomplete="off" type="tel"></el-input>
         </el-form-item>
-        <el-form-item label="应修学时" min-width="150" label-width="80px" v-show="userType===1">
-          <el-input v-model.number="userInfo.total_credits" type="number"></el-input>
-        </el-form-item>
         <el-form-item label="密码" label-width="80px" prop="password">
-          <el-input v-model="userInfo.password" type="password" autocomplete="off"></el-input>
+          <el-input v-model="userInfo.password" type="password" autocomplete="new-password"></el-input>
         </el-form-item>
       </el-form>
       <div class="dialog-footer" slot="footer">
@@ -89,8 +89,11 @@
         <el-form-item label="姓名" label-width="80px" prop="name">
           <el-input v-model="userInfo.name"></el-input>
         </el-form-item>
+        <el-form-item label="应修学时" label-width="80px" prop="total_credits" v-show="userType===1">
+          <el-input v-model.number="userInfo.total_credits" type="tel"></el-input>
+        </el-form-item>
         <el-form-item :label="getIdType" label-width="80px" prop="username">
-          <el-input v-model="userInfo.username"></el-input>
+          <el-input v-model.number="userInfo.username" type="tel"></el-input>
         </el-form-item>
         <el-form-item label="密码" label-width="80px" prop="password">
           <el-input placeholder="未修改" v-model="userInfo.password" type="password"></el-input>
@@ -138,7 +141,7 @@ export default {
         password: "",
         name: "",
         authorityId: "",
-        total_credits: 48
+        total_credits: null
       },
       rules: {
         username: [
@@ -188,7 +191,7 @@ export default {
       }
       this.multipleSelection &&
       this.multipleSelection.map(item => {
-        ids.push(item.ID)
+        ids.push(item.username)
       })
       const res = await deleteUserByIds({ids})
       if (res.code == 0) {
@@ -223,11 +226,11 @@ export default {
         name: "",
         pid: "",
         authorityId: "",
-        total_credits: 0
+        total_credits: ""
       }
     },
     async deleteUser(row) {
-      const res = await deleteUser({id: row.ID});
+      const res = await deleteUser({id: row.username});
       if (res.code == 0) {
         this.getTableData();
         row.visible = false;
@@ -253,23 +256,23 @@ export default {
       this.addUserDialog = false;
     },
     async enterModifyUserDialog() {
-      this.$refs.userForm.validate(async valid => {
-        if (valid) {
-          this.userInfo.password = this.$md5(this.userInfo.password)
-          const res = await setUserInfo(this.userInfo);
-          if (res.code == 0) {
-            this.$message({type: "success", message: "修改成功"});
-          }
-          await this.getTableData();
-          this.closeModifyUserDialog();
-        }
-      });
+      if (this.userInfo.password)
+        this.userInfo.password = this.$md5(this.userInfo.password)
+      const res = await setUserInfo(this.userInfo);
+      if (res.code == 0) {
+        this.$message({type: "success", message: "修改成功"});
+      }
+      await this.getTableData();
+      this.closeModifyUserDialog();
+
     },
     closeModifyUserDialog() {
       this.$refs.userForm.resetFields();
+      this.resetForm()
       this.modifyUserDialog = false;
     },
     addUser() {
+      this.resetForm()
       this.resetForm()
       this.addUserDialog = true;
     },
@@ -301,7 +304,8 @@ export default {
       });
     }
   }
-};
+}
+;
 </script>
 <style lang="scss">
 
