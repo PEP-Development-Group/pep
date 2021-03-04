@@ -17,7 +17,7 @@
             @keyup.enter.native="submitForm"
         >
           <el-form-item prop="username">
-            <el-input placeholder="请输入用户名" v-model="loginForm.username">
+            <el-input placeholder="请输入用户名" v-model.number="loginForm.username" type="tel">
               <i class="el-input__icon el-icon-user" slot="suffix"></i
               ></el-input>
           </el-form-item>
@@ -75,13 +75,13 @@ import {captcha} from "@/api/user";
 export default {
   name: "Login",
   data() {
-    const checkUsername = (rule, value, callback) => {
-      if (value.length < 3 || value.length > 15) {
-        return callback(new Error("请输入正确的用户名"));
-      } else {
-        callback();
-      }
-    };
+    // const checkUsername = (rule, value, callback) => {
+    //   if (value.length < 3 || value.length > 15) {
+    //     return callback(new Error("请输入正确的用户名"));
+    //   } else {
+    //     callback();
+    //   }
+    // };
     const checkPassword = (rule, value, callback) => {
       if (value.length < 6 || value.length > 32) {
         return callback(new Error("请输入正确的密码"));
@@ -90,7 +90,6 @@ export default {
       }
     };
     const checkCaptcha = (rule, value, callback) => {
-      console.log(value)
       if (value.length < 5) {
         return callback(new Error("请输入验证码"));
       } else {
@@ -101,13 +100,13 @@ export default {
       curYear: 0,
       lock: "lock",
       loginForm: {
-        username: "",
+        username: null,
         password: "",
         captcha: "",
         captchaId: "",
       },
       rules: {
-        username: [{validator: checkUsername, trigger: "blur"}],
+        username: [{required: true, message: "请输入用户名", trigger: "blur"}],
         password: [{validator: checkPassword, trigger: "blur"}],
         captcha: [{validator: checkCaptcha, trigger: "blur"}]
       },

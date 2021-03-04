@@ -70,7 +70,7 @@
           <el-input v-model="userInfo.name" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item :label="getIdType" label-width="80px" prop="userName">
-          <el-input v-model="userInfo.username" autocomplete="off"></el-input>
+          <el-input v-model.number="userInfo.username" autocomplete="off" type="tel"></el-input>
         </el-form-item>
         <el-form-item label="应修学时" min-width="150" label-width="80px" v-show="userType===1">
           <el-input v-model.number="userInfo.total_credits" type="number"></el-input>
