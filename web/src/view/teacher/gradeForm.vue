@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-auth="888">
+    <div v-if="authId=='888'">
       <span v-if="grade===101">
         <el-tag type="danger" effect="dark" size="mini">旷课</el-tag>
       </span>
@@ -17,11 +17,13 @@
           <el-button :disabled="gradeValid" @click="submitGrade"><i class="el-icon-s-custom"></i>提交</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button type="warning" @click="submitFailGrade"><i class="el-icon-s-custom"></i>旷课</el-button>
+          <el-button type="warning" @click="submitFailGrade"><i
+              class="el-icon-s-custom"></i>{{ failOpConfirm ? "确认" : "旷课" }}
+          </el-button>
         </el-form-item>
       </el-form>
     </div>
-    <div v-auth="2">
+    <div v-else>
     <span v-if="grade<=100">
             <i class="el-icon-lock"></i>
       <span :class="{fail:grade<60}">{{ grade }}</span>
@@ -42,7 +44,7 @@
         <el-button :disabled="gradeValid" @click="submitGrade">提交</el-button>
       </el-form-item>
       <el-form-item>
-        <el-button type="warning" @click="submitFailGrade">旷课</el-button>
+        <el-button type="warning" @click="submitFailGrade">{{ failOpConfirm ? "确认" : "旷课" }}</el-button>
       </el-form-item>
     </el-form>
     </span>
@@ -52,6 +54,7 @@
 
 <script>
 import {setStuGrade} from "@/api/course";
+import {store} from "@/store";
 
 export default {
   name: "gradeForm",
@@ -73,6 +76,8 @@ export default {
         username: null,
         grade: ''
       },
+      failOpConfirm: false,
+      authId: store.state.user.userInfo.authorityId
     }
   },
   methods: {
@@ -85,13 +90,19 @@ export default {
       })
     },
     submitFailGrade() {
-      this.isLoading = true
-      this.gradeForm.grade = 101
-      setStuGrade(this.gradeForm).then((res) => {
-        if (res.code === 0)
-          this.grade = this.gradeForm.grade
-        this.isLoading = false
-      })
+      if (this.failOpConfirm) {
+        this.isLoading = true
+        this.gradeForm.grade = 101
+        setStuGrade(this.gradeForm).then((res) => {
+          if (res.code === 0)
+            this.grade = this.gradeForm.grade
+          this.isLoading = false
+        })
+        this.failOpConfirm = false
+        this.grade = null
+      } else {
+        this.failOpConfirm = true
+      }
     }
   }, created() {
     this.gradeForm.cid = parseInt(this.cid)
