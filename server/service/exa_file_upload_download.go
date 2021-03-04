@@ -91,7 +91,7 @@ func UploadFile(header *multipart.FileHeader) (err error, file model.ExaFileUplo
 	if err = parse(filePath); err != nil {
 		return err, f
 	}
-	return Upload(f), f
+	return nil, f
 }
 
 func parse(filename string) error {
