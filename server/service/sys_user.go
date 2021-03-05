@@ -61,7 +61,7 @@ func Register(u model.SysUser) (err error, userInter model.SysUser) {
 func Login(u *model.SysUser) (err error, userInter *model.SysUser) {
 	var user model.SysUser
 	up := utils.MD5V([]byte(u.Password))
-	err = global.GVA_DB.Select("username","AuthorityId","password", "uuid", "name", "class", "have_credits", "total_credits", "selected_credits", "cancel_nums").First(&user, u.Username).Error
+	err = global.GVA_DB.Select("username","AuthorityId","password", "uuid", "name", "class", "total_credits").First(&user, u.Username).Error
 	if err != nil {
 		return err, nil
 	}
