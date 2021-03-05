@@ -2,47 +2,47 @@
 
 # jwt configuration
 jwt:
-  signing-key: 'pep'
+  signing-key: "pep"
   expires-time: 3600
 
 # zap logger configuration
 zap:
-  level: 'info'
-  format: 'console'
-  prefix: '[pep]'
-  director: 'log'
-  link-name: 'latest_log'
+  level: "info"
+  format: "console"
+  prefix: "[pep]"
+  director: "log"
+  link-name: "latest_log"
   show-line: true
-  encode-level: 'LowercaseColorLevelEncoder'
-  stacktrace-key: 'stacktrace'
+  encode-level: "LowercaseColorLevelEncoder"
+  stacktrace-key: "stacktrace"
   log-in-console: true
 
 # redis configuration
 redis:
   db: 0
-  addr: '127.0.0.1:6379'
-  password: ''
+  addr: "127.0.0.1:6379"
+  password: ""
 
 # email configuration
 email:
-  to: 'xxx@qq.com'
+  to: "xxx@qq.com"
   port: 465
-  from: 'xxx@163.com'
-  host: 'smtp.163.com'
+  from: "xxx@163.com"
+  host: "smtp.163.com"
   is-ssl: true
-  secret: 'xxx'
-  nickname: 'test'
+  secret: "xxx"
+  nickname: "test"
 
 # casbin configuration
 casbin:
-  model-path: './resource/rbac_model.conf'
+  model-path: "./resource/rbac_model.conf"
 
 # system configuration
 system:
-  env: 'develop'  # Change to "develop" to skip authentication for development mode
+  env: "develop" # Change to "develop" to skip authentication for development mode
   addr: 8888
-  db-type: 'mysql'
-  oss-type: 'local'    # 控制oss选择走本期还是 七牛等其他仓 自行增加其他oss仓可以在 server/utils/upload/upload.go 中 NewOss函数配置
+  db-type: "mysql"
+  oss-type: "local" # 控制oss选择走本期还是 七牛等其他仓 自行增加其他oss仓可以在 server/utils/upload/upload.go 中 NewOss函数配置
   use-multipoint: false
   cancel_nums: 3
   first_day: "2021-03-01"
@@ -55,11 +55,11 @@ captcha:
 
 # mysql connect configuration
 mysql:
-  path: 'rm-2zea2w6fx5s562393wo.mysql.rds.aliyuncs.com:3306'
-  config: 'charset=utf8mb4&parseTime=True&loc=Local'
-  db-name: 'saupep'
-  username: 'pep_admin'
-  password: 'SAUpep123'
+  path: "pepmysql.mysql.rds.aliyuncs.com:3306"
+  config: "charset=utf8mb4&parseTime=True&loc=Local"
+  db-name: "saupep"
+  username: "pep_admin"
+  password: "SAUpep123"
   max-idle-conns: 100
   max-open-conns: 200
   log-mode: true
@@ -67,14 +67,14 @@ mysql:
 
 # local configuration
 local:
-  path: 'uploads/file'
+  path: "uploads/file"
 
 # qiniu configuration (请自行七牛申请对应的 公钥 私钥 bucket �?域名地址)
 qiniu:
-  zone: 'ZoneHuadong'
-  bucket: 'qm-plus-img'
-  img-path: 'http://qmplusimg.henrongyi.top'
+  zone: "ZoneHuadong"
+  bucket: "qm-plus-img"
+  img-path: "http://qmplusimg.henrongyi.top"
   use-https: false
-  access-key: '25j8dYBZ2wuiy0yhwShytjZDTX662b8xiFguwxzZ'
-  secret-key: 'pgdbqEsf7ooZh7W3xokP833h3dZ_VecFXPDeG5JY'
+  access-key: "25j8dYBZ2wuiy0yhwShytjZDTX662b8xiFguwxzZ"
+  secret-key: "pgdbqEsf7ooZh7W3xokP833h3dZ_VecFXPDeG5JY"
   use-cdn-domains: false
