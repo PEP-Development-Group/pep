@@ -1,8 +1,11 @@
 <template>
   <div>
-    <div class="grade-tips">本学期需要修满<strong>{{ totalCredits }}</strong>学时,当前已修<strong>{{
-        haveCredits
-      }}</strong>学时,平均分为<strong>{{ ave }}</strong>
+    <div class="grade-tips">
+      本学期需要修满<strong>{{ totalCredits }}学时</strong>,
+      当前已选<strong>{{ selectedCredits }}学时</strong>,
+      <span v-if="failCredits">其中<strong class="fail">{{ failCredits }}学时</strong>不通过,</span>
+      <span v-if="learnedClassCnt">平均分为<strong :class="{fail: ave<60}">{{ ave }}</strong>分,</span>
+      <span v-if="todoClassCnt">还有<strong>{{ todoClassCnt }}节</strong>实验未上</span>.
     </div>
     <el-card v-for="(item,i) in sortedList" v-bind:key="i" class="lesson-card">
       <div class="lesson-title">
@@ -54,27 +57,40 @@ export default {
       const res = await getUserCreditInfo()
       this.cancelTimes = res.data.cancel_nums
       this.haveCredits = res.data.have_credits
-    },
-    //TODO 需要根据课程情况调整算法
+      this.selectedCredits = res.data.selected_credits
+    }
+    ,
+//TODO 需要根据课程情况调整算法
     getAve() {
+      const t = new Date()
       if (this.tableData == null) {
         this.ave = 0
         return
       }
       let a = 0.0
       let cnt = 0
+      this.failCredits = 0
+      this.todoClassCnt = 0
       for (let i = 0; i < this.tableData.length; ++i) {
-        if (this.tableData[i].grade <= 100) {
+        if (schoolTimeToRealTime(this.tableData[i].desc, store.state.user.firstDay) > t) {
+          this.todoClassCnt++
+        } else if (this.tableData[i].grade <= 100) {
           a += this.tableData[i].grade
           cnt++
+          if (this.tableData[i].grade < 60)
+            this.failCredits += this.tableData[i].hours
         }
       }
+      this.learnedClassCnt = cnt
       this.ave = cnt ? (a / cnt).toFixed(2) : 0
-    },
+    }
+    ,
     isFinished(desc) {
       let now = new Date()
       return schoolTimeToRealTime(desc, store.state.user.firstDay) < now
-    }, async deleteCourse(cid) {
+    }
+    ,
+    async deleteCourse(cid) {
       this.$confirm('你确定要退课吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -93,7 +109,9 @@ export default {
         });
       });
 
-    }, async getList() {
+    }
+    ,
+    async getList() {
       this.tableData = (await GetPersonalClasses()).data.list.crs
     }
   },
@@ -108,13 +126,18 @@ export default {
       })
       return orderList
     }
-  },
+  }
+  ,
   data() {
     return {
       tableData: [],
-      totalCredits: userInfo.total_credits,
-      haveCredits: userInfo.have_credits,
-      ave: null
+      totalCredits: store.state.user.userInfo.total_credits,
+      haveCredits: null,
+      failCredits: null,
+      selectedCredits: null,
+      learnedClassCnt: 0,
+      ave: null,
+      todoClassCnt: null
     }
   }
 }
