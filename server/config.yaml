@@ -55,7 +55,7 @@ captcha:
 
 # mysql connect configuration
 mysql:
-  path: "pepmysql.mysql.rds.aliyuncs.com:3306"
+  path: "rm-2zea2w6fx5s5623934o.mysql.rds.aliyuncs.com:3306"
   config: "charset=utf8mb4&parseTime=True&loc=Local"
   db-name: "saupep"
   username: "pep_admin"
