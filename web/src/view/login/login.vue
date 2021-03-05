@@ -40,6 +40,7 @@
                 name="logVerify"
                 placeholder="请输入验证码"
                 style="width: 60%"
+                type="tel"
             />
             <div class="vPic">
               <img
@@ -132,7 +133,6 @@ export default {
           const flag = await this.login();
           if (!flag) {
             this.loginForm.captcha = ""
-            this.loginForm.password = ""
             this.loginVefify();
           }
         } else {

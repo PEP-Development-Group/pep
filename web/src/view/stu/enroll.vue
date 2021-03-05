@@ -39,7 +39,12 @@
                   :color="(colors.time[countDown(l.desc)])">{{ timeTag[countDown(l.desc)] }}</el-tag>
           </span>
           <span class="lesson-op">
-            <span class="progress" :class="{red:l.max-l.now<=3}">{{ l.now }}/{{ l.max }}</span>
+            <el-tooltip effect="dark" placement="left" style="outline: none">
+            <div slot="content">剩余 {{ l.max - l.now }} 个名额</div>
+            <span class="progress" :class="{red:l.max-l.now<=3}">
+                {{ l.now }}/{{ l.max }}
+            </span>
+          </el-tooltip>
           <el-button type="primary" v-if="l.selected===false" :disabled="l.now===l.max||item.learned"
                      @click="selectCourse(i,item,l)">选课</el-button>
           <el-button type="danger" v-else @click="deleteCourse(l.id,l)">退选</el-button>

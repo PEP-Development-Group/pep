@@ -15,7 +15,7 @@
                 <div class="stu-tips" v-if="authId==1">
                   <p>已修/总学时</p>
                   <p>{{ haveCredits }} / {{ totalCredits }}</p>
-                  <div>{{ today }}</div>
+                  <div class="nowarp">{{ today }}</div>
                 </div>
               </el-col>
             </el-row>

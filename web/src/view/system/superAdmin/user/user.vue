@@ -23,7 +23,7 @@
       <el-table-column label="剩余取消次数" min-width="150" prop="cancel_nums" v-if="userType===1"></el-table-column>
       <el-table-column label="已修 / 应修学时" min-width="150" prop="total_credits" v-if="userType===1">
         <template slot-scope="scope">
-          {{ scope.row.have_credits }} / {{ scope.row.total_credits }}
+          {{ scope.row.have_credits ? scope.row.have_credits : 0 }} / {{ scope.row.total_credits }}
         </template>
       </el-table-column>
       <el-table-column label="操作" width="350" align="center">
