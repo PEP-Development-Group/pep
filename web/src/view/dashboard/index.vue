@@ -6,12 +6,12 @@
         <el-col :span="24">
           <el-card style="margin-top:-6px">
             <el-row style="margin:-10px 0">
-              <el-col :span="12">
+              <el-col :span="16">
                 <p class="welcome">欢迎<span v-if="authId!=1">您</span>，</p>
                 <p class="name">{{ name }}{{ appellation }}</p>
                 <p v-if="authId!=1">{{ today }}</p>
               </el-col>
-              <el-col :span="12">
+              <el-col :span="8">
                 <div class="stu-tips" v-if="authId==1">
                   <p>已修/总学时</p>
                   <p>{{ haveCredits }} / {{ totalCredits }}</p>
@@ -26,7 +26,9 @@
       <el-row :gutter="10">
         <el-col :xs="24" :sm="14">
           <el-card style="height: 149px">
-            <b>管理员公告</b>
+            <div class="button-box clearflex">
+              <b>管理员公告</b>
+            </div>
             <!-- <el-button
                 v-auth="888"
                 @click="dialogVisible = true"
@@ -56,7 +58,7 @@
               <el-table-column>
                 <template slot-scope="scope">
                   <div class="lessonCon">
-                  <span class="nowarp"><span style="font-weight: bold">{{ scope.cname }}</span>
+                  <span class="nowarp"><span style="font-weight: bold">{{ scope.row.cname }}</span>
                   <el-divider direction="vertical"></el-divider>
                   {{ scope.row.hours }}学时</span>
                     <span class="grade" v-if="isFinished(scope.row.desc)"
@@ -309,7 +311,7 @@ export default {
       name: store.state.user.userInfo.name,
       today: "",
       totalCredits: store.state.user.userInfo.total_credits,
-      haveCredits: store.state.user.userInfo.have_credits,
+      haveCredits: '-',
       selectedCredits: null,
       adminAnnouncement: "",
       courseList: [],
@@ -436,7 +438,6 @@ export default {
     async updateInfo() {
       const res = await getUserCreditInfo()
       this.haveCredits = res.data.have_credits
-      this.selectedCredits = res.data.selected_credits
     },
     // async reload() {
     //   const {data} = await getSystemState();
