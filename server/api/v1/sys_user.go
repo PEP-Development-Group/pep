@@ -63,6 +63,7 @@ func tokenNext(c *gin.Context, user *model.SysUser) {
 	}
 
 	if !global.GVA_CONFIG.System.UseMultipoint {
+		user.Password = ""
 		response.OkWithDetailed(response.LoginResponse{
 			User:      user,
 			Token:     token,
