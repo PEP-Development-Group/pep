@@ -477,7 +477,7 @@ export default {
       let d = new Date();
       const t = realTimeToSchoolTime(d, store.state.user.firstDay);
       if (t)
-        this.today = "今天是第" + t.week + "周星期" + formatDayOfWeek[t.day]
+        this.today = "今天是第" + t.week + "周星期" + formatDayOfWeek[t.day-1]
       else return "未开学"
     },
     async getList() {

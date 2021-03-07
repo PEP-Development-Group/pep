@@ -102,7 +102,7 @@
       <el-form :model="formData" label-position="right" label-width="80px" :inline="false">
         <el-form-item label="课程名:">
           <el-autocomplete v-model="formData.cname" :fetch-suggestions="queryClass" clearable
-                           placeholder="请输入" @select="setClassData">
+                           placeholder="请输入" class="newclassinp" @select="setClassData">
             <template slot-scope="{ item }">
               <div class="name">{{ item.cname }}
                 <span class="info-text">{{ item.ccredit }}学时 </span>
@@ -113,7 +113,7 @@
         </el-form-item>
         <el-form-item label="教师:">
           <el-autocomplete v-model="formData.tname" :fetch-suggestions="queryTeacher" clearable
-                           placeholder="请输入">
+                           placeholder="请输入" class="newclassinp">
             <template slot-scope="{ item }">
               <div class="name">{{ item.value }}
                 <span class="info-text">{{ item.tid }}</span>
@@ -508,5 +508,9 @@ export default {
 .info-text {
   font-size: 12px;
   color: #b4b4b4;
+}
+
+.newclassinp .el-input{
+  width: 400px;
 }
 </style>

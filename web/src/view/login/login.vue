@@ -130,9 +130,11 @@ export default {
       this.loading = true
       this.$refs.loginForm.validate(async (v) => {
         if (v) {
+          const pwd = this.loginForm.password
           const flag = await this.login();
           if (!flag) {
             this.loginForm.captcha = ""
+            this.loginForm.password = pwd
             this.loginVefify();
           }
         } else {

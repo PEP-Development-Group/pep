@@ -7,7 +7,7 @@
       <i class="el-icon-info"></i> 本学期需要修满 {{ totalCredits }} 学时,当前已选 {{ choosedCredits }} 学时
     </div>
     <el-collapse v-model="activeNames" class="class-area">
-      <el-collapse-item v-for="(item,i) in courseList" :key="item.id" class="class-con">
+      <el-collapse-item v-for="(item,i) in courseList" v-cloak :key="item.id" class="class-con">
         <template slot="title">
           <div class="class-title-con">
             <!--            <el-tag effect="dark" class="hours-tag" type="info"-->
@@ -15,28 +15,29 @@
             <!--            </el-tag>-->
             <span class="class-hours">{{ item.hours }}学时</span>
             <el-divider direction="vertical"></el-divider>
-            <span class="class-title" :class="{tiny:item.learned}">{{ i }}</span>
+            <span class="class-title" v-cloak :class="{tiny:item.learned}">{{ i }}</span>
 
             <span class="class-title-right">共{{ item.List.length }}节</span>
             <span class="class-title-right">
-            <el-tag effect="light" size="small" type="success" v-if="item.learned">
+            <el-tag effect="light" size="small" type="success" v-if="item.learned" v-cloak>
               <i class="el-icon-check"></i>
             已选
             </el-tag>
             </span>
           </div>
         </template>
-        <el-card v-for="l in item.List" class="lesson" :key="l.id" shadow="hover">
-          <i class="el-icon-check check" v-if="l.selected"></i>
-          <el-progress v-else class="lesson-progress" type="circle" :width="18" :show-text="false"
-                       :percentage="selectPercent(l.now,l.max)"
-                       :stroke-width="2"></el-progress>
+        <el-card v-for="l in item.List" class="lesson" v-cloak :class="{'select-card':l.selected}" :key="l.id"
+                 shadow="hover">
+          <i class="el-icon-check lesson-selected" :class="{'select-icon-hide':!l.selected}" v-cloak></i>
           <span class="lesson-info">
           <span class="whitespace nowarp">{{ l.desc|formatDesc }}</span>
           <span class="whitespace nowarp">{{ l.teacher_name }}</span>
           <el-tag effect="light" size="mini" class="whitespace">{{ l.class_room }}</el-tag>
+            <el-tooltip effect="dark" placement="right" style="outline: none">
+            <div slot="content">{{ l.desc |formatDescToRealDay }}</div>
           <el-tag effect="dark" size="mini" type="info" class="whitespace" v-if="countDown(l.desc)!==-1"
                   :color="(colors.time[countDown(l.desc)])">{{ timeTag[countDown(l.desc)] }}</el-tag>
+            </el-tooltip>
           </span>
           <span class="lesson-op">
             <el-tooltip effect="dark" placement="left" style="outline: none">
@@ -45,7 +46,7 @@
                 {{ l.now }}/{{ l.max }}
             </span>
           </el-tooltip>
-          <el-button type="primary" v-if="l.selected===false" :disabled="l.now===l.max||item.learned"
+          <el-button type="primary" v-if="l.selected===false" v-cloak :disabled="l.now===l.max||item.learned"
                      @click="selectCourse(i,item,l)">选课</el-button>
           <el-button type="danger" v-else @click="deleteCourse(l.id,l)">退选</el-button>
           </span>
@@ -151,6 +152,9 @@ export default {
         let descList = d.split('-')
         return "第" + descList[0] + "周 周" + formatDayOfWeek[descList[1] - 1] + " 第" + descList[2] + "节";
       }
+    },
+    formatDescToRealDay(d) {
+      return formatTimeToStr(new Date(schoolTimeToRealTime(d, store.state.user.firstDay)), "yyyy年MM月dd日")
     }
   },
   computed: {
@@ -172,11 +176,11 @@ export default {
         return a.hours < b.hours ? -1 : 1
       }
     },
-    selectPercent: function (now, max) {
-      if (now < 0) return 0
-      if (max <= 0) return 0
-      return now / max * 100;
-    },
+    // selectPercent: function (now, max) {
+    //   if (now < 0) return 0
+    //   if (max <= 0) return 0
+    //   return now / max * 100;
+    // },
     async selectCourse(i, item, l) {
       const d = {
         cid: l.id,
@@ -247,6 +251,10 @@ export default {
 </script>
 
 <style>
+[v-cloak] {
+  display: none
+}
+
 .el-message-box {
   width: min(80%, 420px);
 }
@@ -272,10 +280,14 @@ export default {
   line-height: normal;
   vertical-align: middle;
   max-width: calc(100% - 105px);
+  transition: max-width 0.5s;
+  transition-delay: 1s;
 }
 
 .tiny {
   max-width: calc(100% - 168px);
+  transition-delay: 0;
+  transition: none;
 }
 
 .class-title-right {
@@ -306,12 +318,42 @@ export default {
   display: inline-block;
   line-height: normal;
   vertical-align: middle;
-  max-width: calc(100% - 90px);
+  max-width: calc(100% - 65px);
+  margin-left: -14px;
 }
 
 .lesson {
   box-sizing: border-box;
   margin: 8px;
+  position: relative;
+  background-color: #00a38e;
+}
+
+.lesson .el-card__body {
+  background-color: #fff;
+  border-radius: 3px;
+  transition: border-color 1s ease-in-out, border-top-left-radius 1s ease-out;
+  border: transparent 1px solid;
+}
+
+.lesson-selected {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: white;
+  font-weight: bolder;
+  margin-left: 1px;
+}
+
+.select-icon-hide {
+  opacity: 0;
+  transition: opacity 1.5s ease-in;
+}
+
+.select-card .el-card__body {
+  border: #00a38e 1px solid;
+  border-top-left-radius: 35px;
+  transition: border-color 1s ease-in-out 0.6s, border-top-left-radius 1s ease-out 0.5s;
 }
 
 .lesson-progress {
