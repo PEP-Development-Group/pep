@@ -7,17 +7,22 @@ import (
 	"pep/global"
 	"pep/model/request"
 	"pep/model/response"
+	"pep/service"
 	"strconv"
 	"time"
 )
 
 func JWTAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// 不存在是空的情况，所以直接获取
-		token,_ := c.Get("token")
+		token := c.Request.Header.Get("x-token")
+		if token == "" || service.IsBlacklist(token) {
+			response.FailWithDetailed(gin.H{"reload": true}, "登录凭证失效或不存在", c)
+			c.Abort()
+			return
+		}
 
 		j := NewJWT()
-		claims, err := j.ParseToken(token.(string))
+		claims, err := j.ParseToken(token)
 		if err != nil {
 			if err == TokenExpired {
 				response.FailWithDetailed(gin.H{"reload": true}, "授权已过期", c)
