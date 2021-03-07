@@ -8,14 +8,13 @@ import (
 	"pep/model/request"
 	"pep/model/response"
 	"pep/service"
-	"strconv"
-	"time"
 )
 
 func JWTAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.Request.Header.Get("x-token")
 		if token == "" || service.IsBlacklist(token) {
+			//c.AbortWithStatusJSON(401, gin.H{"reload": true})
 			response.FailWithDetailed(gin.H{"reload": true}, "登录凭证失效或不存在", c)
 			c.Abort()
 			return
@@ -51,23 +50,23 @@ func JWTAuth() gin.HandlerFunc {
 		//	response.FailWithDetailed(gin.H{"reload": true}, err.Error(), c)
 		//	c.Abort()
 		//}
-		if claims.ExpiresAt < time.Now().Unix() {
-			claims.ExpiresAt = time.Now().Unix() + global.GVA_CONFIG.JWT.ExpiresTime
-			newToken, _ := j.CreateToken(*claims)
-			newClaims, _ := j.ParseToken(newToken)
-			c.Header("new-token", newToken)
-			c.Header("new-expires-at", strconv.FormatInt(newClaims.ExpiresAt, 10))
-			//if global.GVA_CONFIG.System.UseMultipoint {
-			//	err, RedisJwtToken := service.GetRedisJWT(newClaims.Username)
-			//	if err != nil {
-			//		global.GVA_LOG.Error("get redis jwt failed", zap.Any("err", err))
-			//	} else { // 当之前的取成功时才进行拉黑操作
-			//		_ = service.CreateJsonBlackListRecord(model.JwtBlacklist{Jwt: RedisJwtToken})
-			//	}
-			//	// 无论如何都要记录当前的活跃状态
-			//	_ = service.SetRedisJWT(newToken, newClaims.Username)
-			//}
-		}
+		//if claims.ExpiresAt < time.Now().Unix() {
+		//	claims.ExpiresAt = time.Now().Unix() + global.GVA_CONFIG.JWT.ExpiresTime
+		//	newToken, _ := j.CreateToken(*claims)
+		//	newClaims, _ := j.ParseToken(newToken)
+		//	c.Header("new-token", newToken)
+		//	c.Header("new-expires-at", strconv.FormatInt(newClaims.ExpiresAt, 10))
+		//	//if global.GVA_CONFIG.System.UseMultipoint {
+		//	//	err, RedisJwtToken := service.GetRedisJWT(newClaims.Username)
+		//	//	if err != nil {
+		//	//		global.GVA_LOG.Error("get redis jwt failed", zap.Any("err", err))
+		//	//	} else { // 当之前的取成功时才进行拉黑操作
+		//	//		_ = service.CreateJsonBlackListRecord(model.JwtBlacklist{Jwt: RedisJwtToken})
+		//	//	}
+		//	//	// 无论如何都要记录当前的活跃状态
+		//	//	_ = service.SetRedisJWT(newToken, newClaims.Username)
+		//	//}
+		//}
 		c.Set("claims", claims)
 		c.Next()
 	}
