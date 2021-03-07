@@ -3,7 +3,7 @@
     <el-card class="container">
       <div class="top">
         <div class="desc">
-          <img class="logo_login" src="@/assets/saulogo.png" alt=""/>
+          <img class="logo_login" src="@/assets/saulogo.webp" alt=""/>
         </div>
         <div class="header">
           <span class="title">物理实验选课系统</span>

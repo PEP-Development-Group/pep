@@ -197,9 +197,9 @@ export default {
   name: "About",
   data() {
     return {
-      imgwyl: require("@/assets/imgwyl.jpg"),
-      imgdjh: require("@/assets/imgdjh.jpg"),
-      imgljk: require("@/assets/imgljk.jpg"),
+      imgwyl: require("@/assets/imgwyl.webp"),
+      imgdjh: require("@/assets/imgdjh.webp"),
+      imgljk: require("@/assets/imgljk.webp"),
     };
   },
   methods: {},

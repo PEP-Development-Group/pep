@@ -4,7 +4,7 @@
       <el-row :class="[isShadowBg?'shadowBg':'']" @click.native="changeShadow()"></el-row>
       <el-aside class="main-cont main-left">
         <div class="tilte">
-          <img alt class="logoimg" src="~@/assets/saulogo.png"/>
+          <img alt class="logoimg" src="~@/assets/saulogo.webp"/>
           <h2 class="tit-text" v-if="isSider">物理实验中心</h2>
         </div>
         <Aside class="aside"/>

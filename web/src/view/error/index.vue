@@ -2,7 +2,7 @@
   <div>
     <div class="big">
       <div class="inner">
-        <img src="../../assets/404.png">
+        <img src="../../assets/404.webp">
       </div>
     </div>
   </div>
