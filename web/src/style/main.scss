@@ -1230,6 +1230,7 @@ $mainHight: 100vh;
   top: 0;
   box-sizing: border-box;
   z-index: 999;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
 
   > .el-row {
     padding: 0;

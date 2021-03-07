@@ -529,7 +529,7 @@ b {
 
 .big {
   margin: 60px 0 -16px 0;
-  background-color: rgb(243, 243, 243);
+  background-color: #fff;
   padding-top: 15px;
   overflow-x: hidden;
 }

@@ -17,7 +17,7 @@ export default {
 @import '@/style/base.scss';
 @import '@/style/mobile.scss';
 #app {
-  background: #eee;
+  background: #EEF3F9;
   height: 100vh;
   overflow: hidden;
 }

@@ -60,10 +60,8 @@ export const user = {
             }
         },
         async LoginOut({commit}) {
-            const res = await jsonInBlacklist()
-            if (res.code == 0) {
-                commit("LoginOut")
-            }
+            commit("LoginOut")
+            jsonInBlacklist()
         }
     },
     getters: {
