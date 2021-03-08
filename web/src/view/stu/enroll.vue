@@ -330,8 +330,8 @@ export default {
 }
 
 .lesson .el-card__body {
-  padding-bottom: 10px;
-  padding-top: 10px;
+  padding-bottom: 15px;
+  padding-top: 15px;
   background-color: #fff;
   border-radius: 3px;
   transition: border-color 1s ease-in-out, border-top-left-radius 1s ease-out;
