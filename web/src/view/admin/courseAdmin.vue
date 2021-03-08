@@ -98,7 +98,7 @@
         layout="total, sizes, prev, pager, next, jumper"
     ></el-pagination>
 
-    <el-dialog :before-close="closeDialog" :visible.sync="dialogFormVisible" title="课程操作">
+    <el-dialog :before-close="closeDialog" :visible.sync="dialogFormVisible" title="课程操作" class="class-add">
       <el-form :model="formData" label-position="right" label-width="80px" :inline="false">
         <el-form-item label="课程名:">
           <el-autocomplete v-model="formData.cname" :fetch-suggestions="queryClass" clearable
@@ -510,7 +510,11 @@ export default {
   color: #b4b4b4;
 }
 
-.newclassinp .el-input{
+.newclassinp .el-input {
   width: 400px;
+}
+
+.class-add .el-dialog {
+  min-width: 600px;
 }
 </style>

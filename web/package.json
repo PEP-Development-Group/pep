@@ -1,60 +1,62 @@
 {
-    "name": "sau-pep",
-    "version": "0.1.0",
-    "private": true,
-    "scripts": {
-        "serve": "vue-cli-service serve",
-        "build": "vue-cli-service build",
-        "lint": "vue-cli-service lint"
+  "name": "sau-pep",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "axios": "^0.19.2",
+    "element-ui": "^2.15.1",
+    "js-md5": "^0.7.3",
+    "node-sass": "^4.14.1",
+    "path": "^0.12.7",
+    "qs": "^6.9.6",
+    "script-ext-html-webpack-plugin": "^2.1.5",
+    "vue": "^2.6.12",
+    "vue-router": "^3.5.1",
+    "vuescroll": "^4.17.3",
+    "vuex": "^3.6.2",
+    "vuex-persist": "^2.3.0"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.13.9",
+    "@vue/cli-plugin-babel": "^4.5.11",
+    "@vue/cli-plugin-eslint": "^4.5.11",
+    "@vue/cli-service": "^4.5.11",
+    "babel-eslint": "^10.1.0",
+    "babel-plugin-component": "^1.1.1",
+    "core-js": "^3.9.0",
+    "eslint": "^6.7.2",
+    "eslint-plugin-vue": "^6.2.2",
+    "node-sass": "^4.12.0",
+    "raw-loader": "^3.1.0",
+    "sass-loader": "^8.0.2",
+    "vue-template-compiler": "^2.6.12"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
     },
-    "dependencies": {
-        "axios": "^0.19.2",
-        "element-ui": "^2.15.1",
-        "js-md5": "^0.7.3",
-        "node-sass": "^4.14.1",
-        "path": "^0.12.7",
-        "qs": "^6.9.6",
-        "script-ext-html-webpack-plugin": "^2.1.5",
-        "vue": "^2.6.12",
-        "vue-router": "^3.5.1",
-        "vuescroll": "^4.17.3",
-        "vuex": "^3.6.2",
-        "vuex-persist": "^2.3.0"
-    },
-    "devDependencies": {
-        "@vue/cli-plugin-babel": "^4.5.11",
-        "@vue/cli-plugin-eslint": "^4.5.11",
-        "@vue/cli-service": "^4.5.11",
-        "babel-eslint": "^10.1.0",
-        "core-js": "^3.9.0",
-        "eslint": "^6.7.2",
-        "eslint-plugin-vue": "^6.2.2",
-        "node-sass": "^4.12.0",
-        "raw-loader": "^3.1.0",
-        "sass-loader": "^8.0.2",
-        "vue-template-compiler": "^2.6.12"
-    },
-    "eslintConfig": {
-        "root": true,
-        "env": {
-            "node": true
-        },
-        "extends": [
-            "plugin:vue/essential",
-            "eslint:recommended"
-        ],
-        "rules": {},
-        "parserOptions": {
-            "parser": "babel-eslint"
-        }
-    },
-    "postcss": {
-        "plugins": {
-            "autoprefixer": {}
-        }
-    },
-    "browserslist": [
-        "> 1%",
-        "last 2 versions"
-    ]
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended"
+    ],
+    "rules": {},
+    "parserOptions": {
+      "parser": "babel-eslint"
+    }
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions"
+  ]
 }
