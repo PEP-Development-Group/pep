@@ -330,7 +330,7 @@ export default {
 }
 
 .lesson .el-card__body {
-  padding-bottom: 5px;
+  padding-bottom: 10px;
   padding-top: 10px;
   background-color: #fff;
   border-radius: 3px;
@@ -422,6 +422,10 @@ export default {
 
 .class-area {
   max-width: 800px;
+}
+
+.class-area .el-collapse-item__content {
+  padding-bottom: 0;
 }
 
 .warning-info {
