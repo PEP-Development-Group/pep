@@ -7,7 +7,6 @@ import (
 	"pep/model/request"
 	"pep/utils"
 
-	uuid "github.com/satori/go.uuid"
 	"gorm.io/gorm"
 )
 
@@ -47,7 +46,6 @@ func Register(u model.SysUser) (err error, userInter model.SysUser) {
 		return errors.New("用户名已注册"), userInter
 	}
 	u.Password = utils.MD5V([]byte(u.Password))
-	u.UUID = uuid.NewV4()
 	err = global.GVA_DB.Create(&u).Error
 	return err, u
 }
@@ -61,7 +59,7 @@ func Register(u model.SysUser) (err error, userInter model.SysUser) {
 func Login(u *model.SysUser) (err error, userInter *model.SysUser) {
 	var user model.SysUser
 	up := utils.MD5V([]byte(u.Password))
-	err = global.GVA_DB.Select("username","AuthorityId","password", "uuid", "name", "class", "total_credits").First(&user, u.Username).Error
+	err = global.GVA_DB.Select("username", "AuthorityId", "password", "name", "class", "total_credits").First(&user, u.Username).Error
 	if err != nil {
 		return err, nil
 	}
@@ -118,8 +116,8 @@ func GetUserInfoList(info request.PageInfo) (err error, list interface{}, total 
 //@param: uuid uuid.UUID, authorityId string
 //@return: err error
 
-func SetUserAuthority(uuid uuid.UUID, authorityId string) (err error) {
-	err = global.GVA_DB.Where("uuid = ?", uuid).First(&model.SysUser{}).Update("authority_id", authorityId).Error
+func SetUserAuthority(username int64, authorityId string) (err error) {
+	err = global.GVA_DB.Where("username = ?", username).First(&model.SysUser{}).Update("authority_id", authorityId).Error
 	return err
 }
 

@@ -2,7 +2,6 @@ package service
 
 import (
 	"errors"
-	uuid "github.com/satori/go.uuid"
 	"github.com/tealeg/xlsx/v3"
 	"mime/multipart"
 	"os"
@@ -126,7 +125,6 @@ func ParseExcelFile(bs string) (*[]model.SysUser, error) {
 		s.TotalCredits, _ = r.GetCell(4).Int()
 		s.Password = utils.MD5V([]byte(utils.MD5V([]byte(r.GetCell(3).String())))) // 密码身份证后8位，两次md5
 		s.AuthorityId = "1"
-		s.UUID = uuid.NewV4()
 
 		s.CancelNums = global.GVA_CONFIG.System.CancelNums
 		st = append(st, s)

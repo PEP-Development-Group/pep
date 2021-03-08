@@ -45,7 +45,6 @@ func Login(c *gin.Context) {
 func tokenNext(c *gin.Context, user *model.SysUser) {
 	j := &middleware.JWT{SigningKey: []byte(global.GVA_CONFIG.JWT.SigningKey)} // 唯一签名
 	claims := request.CustomClaims{
-		UUID:        user.UUID,
 		Username:    user.Username,
 		AuthorityId: user.AuthorityId,
 		StandardClaims: jwt.StandardClaims{
@@ -222,7 +221,7 @@ func SetUserAuthority(c *gin.Context) {
 		response.FailWithMessage(UserVerifyErr.Error(), c)
 		return
 	}
-	if err := service.SetUserAuthority(sua.UUID, sua.AuthorityId); err != nil {
+	if err := service.SetUserAuthority(sua.Username, sua.AuthorityId); err != nil {
 		global.GVA_LOG.Error("修改失败", zap.Any("err", err))
 		response.FailWithMessage("修改失败", c)
 	} else {
@@ -317,20 +316,20 @@ func getUsername(c *gin.Context) int64 {
 }
 
 // 从Gin的Context中获取从jwt解析出来的用户UUID
-func getUserUuid(c *gin.Context) string {
-	if claims, exists := c.Get("claims"); !exists {
-		global.GVA_LOG.Error("从Gin的Context中获取从jwt解析出来的用户UUID失败, 请检查路由是否使用jwt中间件")
-		return ""
-	} else {
-		waitUse := claims.(*request.CustomClaims)
-		return waitUse.UUID.String()
-	}
-}
+//func getUserUuid(c *gin.Context) string {
+//	if claims, exists := c.Get("claims"); !exists {
+//		global.GVA_LOG.Error("从Gin的Context中获取从jwt解析出来的用户UUID失败, 请检查路由是否使用jwt中间件")
+//		return ""
+//	} else {
+//		waitUse := claims.(*request.CustomClaims)
+//		return waitUse.UUID.String()
+//	}
+//}
 
 // 从Gin的Context中获取从jwt解析出来的用户角色id
 func getUserAuthorityId(c *gin.Context) string {
 	if claims, exists := c.Get("claims"); !exists {
-		global.GVA_LOG.Error("从Gin的Context中获取从jwt解析出来的用户UUID失败, 请检查路由是否使用jwt中间件")
+		global.GVA_LOG.Error("从Gin的Context中获取从jwt解析出来的用户AuthorityId失败, 请检查路由是否使用jwt中间件")
 		return ""
 	} else {
 		waitUse := claims.(*request.CustomClaims)

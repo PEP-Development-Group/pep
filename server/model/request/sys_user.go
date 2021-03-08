@@ -1,7 +1,5 @@
 package request
 
-import uuid "github.com/satori/go.uuid"
-
 // User register structure
 type Register struct {
 	Username int64  `json:"userName"`
@@ -33,8 +31,8 @@ type ChangePasswordStruct struct {
 
 // Modify  user's auth structure
 type SetUserAuth struct {
-	UUID        uuid.UUID `json:"uuid"`
-	AuthorityId string    `json:"authorityId"`
+	UsernameRequest
+	AuthorityId string `json:"authorityId"`
 }
 
 type AddCancelNums struct {
