@@ -4,7 +4,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"pep/global"
-	"pep/model/response"
 	"pep/service"
 )
 
@@ -19,8 +18,5 @@ func JsonInBlacklist(c *gin.Context) {
 	token := c.Request.Header.Get("x-token")
 	if err := service.CreateJsonBlackListRecord(token); err != nil {
 		global.GVA_LOG.Error("jwt作废失败!", zap.Any("err", err))
-		response.FailWithMessage("注销失败", c)
-	} else {
-		response.OkWithMessage("注销成功", c)
 	}
 }
