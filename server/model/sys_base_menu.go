@@ -14,17 +14,17 @@ type SysBaseMenu struct {
 	Component     string `json:"component" gorm:"comment:对应前端文件路径"`
 	Sort          int    `json:"sort" gorm:"comment:排序标记"`
 	Meta          `json:"meta" gorm:"comment:附加属性"`
-	SysAuthoritys []SysAuthority         `json:"authoritys" gorm:"many2many:sys_authority_menus;"`
-	Children      []SysBaseMenu          `json:"children" gorm:"-"`
-	Parameters    []SysBaseMenuParameter `json:"parameters"`
+	SysAuthoritys []SysAuthority         `json:"authoritys,omitempty" gorm:"many2many:sys_authority_menus;"`
+	Children      []SysBaseMenu          `json:"children,omitempty" gorm:"-"`
+	Parameters    []SysBaseMenuParameter `json:"parameters,omitempty"`
 }
 
 type Meta struct {
-	KeepAlive   bool   `json:"keepAlive" gorm:"comment:是否缓存"`
-	DefaultMenu bool   `json:"defaultMenu" gorm:"comment:是否是基础路由（开发中）"`
+	KeepAlive   bool   `json:"keepAlive,omitempty" gorm:"comment:是否缓存"`
+	DefaultMenu bool   `json:"defaultMenu,omitempty" gorm:"comment:是否是基础路由（开发中）"`
 	Title       string `json:"title" gorm:"comment:菜单名"`
 	Icon        string `json:"icon" gorm:"comment:菜单图标"`
-	CloseTab    bool   `json:"closeTab" gorm:"comment:自动关闭tab"`
+	CloseTab    bool   `json:"closeTab,omitempty" gorm:"comment:自动关闭tab"`
 }
 
 type SysBaseMenuParameter struct {

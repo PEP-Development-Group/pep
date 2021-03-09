@@ -19,12 +19,19 @@ var (
 		{SysBaseMenu: sysbase[3], MenuId:      "33"},
 		{SysBaseMenu: sysbase[4], MenuId:      "35"},
 	}}
+	//sysbase = []model.SysBaseMenu{
+	//	{GVA_MODEL: global.GVA_MODEL{ID: 1}, Hidden: false, ParentId: "0", Path: "dashboard", Name: "dashboard", Component: "view/dashboard/index.vue", Sort: 0, Meta: model.Meta{KeepAlive: false, DefaultMenu: false, Title: "首页", Icon: "house", CloseTab: false}},
+	//	{GVA_MODEL: global.GVA_MODEL{ID: 2}, Hidden: true, ParentId: "0", Path: "about", Name: "about", Component: "view/about/index.vue", Sort: 7, Meta: model.Meta{KeepAlive: false, DefaultMenu: false, Title: "关于我们", Icon: "info", CloseTab: false}},
+	//	{GVA_MODEL: global.GVA_MODEL{ID: 8}, Hidden: true, ParentId: "0", Path: "person", Name: "person", Component: "view/person/person.vue", Sort: 4, Meta: model.Meta{KeepAlive: false, DefaultMenu: false, Title: "个人信息", Icon: "message-solid", CloseTab: false}},
+	//	{GVA_MODEL: global.GVA_MODEL{ID: 33}, Hidden: false, ParentId: "0", Path: "enroll", Name: "enroll", Component: "view/stu/enroll.vue", Sort: 3, Meta: model.Meta{KeepAlive: false, DefaultMenu: false, Title: "学生选课", Icon: "s-flag", CloseTab: false}},
+	//	{GVA_MODEL: global.GVA_MODEL{ID: 35}, Hidden: false, ParentId: "0", Path: "lessons", Name: "lessons", Component: "view/stu/lessons.vue", Sort: 3, Meta: model.Meta{KeepAlive: false, DefaultMenu: false, Title: "选课查询", Icon: "success", CloseTab: false}},
+	//}
 	sysbase = []model.SysBaseMenu{
-		{GVA_MODEL: global.GVA_MODEL{ID: 1}, Hidden: false, ParentId: "0", Path: "dashboard", Name: "dashboard", Component: "view/dashboard/index.vue", Sort: 0, Meta: model.Meta{KeepAlive: false, DefaultMenu: false, Title: "首页", Icon: "house", CloseTab: false}},
-		{GVA_MODEL: global.GVA_MODEL{ID: 2}, Hidden: true, ParentId: "0", Path: "about", Name: "about", Component: "view/about/index.vue", Sort: 7, Meta: model.Meta{KeepAlive: false, DefaultMenu: false, Title: "关于我们", Icon: "info", CloseTab: false}},
-		{GVA_MODEL: global.GVA_MODEL{ID: 8}, Hidden: true, ParentId: "0", Path: "person", Name: "person", Component: "view/person/person.vue", Sort: 4, Meta: model.Meta{KeepAlive: false, DefaultMenu: false, Title: "个人信息", Icon: "message-solid", CloseTab: false}},
-		{GVA_MODEL: global.GVA_MODEL{ID: 33}, Hidden: false, ParentId: "0", Path: "enroll", Name: "enroll", Component: "view/stu/enroll.vue", Sort: 3, Meta: model.Meta{KeepAlive: false, DefaultMenu: false, Title: "学生选课", Icon: "s-flag", CloseTab: false}},
-		{GVA_MODEL: global.GVA_MODEL{ID: 35}, Hidden: false, ParentId: "0", Path: "lessons", Name: "lessons", Component: "view/stu/lessons.vue", Sort: 3, Meta: model.Meta{KeepAlive: false, DefaultMenu: false, Title: "选课查询", Icon: "success", CloseTab: false}},
+		{GVA_MODEL: global.GVA_MODEL{ID: 1}, ParentId: "0", Path: "dashboard", Name: "dashboard", Component: "view/dashboard/index.vue", Sort: 0, Meta: model.Meta{Title: "首页", Icon: "house"}},
+		{GVA_MODEL: global.GVA_MODEL{ID: 2}, Hidden: true, ParentId: "0", Path: "about", Name: "about", Component: "view/about/index.vue", Sort: 7, Meta: model.Meta{Title: "关于我们", Icon: "info"}},
+		{GVA_MODEL: global.GVA_MODEL{ID: 8}, Hidden: true, ParentId: "0", Path: "person", Name: "person", Component: "view/person/person.vue", Sort: 4, Meta: model.Meta{Title: "个人信息", Icon: "message-solid"}},
+		{GVA_MODEL: global.GVA_MODEL{ID: 33},ParentId: "0", Path: "enroll", Name: "enroll", Component: "view/stu/enroll.vue", Sort: 3, Meta: model.Meta{Title: "学生选课", Icon: "s-flag"}},
+		{GVA_MODEL: global.GVA_MODEL{ID: 35},ParentId: "0", Path: "lessons", Name: "lessons", Component: "view/stu/lessons.vue", Sort: 3, Meta: model.Meta{Title: "选课查询", Icon: "success"}},
 	}
 )
 
