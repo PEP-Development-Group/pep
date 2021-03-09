@@ -1,7 +1,8 @@
 import axios from 'axios'; // 引入axios
-import { Message } from 'element-ui';
-import { store } from '@/store/index'
+import {Message} from 'element-ui';
+import {store} from '@/store/index'
 import context from '@/main.js'
+
 const service = axios.create({
     baseURL: process.env.VUE_APP_BASE_API,
     timeout: 99999
@@ -21,25 +22,25 @@ const showLoading = () => {
 }
 
 const closeLoading = () => {
-        acitveAxios--
-        if (acitveAxios <= 0) {
-            clearTimeout(timer)
-            context.$bus.emit("closeLoading")
-        }
+    acitveAxios--
+    if (acitveAxios <= 0) {
+        clearTimeout(timer)
+        context.$bus.emit("closeLoading")
     }
-    //http request 拦截器
+}
+//http request 拦截器
 service.interceptors.request.use(
     config => {
         if (!config.donNotShowLoading) {
             showLoading()
         }
         const token = store.getters['user/token']
-        const user = store.getters['user/userInfo']
+        // const user = store.getters['user/userInfo']
         config.data = JSON.stringify(config.data);
         config.headers = {
             'Content-Type': 'application/json',
             'x-token': token,
-            'x-user-id': user.ID
+            // 'x-user-id': user.ID
         }
         return config;
     },
@@ -68,7 +69,7 @@ service.interceptors.response.use(
             Message({
                 showClose: true,
                 message: response.data.msg || decodeURI(response.headers.msg),
-                type: response.headers.msgtype||'error',
+                type: response.headers.msgtype || 'error',
             })
             if (response.data.data && response.data.data.reload) {
                 store.commit('user/LoginOut')
@@ -78,9 +79,14 @@ service.interceptors.response.use(
     },
     error => {
         closeLoading()
+        let msg = error
+        switch (error.response.status) {
+            case 403:
+                msg = "你的操作过于频繁，请稍后再试！"
+        }
         Message({
             showClose: true,
-            message: error,
+            message: msg,
             type: 'error'
         })
         return error
