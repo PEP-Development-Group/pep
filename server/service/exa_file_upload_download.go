@@ -74,7 +74,7 @@ func GetFileRecordInfoList(info request.PageInfo) (err error, list interface{}, 
 //@param: header *multipart.FileHeader, noSave string
 //@return: err error, file model.ExaFileUploadAndDownload
 
-func UploadFile(header *multipart.FileHeader) (err error, file model.ExaFileUploadAndDownload) {
+func UploadFile(header *multipart.FileHeader, mayConflict string) (err error, file model.ExaFileUploadAndDownload) {
 	oss := upload.NewOss()
 	filePath, key, uploadErr := oss.UploadFile(header)
 	if uploadErr != nil {
@@ -87,16 +87,28 @@ func UploadFile(header *multipart.FileHeader) (err error, file model.ExaFileUplo
 		Tag:  s[len(s)-1],
 		Key:  key,
 	}
-	if err = parse(filePath); err != nil {
+	if err = parseAndCreate(filePath, mayConflict); err != nil {
 		return err, f
 	}
 	return nil, f
 }
 
-func parse(filename string) error {
+func parseAndCreate(filename string, mayConflict string) error {
 	st, err := ParseExcelFile(filename)
 	if err != nil {
 		return err
+	}
+	if mayConflict == "1" {
+		for _, s := range *st {
+			global.GVA_DB.Select("name").Where(model.SysUser{Username: s.Username}).Assign(model.SysUser{Class: s.Class,
+				Name: s.Name,
+				TotalCredits: s.TotalCredits,
+				Password: s.Password,
+				AuthorityId: s.AuthorityId,
+				CancelNums: global.GVA_CONFIG.System.CancelNums,
+			}).FirstOrCreate(&s)
+		}
+		return nil
 	}
 	if err = global.GVA_DB.Create(st).Error; err != nil {
 		return err
