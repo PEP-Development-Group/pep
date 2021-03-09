@@ -15,9 +15,10 @@ var (
 	ErrClassHasNotSelected = errors.New("未选择该课程")
 	ErrSelectFull          = errors.New("已选够应修学时，无法继续选课，请退选部分课程后继续选课")
 
-	ErrDelClassTooMany      = errors.New("退课次数太多")
-	ErrDelClassOnDayOfClass = errors.New("上课当天无法退课")
-	ErrDelClass             = errors.New("退课失败")
+	ErrDelClassTooMany    = errors.New("退课次数太多")
+	ErrDelClassAfterClass = errors.New("上课当天及以后无法退课")
+	ErrDelClass           = errors.New("退课失败")
+	ErrDelClassAfterGrade = errors.New("该课已有成绩，无法退课")
 
 	// ErrSetGradeTooMany = errors.New("成绩只能修改一次")
 )

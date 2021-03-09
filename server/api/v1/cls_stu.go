@@ -91,7 +91,7 @@ func GetStuClassList(c *gin.Context) {
 // @Produce application/json
 // @Param data body request.UsernameRequest true "获取个人已选课程(课表，首页用)"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
-// @Router /class/getMyClass [get]
+// @Router /class/getPersonalClasses [get]
 func GetPersonalClasses(c *gin.Context) {
 	var u request.UsernameRequest
 	u.Username = getUsername(c)

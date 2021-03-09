@@ -12,6 +12,25 @@ import (
 	"pep/utils"
 )
 
+var (
+	stu = response.SysMenusResponse{Menus: []model.SysMenu{
+		{MenuId: "1"}}}
+	stuMenu = []model.SysBaseMenu{
+		{GVA_MODEL: global.GVA_MODEL{ID: 1}, Hidden: false, ParentId: "0", Path: "dashboard", Name: "dashboard", Component: "view/dashboard/index.vue", Sort: 0, Meta: model.Meta{KeepAlive: false, DefaultMenu: false, Title: "首页", Icon: "house", CloseTab: false}},
+		{GVA_MODEL: global.GVA_MODEL{ID: 2}, Hidden: true, ParentId: "0", Path: "about", Name: "about", Component: "view/about/index.vue", Sort: 7, Meta: model.Meta{KeepAlive: false, DefaultMenu: false, Title: "关于我们", Icon: "info", CloseTab: false}},
+		{GVA_MODEL: global.GVA_MODEL{ID: 8}, Hidden: false, ParentId: "0", Path: "person", Name: "person", Component: "view/person/person.vue", Sort: 4, Meta: model.Meta{KeepAlive: false, DefaultMenu: false, Title: "个人信息", Icon: "message-solid", CloseTab: false}},
+		{GVA_MODEL: global.GVA_MODEL{ID: 33}, Hidden: false, ParentId: "0", Path: "enroll", Name: "enroll", Component: "view/stu/enroll.vue", Sort: 3, Meta: model.Meta{KeepAlive: false, DefaultMenu: false, Title: "学生选课", Icon: "s-flag", CloseTab: false}},
+		{GVA_MODEL: global.GVA_MODEL{ID: 35}, Hidden: false, ParentId: "0", Path: "lessons", Name: "lessons", Component: "view/stu/lessons.vue", Sort: 3, Meta: model.Meta{KeepAlive: false, DefaultMenu: false, Title: "选课查询", Icon: "success", CloseTab: false}},
+	}
+)
+
+// 只缓存学生和老师
+var menuMap map[string]*response.SysMenusResponse
+
+func init() {
+	menuMap = make(map[string]*response.SysMenusResponse, 2)
+}
+
 // @Tags AuthorityMenu
 // @Summary 获取用户动态路由
 // @Security ApiKeyAuth
@@ -20,21 +39,37 @@ import (
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
 // @Router /menu/getMenu [post]
 func GetMenu(c *gin.Context) {
-	// 如果缓存存在就不需要查询db了
 	auID := getUserAuthorityId(c)
-	if menus, ok := service.CheckUserAuthorityExist(auID); ok {
+
+	// 管理员均从数据库查询
+	//if auID == "888" {
+	//	_, menus := service.GetMenuTree(auID)
+	//	response.OkWithDetailed(response.SysMenusResponse{Menus: menus}, "获取成功", c)
+	//	return
+	//}
+	//
+	//// 如果该角色权限缓存还没过期，直接返回
+	//if service.CheckAuthorityTime(auID) {
+	//	fmt.Println("该权限id已存在，直接返回:", *menuMap[auID])
+	//	response.OkWithDetailed(menuMap[auID], "获取成功", c)
+	//	return
+	//}
+
+	if menus, ok :=service.CheckUserAuthorityExist(auID);ok{
+		fmt.Println("该权限id已存在，直接返回:", *menus)
 		response.OkWithDetailed(response.SysMenusResponse{Menus: *menus}, "获取成功", c)
-		fmt.Println("无需再次查询数据库！id:", auID)
 		return
 	}
 
+	// 否则从数据库查询最新数据，重置权限ID时间，再覆盖menuMap对应的权限
 	if err, menus := service.GetMenuTree(auID); err != nil {
 		global.GVA_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", c)
 	} else {
-		// 从db里获取后缓存起来
+		//service.CacheAuthorityID(auID)
+		//menuMap[auID] = &response.SysMenusResponse{Menus: menus}
+		service.CacheAuthorityMenu(auID, &menus)
 		response.OkWithDetailed(response.SysMenusResponse{Menus: menus}, "获取成功", c)
-		service.CacheMenus(auID, &menus)
 	}
 }
 
@@ -46,17 +81,17 @@ func GetMenu(c *gin.Context) {
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
 // @Router /menu/getBaseMenuTree [post]
 func GetBaseMenuTree(c *gin.Context) {
-	if menus, ok := service.CheckBase("baseMenus"); ok {
-		response.OkWithDetailed(response.SysBaseMenusResponse{Menus: *menus}, "获取成功", c)
-		return
-	}
+	//if menus, ok := service.CheckBase("baseMenus"); ok {
+	//	response.OkWithDetailed(response.SysBaseMenusResponse{Menus: *menus}, "获取成功", c)
+	//	return
+	//}
 
 	if err, menus := service.GetBaseMenuTree(); err != nil {
 		global.GVA_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage("获取失败", c)
 	} else {
 		response.OkWithDetailed(response.SysBaseMenusResponse{Menus: menus}, "获取成功", c)
-		service.CacheMenus("baseMenus", &menus)
+		// service.CacheAuthorityID("baseMenus", &menus)
 	}
 }
 

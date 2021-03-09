@@ -86,21 +86,25 @@ func SelectClass(sc request.SelectClass) (err error) {
 //@return: err error
 
 func DeleteSelect(sc request.SelectClass) (err error) {
+	// 退课次数为0不允许再退课
 	user := model.SysUser{}
 	global.GVA_DB.Select("CancelNums", "SelectedCredits").Where("username = ?", sc.Username).First(&user)
 	if user.CancelNums == 0 {
 		return constant.ErrDelClassTooMany
 	}
 
-	return global.GVA_DB.Transaction(func(tx *gorm.DB) error {
-		cls := model.SelectClass{}
-		tmptx := tx.Where("class_id = ? AND username = ?", sc.Cid, sc.Username)
-		tmptx.First(&cls)
-		if errors.Is(tmptx.Error, gorm.ErrRecordNotFound) {
-			return constant.ErrClassHasNotSelected
-		}
+	srs := model.SelectClass{}
+	err = global.GVA_DB.Select("grade").Where("class_id = ? AND username = ?", sc.Cid, sc.Username).First(&srs).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return constant.ErrClassHasNotSelected
+	}
+	// 成绩有变动不允许再退课
+	if 	srs.Grade != 0 {
+		return constant.ErrDelClassAfterGrade
+	}
 
-		err = tmptx.Unscoped().Delete(&model.SelectClass{}).Error
+	return global.GVA_DB.Transaction(func(tx *gorm.DB) error {
+		err = global.GVA_DB.Where("class_id = ? AND username = ?", sc.Cid, sc.Username).Unscoped().Delete(&model.SelectClass{}).Error
 		if err != nil {
 			return constant.ErrDelClass
 		}
@@ -122,10 +126,10 @@ func DeleteSelect(sc request.SelectClass) (err error) {
 			return err
 		}
 
-		// 上课当天不允许退课
+		// 上课当天及以后不允许退课
 		t, _ := time.ParseInLocation("2006-01-02", global.GVA_CONFIG.System.FirstDay, time.Local)
-		if time.Now().Day() == t.AddDate(0, 0, week*7+d).Day() {
-			return constant.ErrDelClassOnDayOfClass
+		if time.Now().After(t.AddDate(0, 0, week*7+d)) {
+			return constant.ErrDelClassAfterClass
 		}
 
 		err = tmptx2.Update("selected", c.Selected-1).Error
