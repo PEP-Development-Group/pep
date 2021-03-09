@@ -1,7 +1,6 @@
 package v1
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"pep/global"
@@ -13,23 +12,21 @@ import (
 )
 
 var (
-	stu = response.SysMenusResponse{Menus: []model.SysMenu{
-		{MenuId: "1"}}}
-	stuMenu = []model.SysBaseMenu{
+	StuMenu = response.SysMenusResponse{Menus: []model.SysMenu{
+		{SysBaseMenu: sysbase[0], MenuId:      "1"},
+		{SysBaseMenu: sysbase[1], MenuId:      "2"},
+		{SysBaseMenu: sysbase[2], MenuId:      "8"},
+		{SysBaseMenu: sysbase[3], MenuId:      "33"},
+		{SysBaseMenu: sysbase[4], MenuId:      "35"},
+	}}
+	sysbase = []model.SysBaseMenu{
 		{GVA_MODEL: global.GVA_MODEL{ID: 1}, Hidden: false, ParentId: "0", Path: "dashboard", Name: "dashboard", Component: "view/dashboard/index.vue", Sort: 0, Meta: model.Meta{KeepAlive: false, DefaultMenu: false, Title: "首页", Icon: "house", CloseTab: false}},
 		{GVA_MODEL: global.GVA_MODEL{ID: 2}, Hidden: true, ParentId: "0", Path: "about", Name: "about", Component: "view/about/index.vue", Sort: 7, Meta: model.Meta{KeepAlive: false, DefaultMenu: false, Title: "关于我们", Icon: "info", CloseTab: false}},
-		{GVA_MODEL: global.GVA_MODEL{ID: 8}, Hidden: false, ParentId: "0", Path: "person", Name: "person", Component: "view/person/person.vue", Sort: 4, Meta: model.Meta{KeepAlive: false, DefaultMenu: false, Title: "个人信息", Icon: "message-solid", CloseTab: false}},
+		{GVA_MODEL: global.GVA_MODEL{ID: 8}, Hidden: true, ParentId: "0", Path: "person", Name: "person", Component: "view/person/person.vue", Sort: 4, Meta: model.Meta{KeepAlive: false, DefaultMenu: false, Title: "个人信息", Icon: "message-solid", CloseTab: false}},
 		{GVA_MODEL: global.GVA_MODEL{ID: 33}, Hidden: false, ParentId: "0", Path: "enroll", Name: "enroll", Component: "view/stu/enroll.vue", Sort: 3, Meta: model.Meta{KeepAlive: false, DefaultMenu: false, Title: "学生选课", Icon: "s-flag", CloseTab: false}},
 		{GVA_MODEL: global.GVA_MODEL{ID: 35}, Hidden: false, ParentId: "0", Path: "lessons", Name: "lessons", Component: "view/stu/lessons.vue", Sort: 3, Meta: model.Meta{KeepAlive: false, DefaultMenu: false, Title: "选课查询", Icon: "success", CloseTab: false}},
 	}
 )
-
-// 只缓存学生和老师
-var menuMap map[string]*response.SysMenusResponse
-
-func init() {
-	menuMap = make(map[string]*response.SysMenusResponse, 2)
-}
 
 // @Tags AuthorityMenu
 // @Summary 获取用户动态路由
@@ -41,6 +38,10 @@ func init() {
 func GetMenu(c *gin.Context) {
 	auID := getUserAuthorityId(c)
 
+	if auID == "1" {
+		response.OkWithDetailed(&StuMenu, "获取成功", c)
+		return
+	}
 	// 管理员均从数据库查询
 	//if auID == "888" {
 	//	_, menus := service.GetMenuTree(auID)
@@ -55,11 +56,11 @@ func GetMenu(c *gin.Context) {
 	//	return
 	//}
 
-	if menus, ok :=service.CheckUserAuthorityExist(auID);ok{
-		fmt.Println("该权限id已存在，直接返回:", *menus)
-		response.OkWithDetailed(response.SysMenusResponse{Menus: *menus}, "获取成功", c)
-		return
-	}
+	//if menus, ok :=service.CheckUserAuthorityExist(auID);ok{
+	//	fmt.Println("该权限id已存在，直接返回:", *menus)
+	//	response.OkWithDetailed(response.SysMenusResponse{Menus: *menus}, "获取成功", c)
+	//	return
+	//}
 
 	// 否则从数据库查询最新数据，重置权限ID时间，再覆盖menuMap对应的权限
 	if err, menus := service.GetMenuTree(auID); err != nil {
@@ -68,7 +69,7 @@ func GetMenu(c *gin.Context) {
 	} else {
 		//service.CacheAuthorityID(auID)
 		//menuMap[auID] = &response.SysMenusResponse{Menus: menus}
-		service.CacheAuthorityMenu(auID, &menus)
+		//service.CacheAuthorityMenu(auID, &menus)
 		response.OkWithDetailed(response.SysMenusResponse{Menus: menus}, "获取成功", c)
 	}
 }
