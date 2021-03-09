@@ -46,6 +46,7 @@ system:
   use-multipoint: false
   cancel_nums: 3
   first_day: "2021-03-01"
+  weeklyEnrollLimit: 2
 
 # captcha configuration
 captcha:

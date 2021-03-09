@@ -27,9 +27,10 @@ func GetUserCreditsInfo(username int64) (selected int, have int, cancel int, err
 //@return: err error
 
 func SelectClass(sc request.SelectClass) (err error) {
+	// 课程人数已满不能再选
 	cls := model.Class{}
 	err = global.GVA_DB.Select("id", "cname", "selected", "total", "ccredit").Where("id = ?", sc.Cid).First(&cls).Error
-	if errors.Is(err, gorm.ErrRecordNotFound) {
+	if err == gorm.ErrRecordNotFound {
 		return constant.ErrClassNotExist
 	}
 	if cls.Selected >= cls.Total {
@@ -58,6 +59,27 @@ func SelectClass(sc request.SelectClass) (err error) {
 		}
 	}
 
+	// 每周只能选 global.GVA_CONFIG.System.WeeklyEnrollLimit 次课
+	cntMap := make(map[uint8]uint8, 25)  // key 是周数，value是该周选课次数
+	desc := ""
+	rows, err = global.GVA_DB.Raw("select c.desc from cls_class c, user_classes sc where username = ? AND c.id=sc.class_id", sc.Username).Rows()
+	if err != nil {
+		return constant.InternalErr
+	}
+	defer rows.Close()
+	for rows.Next() {
+		_ = rows.Scan(&desc)
+		ts := strings.Split(desc, "-")
+		week, err := strconv.Atoi(ts[0])
+		if err != nil {
+			return constant.ErrClassDesc
+		}
+		if cntMap[uint8(week)]+1 == global.GVA_CONFIG.System.WeeklyEnrollLimit {
+			return constant.ErrSelectClassTooManyWeekly
+		}
+		cntMap[uint8(week)]++
+	}
+
 	return global.GVA_DB.Transaction(func(tx *gorm.DB) error {
 		err = tx.Model(&model.SysUser{}).Where("username = ?", sc.Username).UpdateColumn("selected_credits", u.SelectedCredits+cls.Ccredit).Error
 		if err != nil {
@@ -69,12 +91,14 @@ func SelectClass(sc request.SelectClass) (err error) {
 			return err
 		}
 		scm := model.SelectClass{}
-		err = tx.Where("class_id = ? AND username = ?", sc.Cid, sc.Username).First(&scm).Error
-		if !errors.Is(err, gorm.ErrRecordNotFound) {
-			return constant.ErrClassHasSelected
-		}
+		// 这里不需要再判断是否选过了，已经在 同名课程只能选一次 中判断过
+		//err = tx.Where("class_id = ? AND username = ?", sc.Cid, sc.Username).First(&scm).Error
+		//if err == gorm.ErrRecordNotFound {
+		//	return constant.ErrClassHasSelected
+		//}
 		scm.Cid = sc.Cid
 		scm.Username = sc.Username
+		scm.Grade = 102
 		return tx.Create(&scm).Error
 	})
 }
@@ -99,7 +123,7 @@ func DeleteSelect(sc request.SelectClass) (err error) {
 		return constant.ErrClassHasNotSelected
 	}
 	// 成绩有变动不允许再退课
-	if 	srs.Grade != 0 {
+	if 	srs.Grade != 102 {
 		return constant.ErrDelClassAfterGrade
 	}
 

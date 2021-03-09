@@ -9,4 +9,5 @@ type System struct {
 
 	FirstDay   string `mapstructure:"first_day" json:"first_day" yaml:"first_day"`
 	CancelNums int    `mapstructure:"cancel_nums" json:"cancel_nums" yaml:"cancel_nums"`
+	WeeklyEnrollLimit uint8 `mapstructure:"weeklyEnrollLimit" json:"weeklyEnrollLimit" yaml:"weeklyEnrollLimit"`
 }
