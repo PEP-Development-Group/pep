@@ -1,7 +1,7 @@
 package service
 
 import (
-	"encoding/json"
+	jsoniter "github.com/json-iterator/go"
 	"errors"
 	"fmt"
 	"gorm.io/gorm"
@@ -11,6 +11,8 @@ import (
 	"strconv"
 	"time"
 )
+
+var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 //@author: [sh1luo](https://github.com/sh1luo)
 //@function: getMenuTreeMap
@@ -56,8 +58,17 @@ func GetMenuTree(authorityId string) (err error, menus []model.SysMenu) {
 	return err, menus
 }
 
+// 检查权限ID是否过期
+func CheckAuthorityTime(authorityId string) bool {
+	duration, _ := global.GVA_REDIS.TTL(authorityId).Result()
+	if duration.Seconds() > 0 {
+		return true
+	}
+	return false
+}
+
 func CheckUserAuthorityExist(authorityId string) (*[]model.SysMenu, bool) {
-	var menus []model.SysMenu
+	var menus = make([]model.SysMenu, 15)
 	res, _ := global.GVA_REDIS.Get(authorityId).Result()
 	if res != "" {
 		_ = json.Unmarshal([]byte(res), &menus)
@@ -77,11 +88,21 @@ func CheckBase(baseMenus string) (*[]model.SysBaseMenu, bool) {
 	return nil, false
 }
 
-func CacheMenus(auID string, value interface{}) {
-	bs, _ := json.Marshal(value)
-	_, err := global.GVA_REDIS.Set(auID, bs, time.Hour*6).Result()
+func CacheAuthorityMenu(auID  string, menu *[]model.SysMenu) {
+	bs, _ := json.Marshal(menu)
+	_,err := global.GVA_REDIS.Set(auID, bs, time.Hour*1).Result()
 	if err != nil {
-		fmt.Println("cache menus err:", err)
+		fmt.Println("缓存菜单数据失败:", auID)
+	}
+	fmt.Println("缓存菜单数据成功", auID)
+}
+
+func CacheAuthorityID(auID string) {
+	// 随便设置一个值缓存权限id一小时，在这一个小时之内对应权限角色都不需要查询数据库
+	// 会存在一个小时的时间差，即管理员更新了某个角色的权限，该角色最晚一个小时后才能获得最新菜单
+	_, err := global.GVA_REDIS.Set(auID, 1, time.Hour*1).Result()
+	if err != nil {
+		fmt.Println("cache authorityID err:", err)
 		return
 	}
 	fmt.Println("cache menu successful！id:", auID)

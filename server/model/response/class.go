@@ -15,14 +15,13 @@ type Group struct {
 }
 
 type Course struct {
-	ID          uint      `json:"id"`
-	TeacherName string    `json:"teacher_name"`
-	Time        time.Time `json:"time"`
-	Desc        string    `json:"desc"`
-	ClassRoom   string    `json:"class_room"`
-	Max         int       `json:"max"`
-	Now         int       `json:"now"`
-	Selected    bool      `json:"selected"`
+	ID          uint   `json:"id"`
+	TeacherName string `json:"teacher_name"`
+	Desc        string `json:"desc"`
+	ClassRoom   string `json:"class_room"`
+	Max         int    `json:"max"`
+	Now         int    `json:"now"`
+	Selected    bool   `json:"selected"`
 }
 
 type PersonalClassResponse struct {
