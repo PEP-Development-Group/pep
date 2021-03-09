@@ -1,8 +1,11 @@
 <template>
   <div>
-    <el-form :model="config" label-width="100px">
+    <el-form :model="config" label-width="130px">
       <el-form-item label="最大退课次数">
         <el-input-number v-model="config.system.cancel_nums"></el-input-number>
+      </el-form-item>
+      <el-form-item label="每周最多选课次数">
+        <el-input-number v-model="config.system.weeklyEnrollLimit"></el-input-number>
       </el-form-item>
       <el-form-item label="学期开始时间">
         <el-date-picker v-model="config.system.first_day" value-format="yyyy-MM-dd"></el-date-picker>

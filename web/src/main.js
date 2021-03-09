@@ -52,6 +52,7 @@ import {
     Collapse,
     TimePicker,
     TimeSelect,
+    DatePicker,
     PageHeader,
     Tabs,
     Popconfirm,
@@ -72,6 +73,7 @@ Vue.use(Tooltip);
 Vue.use(Tabs);
 Vue.use(PageHeader);
 Vue.use(TimePicker)
+Vue.use(DatePicker)
 Vue.use(TimeSelect)
 Vue.use(Container)
 Vue.use(Collapse)
