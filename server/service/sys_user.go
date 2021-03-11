@@ -42,7 +42,7 @@ func init() {
 
 func Register(u model.SysUser) (err error, userInter model.SysUser) {
 	var user model.SysUser
-	if !errors.Is(global.GVA_DB.Where("username = ?", u.Username).First(&user).Error, gorm.ErrRecordNotFound) { // 判断用户名是否注册
+	if global.GVA_DB.Where("username = ?", u.Username).First(&user).Error == gorm.ErrRecordNotFound { // 判断用户名是否注册
 		return errors.New("用户名已注册"), userInter
 	}
 	u.Password = utils.MD5V([]byte(u.Password))
