@@ -33,9 +33,9 @@ func SelectClass(sc request.SelectClass) (err error) {
 	if err == gorm.ErrRecordNotFound {
 		return constant.ErrClassNotExist
 	}
-	if cls.Selected >= cls.Total {
-		return constant.ErrClassHasFull
-	}
+	//if cls.Selected >= cls.Total {
+	//	return constant.ErrClassHasFull
+	//}
 
 	// 已修够或者超选不可继续选课
 	u := model.SysUser{}
@@ -86,7 +86,7 @@ func SelectClass(sc request.SelectClass) (err error) {
 			return err
 		}
 
-		err = tx.Model(&cls).Update("selected", cls.Selected+1).Error
+		err = tx.Model(&model.Class{}).Where("id = ? and selected < ?", cls.ID, cls.Total).Update("selected", cls.Selected+1).Error
 		if err != nil {
 			return err
 		}
