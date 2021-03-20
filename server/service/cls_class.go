@@ -88,7 +88,7 @@ func SelectClass(sc request.SelectClass) (err error) {
 
 		err = tx.Model(&model.Class{}).Where("id = ? and selected < ?", cls.ID, cls.Total).Update("selected", cls.Selected+1).Error
 		if err != nil {
-			return err
+			return constant.ErrClassHasFull
 		}
 		scm := model.SelectClass{}
 		// 这里不需要再判断是否选过了，已经在 同名课程只能选一次 中判断过
