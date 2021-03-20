@@ -61,10 +61,11 @@ import {
     Pagination,
     CollapseItem,
     Progress,
-
+    Checkbox
 } from "element-ui";
 
 Vue.use(Progress);
+Vue.use(Checkbox);
 Vue.use(CollapseItem);
 Vue.use(Pagination);
 Vue.use(RadioGroup);

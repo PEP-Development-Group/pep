@@ -2,7 +2,7 @@
   <div class="center">
     <el-upload
         ref="upload"
-        :action="`${path}/fileUploadAndDownload/upload`"
+        :action="`${path}/fileUploadAndDownload/upload?mayConflict=`+(first?'1':'0')"
         :before-remove="beforeRemove"
         :file-list="fileList"
         :headers="{'x-token':token}"
@@ -19,6 +19,8 @@
       <div class="el-upload__text">将文件拖到此处，或<em>点击选取</em></div>
       <div class="el-upload__tip" slot="tip">只能上传.xls和.xlsx格式文件</div>
     </el-upload>
+    <br/>
+    <el-checkbox v-model="first">首次上传(清空学生列表后导入)</el-checkbox>
     <!--    <br/>-->
     <!--    <el-button style="margin: 30px;" type="success" @click="submitUpload">上传学生名单</el-button>-->
   </div>
@@ -32,7 +34,7 @@ export default {
   data() {
     return {
       path: path,
-
+      first: false,
       fileList: [
         // {
         //   name: 'food.jpeg',
