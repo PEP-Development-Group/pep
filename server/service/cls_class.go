@@ -117,6 +117,22 @@ func DeleteSelect(sc request.SelectClass) (err error) {
 		return constant.ErrDelClassTooMany
 	}
 
+	// TODO:去掉order by
+	c := model.Class{}
+	global.GVA_DB.Select("selected", "desc", "ccredit").First(&c, sc.Cid)
+	// desc split by "-", such as "1-1-1"
+	ts := strings.Split(c.Desc, "-")
+	week, err := strconv.Atoi(ts[0])
+	d, err := strconv.Atoi(ts[1])
+	if err != nil {
+		return err
+	}
+	// 上课当天及以后不允许退课
+	t, _ := time.ParseInLocation("2006-01-02", global.GVA_CONFIG.System.FirstDay, time.Local)
+	if time.Now().After(t.AddDate(0, 0, week*7+d)) {
+		return constant.ErrDelClassAfterClass
+	}
+
 	srs := model.SelectClass{}
 	err = global.GVA_DB.Select("grade").Where("class_id = ? AND username = ?", sc.Cid, sc.Username).First(&srs).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -138,25 +154,7 @@ func DeleteSelect(sc request.SelectClass) (err error) {
 			return err
 		}
 
-		// TODO:去掉order by
-		c := model.Class{}
-		tmptx2 := tx.Select("selected", "desc", "ccredit").First(&c, sc.Cid)
-
-		// desc split by "-", such as "1-1-1"
-		ts := strings.Split(c.Desc, "-")
-		week, err := strconv.Atoi(ts[0])
-		d, err := strconv.Atoi(ts[1])
-		if err != nil {
-			return err
-		}
-
-		// 上课当天及以后不允许退课
-		t, _ := time.ParseInLocation("2006-01-02", global.GVA_CONFIG.System.FirstDay, time.Local)
-		if time.Now().After(t.AddDate(0, 0, week*7+d)) {
-			return constant.ErrDelClassAfterClass
-		}
-
-		err = tmptx2.Update("selected", c.Selected-1).Error
+		err = tx.Model(&model.Class{}).Where("id = ? and selected = ?", sc.Cid, c.Selected).Update("selected", c.Selected-1).Error
 		if err != nil {
 			return constant.ErrDelClass
 		}
