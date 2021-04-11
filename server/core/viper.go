@@ -7,7 +7,6 @@ import (
 	"github.com/spf13/viper"
 	"os"
 	"pep/global"
-	_ "pep/packfile"
 	"pep/utils"
 )
 
