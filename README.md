@@ -14,27 +14,27 @@
 
 ```
 .
-|-- db_dump.sql			// 数据库dump
+|-- db_dump.sql       // 数据库dump
 |-- Dockerfile
 |-- Makefile
 |-- api		
-|-- config				// 配置项的结构体定义
-|-- config.yaml			// 配置文件
-|-- constant 			// 常量定义
-|-- core				// 启动服务器
-|-- docs				// swagger文档
-|-- global				// 全局变量
-|-- initialize			// gorm，redis，router，token-bucket等的初始化
-|-- log					// 日志文件
+|-- config            // 配置项的结构体定义
+|-- config.yaml			  // 配置文件
+|-- constant 			    // 常量定义
+|-- core				      // 启动服务器
+|-- docs				      // swagger文档
+|-- global				    // 全局变量
+|-- initialize			  // gorm，redis，router，token-bucket等的初始化
+|-- log					      // 日志文件
 |-- main.go
-|-- middleware			// casbin，cors，jwt等中间件
-|-- model				// 表模型定义
+|-- middleware			  // casbin，cors，jwt等中间件
+|-- model				      // 表模型定义
 |-- resource
 |   |-- rbac_model.conf	// rbac模型
-|-- router				// 路由
-|-- service				// 业务层
-|-- test.xlsx			// 批量导入学生的示例文件
-`-- utils				// 一些工具
+|-- router				    // 路由
+|-- service				    // 业务层
+|-- test.xlsx			    // 批量导入学生的示例文件
+`-- utils				      // 一些工具
 ```
 
 ### 运行
