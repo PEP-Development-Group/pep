@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"pep/core"
 	"pep/global"
 	"pep/initialize"
@@ -21,7 +22,12 @@ func main() {
 	initialize.MysqlTables(global.GVA_DB) // 初始化表
 	// 程序结束前关闭数据库链接
 	db, _ := global.GVA_DB.DB()
-	defer db.Close()
+	defer func(db *sql.DB) {
+		err := db.Close()
+		if err != nil {
+			panic(err)
+		}
+	}(db)
 
 	core.RunWindowsServer()
 }
