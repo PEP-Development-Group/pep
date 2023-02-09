@@ -11,7 +11,7 @@ require (
 	github.com/fastly/go-utils v0.0.0-20180712184237-d95a45783239 // indirect
 	github.com/fsnotify/fsnotify v1.4.9
 	github.com/fvbock/endless v0.0.0-20170109170031-447134032cb6
-	github.com/gin-gonic/gin v1.7.0
+	github.com/gin-gonic/gin v1.7.7
 	github.com/go-ole/go-ole v1.2.4 // indirect
 	github.com/go-openapi/spec v0.19.7 // indirect
 	github.com/go-openapi/swag v0.19.8 // indirect
